@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+        <typeAlias alias="MemberDTO" type="component.member.MemberDTO"/>
+        <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
+        <typeAlias alias="OfficialPlanDTO" type="component.plan.off.OfficialPlanDTO"/>
+        <typeAlias alias="NonOfficialPlanDTO" type="component.plan.nonoff.NonOfficialPlanDTO"/>
+    </typeAliases>
+    <mappers>
+        <mapper class="component.member.MemberMapper"/>
+        <mapper class="component.plan.off.OfficialPlanMapper"/>
+        <mapper class="component.plan.nonoff.NonOfficialPlanMapper"/>
+    </mappers>
+
+</configuration>

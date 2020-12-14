@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="component.member.MemberMapper">
+    <resultMap id="authMap" type="component.member.AuthDTO">
+        <result property="member_id" column="member_id"/>
+        <result property="auth" column="auth"/>
+    </resultMap>
+
+    <resultMap id="memberMap" type="component.member.MemberDTO">
+        <result property="member_id" column="member_id"/>
+        <result property="m_name" column="m_name"/>
+        <result property="birth_date" column="birth_date"/>
+        <result property="gender" column="gender"/>
+        <result property="job" column="job"/>
+        <result property="nickname" column="nickname"/>
+        <result property="phone_number" column="phone_number"/>
+        <result property="email" column="email"/>
+        <collection property="authList" resultMap="authMap"></collection>
+    </resultMap>
+
+    <select id="selects" resultMap="memberMap" parameterType="string">
+        SELECT m.member_id,m.m_name,m.birth_date,m.gender,m.job,m.nickname,m.phone_number,m.email,a.member_id,a.auth
+        from members as m left outer join members_auth as a on m.member_id = a.member_id
+        <where>
+            <if test="value != null">
+                m.phone_number = #{value}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertMember" parameterType="MemberDTO">
+        INSERT INTO members(m_name,birth_date,gender,job,nickname,phone_number,email)
+        values (#{m_name},#{birth_date},#{gender},#{job},#{nickname},#{phone_number},#{email})
+    </insert>
+
+</mapper>

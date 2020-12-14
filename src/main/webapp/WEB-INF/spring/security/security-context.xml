@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:securityy="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- security password encoding -->
+    <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <!-- authorization for member -->
+    <bean id="memberDetailsService" class="security.login.MemberDetailsService"/>
+    <!-- 로그인 성공 후 처리를 담당하는 핸들러 -->
+    <bean id="customLoginSuccess" class="security.login.CustomMemberLoginSuccessHandler"/>
+    <!-- custom passwordEncoder -->
+    <bean id="customPasswordEncoder" class="security.encoder.CustomNoOpPasswordEncoder"/>
+    <!-- 적절한 권한을 가진사람인지 판단 -->
+    <security:http>
+        <security:intercept-url pattern="/sample/all" access="permitAll()"/> <!-- 모든 사람이 볼 수 있음. -->
+        <security:intercept-url pattern="/nonplan/*" access="hasRole('ROLE_MEMBER')"/> <!-- 인하대 학생만 볼 수 있음 -->
+        <security:intercept-url pattern="/*" access="hasRole('ROLE_MEMBER')"/> <!-- 인하대 학생만 볼 수 있음 -->
+        <security:form-login authentication-success-handler-ref="customLoginSuccess"/>
+        <security:csrf disabled="true"/>
+    </security:http>
+    <security:authentication-manager>
+        <!-- authentication-manager 의 속성으로 provider 지정 -->
+        <security:authentication-provider>
+            <security:user-service>
+                <!-- ROLE-MEMBER 권한을 갖는 객체 -->
+                <security:user name="member" password="{noop}member"
+                               authorities="ROLE_MEMBER"/> <!-- user name = 인증정보를 가진 객체의 이름이 member -->
+            </security:user-service>
+        </security:authentication-provider>
+        <security:authentication-provider>
+            <security:jdbc-user-service data-source-ref="dataSource"/>
+            <!-- use Bcrypt to password encoding -->
+            <security:password-encoder ref="customPasswordEncoder"/>
+        </security:authentication-provider>
+        <securityy:authentication-provider user-service-ref="memberDetailsService">
+            <security:password-encoder ref="customPasswordEncoder"/>
+        </securityy:authentication-provider>
+    </security:authentication-manager>
+</beans>
