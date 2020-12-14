@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 public class MemberController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-    @Setter(onMethod_ = {@Autowired})
+    @Setter(onMethod_ = @Autowired)
     private MemberService memberService;
 
     @GetMapping(value = "/get.do")
