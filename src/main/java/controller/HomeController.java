@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "/mvc")
+@RequestMapping(value = "/")
 public class HomeController {
 
     @GetMapping(value = "/")
