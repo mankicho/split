@@ -23,14 +23,6 @@ public class MemberController {
     @Setter(onMethod_ = @Autowired)
     private MemberService memberService;
 
-    @GetMapping(value = "/get.do")
-    public MemberDTO selects(HttpServletRequest request) {
-        String phone_number = request.getParameter("phone_number");
-        return memberService.selects(phone_number);
-    }
-
-
-
     @PostMapping(value = "/insert.do")
     public String insertMember(HttpServletRequest request) {
         String m_name = request.getParameter("name");
