@@ -1,6 +1,7 @@
 package component.member;
 
 import lombok.Setter;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public int insertMember(MemberDTO memberDTO) {
-        return memberDAO.insertMember(memberDTO);
+    public int registerMember(MemberDTO memberDTO) {
+
+        return memberDAO.registerMember(memberDTO);
     }
 
     @Override
     public MemberDTO login(String email, String password) {
         return memberDAO.login(email, password);
+    }
+
+    @Override
+    public int insertSalt(String email, String salt) {
+        return memberDAO.insertSalt(email, salt);
     }
 }

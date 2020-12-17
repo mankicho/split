@@ -9,24 +9,19 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class MemberDTO {
-    private int member_id;
-    private String m_name;
-    private Date birth_date;
-    private String gender;
-    private String job;
-    private String nickname;
-    private String phone_number;
     private String email;
+    private String pw;
+    private String phoneNumber;
+    private String sex;
+    private String bornTime;
     private List<AuthDTO> authList;
 
-    public MemberDTO(String m_name, Date birth_date, String gender, String job, String nickname, String phone_number, String email) {
-        this.m_name = m_name;
-        this.birth_date = birth_date;
-        this.gender = gender;
-        this.job = job;
-        this.nickname = nickname;
-        this.phone_number = phone_number;
+    public MemberDTO(String email, String pw, String phoneNumber, String sex, String bornTime) {
         this.email = email;
+        this.pw = pw;
+        this.phoneNumber = phoneNumber;
+        this.sex = sex;
+        this.bornTime = bornTime;
     }
 }
 

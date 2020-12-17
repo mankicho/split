@@ -5,14 +5,14 @@ import component.member.MemberService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Random;
 
 @RestController
 @RequestMapping(value = "/member")
@@ -23,28 +23,46 @@ public class MemberController {
     @Setter(onMethod_ = @Autowired)
     private MemberService memberService;
 
-    @PostMapping(value = "/insert.do")
-    public String insertMember(HttpServletRequest request) {
-        String m_name = request.getParameter("name");
-        String birthDate = request.getParameter("bDate");
-        Date d = null;
-        try {
-            d = new Date(format.parse(birthDate).getTime());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String gender = request.getParameter("gender");
-        String job = request.getParameter("job");
-        String nickName = request.getParameter("nickName");
-        String phoneNumber = request.getParameter("pNum");
-        String email = request.getParameter("email");
-        MemberDTO memberDTO = new MemberDTO(m_name, d, gender, job, nickName, phoneNumber, email);
-        System.out.println(memberDTO);
-        int affectedRow = memberService.insertMember(memberDTO);
+    @Setter(onMethod_ = {@Autowired})
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @PostMapping(value = "/register.do")
+    @Transactional
+    public String insertMember(@RequestBody MemberDTO memberDTO) {
+        String salt = generateSalt();
+        String pw = memberDTO.getPw();
+        // todo 1. pw check(right format?)
+
+        log.info("get parameter memberDTO => " + memberDTO);
+        String encodedPassword = passwordEncoder.encode(passwordEncoder.encode(pw + salt)); // salt 와 평문 문자열을 2번 인코딩
+        memberDTO.setPw(encodedPassword);
+
+//        String email = request.getParameter("email");
+//        String phoneNumber = request.getParameter("pNum");
+//        String sex = request.getParameter("sex");
+//        String bornTime = request.getParameter("born_time");
+//        MemberDTO memberDTO = new MemberDTO(email, encodedPassword, phoneNumber, sex, bornTime);
+        int affectedRowOfRegisterMember = memberService.registerMember(memberDTO);
 //
-        if (affectedRow == 0) {
+        int affectedRowOfInsertSalt = memberService.insertSalt(memberDTO.getEmail(),salt);
+        if (affectedRowOfInsertSalt == 1 && affectedRowOfRegisterMember == 1) {
             return "success";
         }
         return "fail";
+    }
+
+    private String generateSalt() {
+        Random random = new Random();
+
+        byte[] salt = new byte[8];
+        random.nextBytes(salt);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < salt.length; i++) {
+            // byte 값을 Hex 값으로 바꾸기.
+            sb.append(String.format("%02x", salt[i]));
+        }
+
+        return sb.toString();
     }
 }

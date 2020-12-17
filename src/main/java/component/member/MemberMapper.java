@@ -1,11 +1,15 @@
 package component.member;
 
-public interface MemberMapper {
-    MemberDTO selects(String phoneNumber);
+import org.apache.ibatis.annotations.Param;
 
-    int insertMember(MemberDTO memberDTO);
+public interface MemberMapper {
+    MemberDTO selects(String email);
+
+    int registerMember(MemberDTO memberDTO);
 
     boolean isExistsNickName(String nickName);
 
     MemberDTO login(String email, String password);
+
+    int insertSalt(@Param("email") String email, @Param("salt") String salt);
 }
