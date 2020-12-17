@@ -3,35 +3,36 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.member.MemberMapper">
     <resultMap id="authMap" type="component.member.AuthDTO">
-        <result property="member_id" column="member_id"/>
+        <result property="memberEmail" column="member_email"/>
         <result property="auth" column="auth"/>
     </resultMap>
 
     <resultMap id="memberMap" type="component.member.MemberDTO">
-        <result property="member_id" column="member_id"/>
-        <result property="m_name" column="m_name"/>
-        <result property="birth_date" column="birth_date"/>
-        <result property="gender" column="gender"/>
-        <result property="job" column="job"/>
-        <result property="nickname" column="nickname"/>
-        <result property="phone_number" column="phone_number"/>
         <result property="email" column="email"/>
+        <result property="pw" column="pw"/>
+        <result property="phoneNumber" column="phone_num"/>
+        <result property="sex" column="sex"/>
+        <result property="bornTime" column="born_time"/>
         <collection property="authList" resultMap="authMap"></collection>
     </resultMap>
 
     <select id="selects" resultMap="memberMap" parameterType="string">
-        SELECT m.member_id,m.m_name,m.birth_date,m.gender,m.job,m.nickname,m.phone_number,m.email,a.member_id,a.auth
-        from members as m left outer join members_auth as a on m.member_id = a.member_id
+        SELECT m.email,m.pw,m.phone_num,m.sex,m.born_time,a.member_email,a.auth
+        from members as m left outer join members_auth as a on m.email = a.member_email
         <where>
             <if test="value != null">
-                m.phone_number = #{value}
+                m.email = #{value}
             </if>
         </where>
     </select>
 
-    <insert id="insertMember" parameterType="MemberDTO">
-        INSERT INTO members(m_name,birth_date,gender,job,nickname,phone_number,email)
-        values (#{m_name},#{birth_date},#{gender},#{job},#{nickname},#{phone_number},#{email})
+    <insert id="registerMember" parameterType="MemberDTO">
+        INSERT INTO members(email,pw,phone_num,sex,born_time)
+        values (#{email},#{pw},#{phoneNumber},#{sex},#{bornTime})
+    </insert>
+
+    <insert id="insertSalt" parameterType="string">
+        INSERT INTO members_salt(member_email,salt) values(#{email},#{salt})
     </insert>
 
 </mapper>
