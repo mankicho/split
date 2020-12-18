@@ -15,7 +15,7 @@
     <context:component-scan base-package="component"/>
     <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url"
                   value="jdbc:mysql://localhost:3306/icnogari?serverTimezone=Asia/Seoul&amp;autoReconnect=true"/>
         <property name="username" value="icnogari"/>
