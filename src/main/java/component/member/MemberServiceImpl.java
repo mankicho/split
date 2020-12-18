@@ -36,4 +36,9 @@ public class MemberServiceImpl implements MemberService {
     public String getSalt(String email) {
         return memberDAO.getSalt(email);
     }
+
+    @Override
+    public String isExist(String email) {
+        return memberDAO.isExist(email);
+    }
 }

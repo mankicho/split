@@ -38,4 +38,8 @@ public class MemberDAO {
         return memberMapper.getSalt(email);
     }
 
+    public String isExist(String email) {
+        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        return memberMapper.isExist(email);
+    }
 }

@@ -13,4 +13,6 @@ public interface MemberService {
 
     String getSalt(String email);
 
+    String isExist(String email);
+
 }

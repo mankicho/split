@@ -12,4 +12,6 @@ public interface MemberMapper {
     int insertSalt(@Param("email") String email, @Param("salt") String salt); // salt 삽입
 
     String getSalt(@Param("email") String email);
+
+    String isExist(@Param("email") String email);
 }
