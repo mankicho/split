@@ -38,4 +38,8 @@
     <select id="getSalt" resultType="string">
         SELECT salt from members_salt where member_email = #{email}
     </select>
+
+    <select id="isExist" resultType="string">
+        SELECT email from members where email = #{email}
+    </select>
 </mapper>
