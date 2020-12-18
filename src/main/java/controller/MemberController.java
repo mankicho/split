@@ -34,7 +34,7 @@ public class MemberController {
         // todo 1. pw check(right format?)
 
         log.info("get parameter memberDTO => " + memberDTO);
-        String encodedPassword = passwordEncoder.encode(passwordEncoder.encode(pw + salt)); // salt 와 평문 문자열을 2번 인코딩
+        String encodedPassword = passwordEncoder.encode(pw + salt); // salt 와 평문 문자열을 2번 인코딩
         memberDTO.setPw(encodedPassword);
 
 //        String email = request.getParameter("email");
@@ -44,11 +44,18 @@ public class MemberController {
 //        MemberDTO memberDTO = new MemberDTO(email, encodedPassword, phoneNumber, sex, bornTime);
         int affectedRowOfRegisterMember = memberService.registerMember(memberDTO);
 //
-        int affectedRowOfInsertSalt = memberService.insertSalt(memberDTO.getEmail(),salt);
+        int affectedRowOfInsertSalt = memberService.insertSalt(memberDTO.getEmail(), salt);
         if (affectedRowOfInsertSalt == 1 && affectedRowOfRegisterMember == 1) {
             return "success";
         }
         return "fail";
+    }
+
+    @PostMapping(value = "/get/salt")
+    public String getSalt(HttpServletRequest request) {
+        String email = request.getParameter("email");
+
+        return memberService.getSalt(email);
     }
 
     private String generateSalt() {
