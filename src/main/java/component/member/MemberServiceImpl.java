@@ -31,4 +31,9 @@ public class MemberServiceImpl implements MemberService {
     public int insertSalt(String email, String salt) {
         return memberDAO.insertSalt(email, salt);
     }
+
+    @Override
+    public String getSalt(String email) {
+        return memberDAO.getSalt(email);
+    }
 }
