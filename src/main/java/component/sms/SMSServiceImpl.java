@@ -15,7 +15,7 @@ import java.util.Random;
 @Log4j
 public class SMSServiceImpl implements SMSService {
     @Override
-    public String sendSMS(String phoneNumber) {
+    public String sendSMS(String phoneNumber, String msg) {
         String[] str = new String[]{phoneNumber};
         try {
             URL url = new URL("https://api-sens.ncloud.com/v1/sms/services/ncp:sms:kr:261072792575:split/messages");
@@ -29,11 +29,8 @@ public class SMSServiceImpl implements SMSService {
             connection.setRequestProperty("X-NCP-auth-key", "Bqm3WYwbuiI7ZaxJQs9H");
             connection.setRequestProperty("X-NCP-service-secret", "195c1c4e4b3b4b879b2a5b112d3b24e9");
 
-
-            String msg = new Random().nextInt(8999) + 1000 + "";
-
             JSONObject object = new JSONObject();
-            object.put("content", "[split 회원가입]\n인증번호 [" + msg + "] 를 입력해주세요");
+            object.put("content", msg);
             object.put("type", "SMS");
             object.put("to", Arrays.stream(str).toArray());
             object.put("from", "01036198087");
@@ -46,7 +43,7 @@ public class SMSServiceImpl implements SMSService {
 
             if (status == 202) {
                 return msg;
-            }else{
+            } else {
                 return "invalid";
             }
         } catch (Exception e) {
