@@ -4,6 +4,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -15,5 +16,15 @@ public class OfficialPlanServiceImpl implements OfficialPlanService {
     @Override
     public List<OfficialPlanDTO> selects() {
         return officialPlanDAO.selects();
+    }
+
+    @Override
+    public int insertOfficialPlan(OfficialPlanDTO officialPlanDTO) {
+        return officialPlanDAO.insertOfficialPlan(officialPlanDTO);
+    }
+
+    @Override
+    public int deleteOfficialPlan(HashMap<String, Object> hashMap) {
+        return officialPlanDAO.deleteOfficialPlan(hashMap);
     }
 }

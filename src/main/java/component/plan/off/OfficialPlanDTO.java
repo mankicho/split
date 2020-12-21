@@ -1,38 +1,30 @@
 package component.plan.off;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.sun.org.apache.bcel.internal.generic.DUP;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import util.DateUtil;
+
+import java.sql.Date;
+import java.sql.Time;
+
+@Data
+@NoArgsConstructor
 public class OfficialPlanDTO {
+    private int planLogId;
+    private String memberEmail;
     private int planId;
-    private String planName;
-    private int needAuthNum;
+    private Date startDate;
+    private Date endDate;
+    private Time authTime;
+    private Date regDate;
 
-    public OfficialPlanDTO(int planId, String planName, int needAuthNum) {
+    public OfficialPlanDTO(String memberEmail, int planId, String startDate, String endDate, String authTime) {
+        this.memberEmail = memberEmail;
         this.planId = planId;
-        this.planName = planName;
-        this.needAuthNum = needAuthNum;
-    }
-
-
-    public int getPlanId() {
-        return planId;
-    }
-
-    public void setPlanId(int planId) {
-        this.planId = planId;
-    }
-
-    public String getPlanName() {
-        return planName;
-    }
-
-    public void setPlanName(String planName) {
-        this.planName = planName;
-    }
-
-    public int getNeedAuthNum() {
-        return needAuthNum;
-    }
-
-    public void setNeedAuthNum(int needAuthNum) {
-        this.needAuthNum = needAuthNum;
+        this.startDate = DateUtil.toSqlDate(startDate);
+        this.endDate = DateUtil.toSqlDate(endDate);
+        this.authTime = DateUtil.toSqlTime(authTime);
     }
 }

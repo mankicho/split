@@ -5,6 +5,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.List;
+
 @Repository
 public class NonOfficialPlanDAO {
 
@@ -12,7 +16,19 @@ public class NonOfficialPlanDAO {
     private SqlSession sqlSession;
 
     public int insertNonOfficialPlan(NonOfficialPlanDTO nonOfficialPlanDTO) {
-        return sqlSession.insert("component.plan.nonoff.NonOfficialPlanMapper.insertNonOfficialPlan", nonOfficialPlanDTO);
+        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
+        return mapper.insertNonOfficialPlan(nonOfficialPlanDTO);
     }
+
+    public List<NonOfficialPlanDTO> getNonPlan(HashMap<String, Object> hashMap) {
+        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
+        return mapper.getNonPlan(hashMap);
+    }
+
+    public int deleteNonOfficialPlan(HashMap<String, Object> hashMap) {
+        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
+        return mapper.deleteNonOfficialPlan(hashMap);
+    }
+
 
 }
