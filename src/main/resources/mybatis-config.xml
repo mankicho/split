@@ -8,11 +8,16 @@
         <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
         <typeAlias alias="OfficialPlanDTO" type="component.plan.off.OfficialPlanDTO"/>
         <typeAlias alias="NonOfficialPlanDTO" type="component.plan.nonoff.NonOfficialPlanDTO"/>
+        <typeAlias alias="TodoDTO" type="component.plan.nonoff.todolist.TodoDTO"/>
+        <typeAlias type="component.plan.off.OfficialPlanDTO" alias="PlanDTO"/>
+
     </typeAliases>
     <mappers>
         <mapper class="component.member.MemberMapper"/>
         <mapper class="component.plan.off.OfficialPlanMapper"/>
         <mapper class="component.plan.nonoff.NonOfficialPlanMapper"/>
+        <mapper class="component.plan.nonoff.todolist.TodoMapper"/>
+        <mapper class="component.home.HomeDataMapper"/>
     </mappers>
 
 </configuration>

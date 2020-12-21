@@ -13,11 +13,12 @@
         <result property="phoneNumber" column="phone_num"/>
         <result property="sex" column="sex"/>
         <result property="bornTime" column="born_time"/>
+        <result property="nickname" column="nickname"/>
         <collection property="authList" resultMap="authMap"></collection>
     </resultMap>
 
     <select id="selects" resultMap="memberMap" parameterType="string">
-        SELECT m.email,m.pw,m.phone_num,m.sex,m.born_time,a.member_email,a.auth
+        SELECT m.email,m.pw,m.phone_num,m.sex,m.born_time,m.nickname,a.member_email,a.auth
         from members as m left outer join members_auth as a on m.email = a.member_email
         <where>
             <if test="value != null">
@@ -27,8 +28,8 @@
     </select>
 
     <insert id="registerMember" parameterType="MemberDTO">
-        INSERT INTO members(email,pw,phone_num,sex,born_time)
-        values (#{email},#{pw},#{phoneNumber},#{sex},#{bornTime})
+        INSERT INTO members(email,pw,phone_num,sex,born_time,nickname)
+        values (#{email},#{pw},#{phoneNumber},#{sex},#{bornTime},#{nickname})
     </insert>
 
     <insert id="insertSalt" parameterType="string">
@@ -39,7 +40,15 @@
         SELECT salt from members_salt where member_email = #{email}
     </select>
 
-    <select id="isExist" resultType="string">
+    <delete id="deleteMember" parameterType="string">
+        DELETE FROM members where email = #{email}
+    </delete>
+
+    <select id="isExistNickname" resultType="string" parameterType="string">
+        SELECT nickname from members where nickname = #{nickname}
+    </select>
+
+    <select id="isExistEmail" resultType="string" parameterType="string">
         SELECT email from members where email = #{email}
     </select>
 </mapper>

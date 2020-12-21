@@ -3,8 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.plan.nonoff.NonOfficialPlanMapper">
     <insert id="insertNonOfficialPlan" parameterType="NonOfficialPlanDTO">
-       insert into non_official_plan(member_id,plan_name,startdate,enddate,authtime,regtime)
-       values (#{memberId},#{planName},date_format(#{startDate},'%Y-%m-%d'),
-       date_format(#{endDate},'%Y-%m-%d'),time_format(#{authTime},'%H:%i:%s'),date_format(#{regTime},'%Y-%m-%d %H:%i:%s'))
+       insert into non_official_plan(member_email,plan_name,startdate,enddate,authtime)
+       values (#{memberEmail},#{planName},#{startDate},#{endDate},#{authTime})
     </insert>
+
+    <select id="getNonPlan" resultType="hashmap" parameterType="hashmap">
+        SELECT member_email,plan_name,startdate,enddate,authtime,regtime
+        from non_official_plan
+        where member_email = #{email} and #{sDate} between startdate and enddate
+    </select>
 </mapper>

@@ -5,4 +5,13 @@
     <select id="selects" resultType="OfficialPlanDTO">
         select plan_id,plan_name,need_auth_num from official_plan
     </select>
+
+    <insert id="insertOfficialPlan" parameterType="PlanDTO">
+        INSERT INTO official_plan_log(member_email,plan_id,startdate,enddate,authtime)
+        values (#{memberEmail},#{planId},#{startDate},#{endDate},#{authTime})
+    </insert>
+
+    <delete id="deleteOfficialPlan" parameterType="hashmap">
+        DELETE FROM official_plan_log where member_email=#{email} and startdate = #{sDate} and authtime = #{authtime}
+    </delete>
 </mapper>
