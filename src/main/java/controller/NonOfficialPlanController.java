@@ -5,10 +5,7 @@ import component.plan.nonoff.NonOfficialPlanService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -25,39 +22,18 @@ public class NonOfficialPlanController {
     private NonOfficialPlanService nonOfficialPlanService;
 
     @GetMapping(value = "/test.do")
-    public String test(){
+    public String test() {
         log.info("test");
         return "success";
     }
 
     @PostMapping(value = "/reserve.do")
-    public String insertNonOfficialPlan(HttpServletRequest request) {
-        String memberId = request.getParameter("mId");
-        String planName = request.getParameter("pName");
-        String sDate = request.getParameter("sDate");
-        String eDate = request.getParameter("eDate");
-        String authT = request.getParameter("authT");
-        log.info(memberId + "," + planName + "," + sDate + "," + eDate + "," + authT);
-        if (memberId == null || planName == null || sDate == null || eDate == null || authT == null) {
-            return "data error";
-        }
-
-        int mId;
-        try {
-            mId = Integer.parseInt(memberId);
-            dateFormat.parse(sDate);
-            dateFormat.parse(eDate);
-            timeFormat.parse(authT);
-        } catch (Exception e) {
-            return "data parsing error";
-        }
-        NonOfficialPlanDTO nonOfficialPlanDTO = new NonOfficialPlanDTO(mId, planName, sDate, eDate, authT, format.format(new Date()));
-
+    public int insertNonOfficialPlan(@RequestBody NonOfficialPlanDTO nonOfficialPlanDTO) {
         int value = nonOfficialPlanService.insertNonOfficialPlan(nonOfficialPlanDTO);
         if (value == 0) {
-            return "reservation fail";
+            return 202;
         }
 
-        return "reservation success";
+        return 200;
     }
 }

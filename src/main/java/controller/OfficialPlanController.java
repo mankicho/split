@@ -4,10 +4,9 @@ import component.plan.off.OfficialPlanDTO;
 import component.plan.off.OfficialPlanService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -21,4 +20,15 @@ public class OfficialPlanController {
     public List<OfficialPlanDTO> getPlans() {
         return officialPlanService.selects();
     }
+
+    @PostMapping(value = "/insert.do")
+    public int insertOfficialPlan(@RequestBody OfficialPlanDTO officialPlanDTO) {
+        return officialPlanService.insertOfficialPlan(officialPlanDTO);
+    }
+
+    @PostMapping(value = "/delete.do")
+    public int deleteOfficialPlan(@RequestBody HashMap<String, Object> hashMap) {
+        return officialPlanService.deleteOfficialPlan(hashMap);
+    }
 }
+

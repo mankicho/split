@@ -2,6 +2,7 @@ package controller;
 
 import component.mail.MailService;
 import component.member.MemberDAO;
+import component.member.MemberService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,12 +21,12 @@ public class MailController {
     private MailService mailService;
 
     @Setter(onMethod_ = {@Autowired})
-    private MemberDAO memberDAO;
+    private MemberService memberService;
 
     @PostMapping(value = "/send/code")
     public String sendAuthCode(HttpServletRequest request) {
         String email = request.getParameter("email");
-        String recordedEmail = memberDAO.isExist(email);
+        String recordedEmail = memberService.isExistEmail(email);
 
         if (!email.equals(recordedEmail)) {
             return "F";
@@ -34,7 +35,7 @@ public class MailController {
         String subject = "[SPLIT] 비밀번호 찾기 코드입니다.";
         String randomMessage = generateSalt();
         String message = randomMessage + "\n 를 입력해주세요";
-        boolean send = mailService.send(subject, message, "skxz123@gmail.com", email);
+        boolean send = mailService.send(subject, message, "icnogari@studyplanet.kr", email);
 
         if (send) {
             return randomMessage;

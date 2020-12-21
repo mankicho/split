@@ -1,5 +1,6 @@
 package controller;
 
+import component.member.MemberDAO;
 import component.member.MemberDTO;
 import component.member.MemberService;
 import lombok.Setter;
@@ -37,13 +38,7 @@ public class MemberController {
         String encodedPassword = passwordEncoder.encode(pw + salt); // salt 와 평문 문자열을 2번 인코딩
         memberDTO.setPw(encodedPassword);
 
-//        String email = request.getParameter("email");
-//        String phoneNumber = request.getParameter("pNum");
-//        String sex = request.getParameter("sex");
-//        String bornTime = request.getParameter("born_time");
-//        MemberDTO memberDTO = new MemberDTO(email, encodedPassword, phoneNumber, sex, bornTime);
         int affectedRowOfRegisterMember = memberService.registerMember(memberDTO);
-//
         int affectedRowOfInsertSalt = memberService.insertSalt(memberDTO.getEmail(), salt);
         if (affectedRowOfInsertSalt == 1 && affectedRowOfRegisterMember == 1) {
             return "success";
@@ -56,6 +51,13 @@ public class MemberController {
         String email = request.getParameter("email");
 
         return memberService.getSalt(email);
+    }
+
+    @PostMapping(value = "/delete.do")
+    public int deleteMember(HttpServletRequest request) {
+        String email = request.getParameter("email");
+
+        return memberService.deleteMember(email);
     }
 
     private String generateSalt() {
@@ -72,4 +74,10 @@ public class MemberController {
 
         return sb.toString();
     }
+
+    public String getNickname(HttpServletRequest request) {
+        String nickname = request.getParameter("nickname");
+        return memberService.isExistNickname(nickname);
+    }
+
 }
