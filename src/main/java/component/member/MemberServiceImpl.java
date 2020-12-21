@@ -23,11 +23,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDTO login(String email, String password) {
-        return memberDAO.login(email, password);
-    }
-
-    @Override
     public int insertSalt(String email, String salt) {
         return memberDAO.insertSalt(email, salt);
     }
@@ -37,8 +32,19 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.getSalt(email);
     }
 
+
     @Override
-    public String isExist(String email) {
-        return memberDAO.isExist(email);
+    public int deleteMember(String email) {
+        return memberDAO.deleteMember(email);
+    }
+
+    @Override
+    public String isExistNickname(String nickname) {
+        return memberDAO.isExistNickname(nickname);
+    }
+
+    @Override
+    public String isExistEmail(String email) {
+        return memberDAO.isExistEmail(email);
     }
 }

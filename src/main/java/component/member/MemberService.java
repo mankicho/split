@@ -7,12 +7,14 @@ public interface MemberService {
 
     int registerMember(MemberDTO memberDTO);
 
-    MemberDTO login(String email, String password);
-
     int insertSalt(String email, String salt);
 
     String getSalt(String email);
 
-    String isExist(String email);
+    int deleteMember(String email);
+
+    String isExistNickname(String nickname);
+
+    String isExistEmail(String email);
 
 }

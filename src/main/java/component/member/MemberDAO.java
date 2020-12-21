@@ -23,11 +23,6 @@ public class MemberDAO {
         return memberMapper.registerMember(memberDTO);
     }
 
-    public MemberDTO login(String email, String password) {
-        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
-        return memberMapper.login(email, password);
-    }
-
     public int insertSalt(String email, String salt) {
         MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
         return memberMapper.insertSalt(email, salt);
@@ -38,8 +33,20 @@ public class MemberDAO {
         return memberMapper.getSalt(email);
     }
 
-    public String isExist(String email) {
+    public int deleteMember(String email) {
         MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
-        return memberMapper.isExist(email);
+        return memberMapper.deleteMember(email);
+    }
+
+    public String isExistNickname(String nickname) {
+        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        String reVal = memberMapper.isExistNickname(nickname);
+        return reVal == null ? "" : reVal;
+    }
+
+    public String isExistEmail(String email) {
+        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        String reVal = memberMapper.isExistEmail(email);
+        return reVal == null ? "" : reVal;
     }
 }
