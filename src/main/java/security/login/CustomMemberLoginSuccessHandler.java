@@ -25,7 +25,8 @@ public class CustomMemberLoginSuccessHandler implements AuthenticationSuccessHan
         log.warn("ROLE NAMES: " + roleNames);
 
         if (roleNames.contains("ROLE_MEMBER")) {
-            httpServletResponse.sendRedirect("/login.do");
+            httpServletResponse.getWriter().println("success");
+//            httpServletResponse.sendRedirect("/login.do");
             return;
         }
 
