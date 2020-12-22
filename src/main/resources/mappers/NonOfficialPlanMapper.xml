@@ -12,4 +12,15 @@
         from non_official_plan
         where member_email = #{email} and #{sDate} between startdate and enddate
     </select>
+
+    <delete id="deleteNonOfficialPlan" parameterType="hashmap">
+        DELETE FROM non_official_plan
+        where member_email = #{email} AND startdate = #{sDate} AND authtime = #{aTime}
+    </delete>
+
+    <select id="nonOfficialPlanShare" parameterType="int" resultType="hashmap">
+        SELECT member_email,plan_name,startdate,enddate,authtime
+        from non_official_plan
+        where non_official_plan_id = #{npid}
+    </select>
 </mapper>

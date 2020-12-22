@@ -14,4 +14,5 @@
     <delete id="deleteOfficialPlan" parameterType="hashmap">
         DELETE FROM official_plan_log where member_email=#{email} and startdate = #{sDate} and authtime = #{authtime}
     </delete>
+
 </mapper>

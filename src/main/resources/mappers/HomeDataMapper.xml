@@ -2,19 +2,19 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.home.HomeDataMapper">
-    <select id="selectPlanAuthLogsFor30Minutes" parameterType="string">
-        select official_plan_log_id from official_plan_log
-        where authtime between time_format(#{fromtime},'%H:%i:%s') and  time_format(#{endtime},'%H:%i:%s')
+    <select id="selectPlanAuthLogsFor30Minutes" parameterType="hashmap" resultType="int">
+        select sum(cnt) from ( select count(*) as cnt from official_plan_log
+        where authtime between time_format(#{fromtime},'%H:%i:%s') and  time_format(#{totime},'%H:%i:%s')
         UNION
-        select non_official_plan_id from non_official_plan
-        where authtime between time_format(#{fromtime},'%H:%i:%s') and  time_format(#{endtime},'%H:%i:%s')
+        select count(*) as cnt from non_official_plan
+        where authtime between time_format(#{fromtime},'%H:%i:%s') and  time_format(#{totime},'%H:%i:%s')) as tmp;
     </select>
 
-    <select id="selectPlanAuthLogsOfToday" parameterType="string">
+    <select id="selectPlanAuthLogsOfToday" resultType="int">
         SELECT COUNT(*) from plan_auth_log where date_format(authenticatedtime,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
     </select>
 
-    <select id="selectPlanAUthLogsFor30MinutesOfSuccessUsers" parameterType="string">
+    <select id="selectPlanAuthLogsFor30MinutesOfSuccessUsers" parameterType="string" resultType="int">
         SELECT COUNT(*) from plan_auth_log where authenticatedtime between date_format(#{fromtime},'%Y-%m-%d %H:%i:%s')
         AND date_format(#{totime},'%Y-%m-%d %H:%i:%s')
     </select>

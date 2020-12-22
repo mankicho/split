@@ -4,13 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="webmail.icnogari.cafe24.com/"/>
+        <property name="host" value="smtp.cafe24.com"/>
         <property name="port" value="587"/>
-        <property name="username" value="split@icnogari.cafe24.com"/>
+        <property name="username" value="split@studyplanet.kr"/>
         <property name="password" value="asd1595753!"/>
         <property name="javaMailProperties">
             <props>
-                <prop key="mail.smtp.ssl.trust">webmail.icnogari.cafe24.com/</prop>
+                <prop key="mail.smtp.ssl.trust">smtp.cafe24.com</prop>
                 <prop key="mail.smtp.starttls.enable">true</prop>
                 <prop key="mail.smtp.auth">true</prop>
             </props>
