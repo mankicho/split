@@ -25,11 +25,19 @@ public class SMSController {
         return smsService.sendSMS(phoneNumber, msg);
     }
 
-   @PostMapping(value = "/upt/receive.do")
-    public String sendMessageForUpg(HttpServletRequest request){
-       String phoneNumber = request.getParameter("pNum");
-       String code = new Random().nextInt(8999) + 1000 + "";
-       String msg = "[split] 비밀번호를 찾기위한 메세지 입니다. [" + code + "]를 입력해주세요";
-       return smsService.sendSMS(phoneNumber, msg);
-   }
+    @PostMapping(value = "/upt/receive.do")
+    public String sendMessageForUpg(HttpServletRequest request) {
+        String phoneNumber = request.getParameter("pNum");
+        String code = new Random().nextInt(8999) + 1000 + "";
+        String msg = "[split] 비밀번호를 찾기위한 메세지 입니다. [" + code + "]를 입력해주세요";
+        return smsService.sendSMS(phoneNumber, msg);
+    }
+
+    @PostMapping(value = "/auth/receive.do")
+    public String sendMessageForAuth(HttpServletRequest request) {
+        String phoneNumber = request.getParameter("pNum");
+        String code = new Random().nextInt(8999) + 1000 + "";
+        String msg = "[split] 회원가입을 위한 메세지 입니다. [" + code + "]를 입력해주세요";
+        return smsService.sendSMS(phoneNumber, msg);
+    }
 }
