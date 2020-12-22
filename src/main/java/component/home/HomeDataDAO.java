@@ -5,6 +5,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+
 @Repository
 public class HomeDataDAO {
 
@@ -21,13 +23,13 @@ public class HomeDataDAO {
         return homeDataMapper.selectPlanAuthLogsOfToday();
     }
 
-    public int selectPlanAuthLogsFor30Minutes() {
+    public int selectPlanAuthLogsFor30Minutes(HashMap<String, String> hashMap) {
         HomeDataMapper homeDataMapper = sqlSession.getMapper(HomeDataMapper.class);
-        return homeDataMapper.selectPlanAuthLogsFor30Minutes();
+        return homeDataMapper.selectPlanAuthLogsFor30Minutes(hashMap);
     }
 
-    public int selectPlanAuthLogsFor30MinutesOfSuccessUsers() {
+    public int selectPlanAuthLogsFor30MinutesOfSuccessUsers(String fromTime, String toTime) {
         HomeDataMapper homeDataMapper = sqlSession.getMapper(HomeDataMapper.class);
-        return homeDataMapper.selectPlanAuthLogsFor30MinutesOfSuccessUsers();
+        return homeDataMapper.selectPlanAuthLogsFor30MinutesOfSuccessUsers(fromTime, toTime);
     }
 }

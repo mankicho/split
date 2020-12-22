@@ -4,6 +4,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 public class HomeDataServiceImpl implements HomeDataService {
 
@@ -21,12 +23,12 @@ public class HomeDataServiceImpl implements HomeDataService {
     }
 
     @Override
-    public int selectPlanAuthLogsFor30Minutes() {
-        return homeDataDAO.selectPlanAuthLogsFor30Minutes();
+    public int selectPlanAuthLogsFor30Minutes(HashMap<String, String> hashMap) {
+        return homeDataDAO.selectPlanAuthLogsFor30Minutes(hashMap);
     }
 
     @Override
-    public int selectPlanAuthLogsFor30MinutesOfSuccessUsers() {
-        return homeDataDAO.selectPlanAuthLogsFor30MinutesOfSuccessUsers();
+    public int selectPlanAuthLogsFor30MinutesOfSuccessUsers(String fromTime, String toTime) {
+        return homeDataDAO.selectPlanAuthLogsFor30MinutesOfSuccessUsers(fromTime, toTime);
     }
 }
