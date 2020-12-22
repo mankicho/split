@@ -27,4 +27,5 @@ public class OfficialPlanDAO {
         OfficialPlanMapper mapper = sqlSession.getMapper(OfficialPlanMapper.class);
         return mapper.deleteOfficialPlan(hashMap);
     }
+
 }

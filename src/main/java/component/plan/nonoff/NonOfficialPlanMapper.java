@@ -13,4 +13,6 @@ public interface NonOfficialPlanMapper {
 
     int deleteNonOfficialPlan(HashMap<String, Object> hashMap);
 
+    NonOfficialPlanDTO nonOfficialPlanShare(@Param("npid") int nonOfficialPlanLogId);
+
 }

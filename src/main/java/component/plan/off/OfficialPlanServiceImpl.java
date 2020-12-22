@@ -27,4 +27,5 @@ public class OfficialPlanServiceImpl implements OfficialPlanService {
     public int deleteOfficialPlan(HashMap<String, Object> hashMap) {
         return officialPlanDAO.deleteOfficialPlan(hashMap);
     }
+
 }

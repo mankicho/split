@@ -28,4 +28,9 @@ public class NonOfficialPlanServiceImpl implements NonOfficialPlanService {
     public int deleteNonOfficialPlan(HashMap<String, Object> hashMap) {
         return nonOfficialPlanDAO.deleteNonOfficialPlan(hashMap);
     }
+
+    @Override
+    public NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId) {
+        return nonOfficialPlanDAO.nonOfficialPlanShare(nonOfficialPlanLogId);
+    }
 }

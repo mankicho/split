@@ -30,5 +30,8 @@ public class NonOfficialPlanDAO {
         return mapper.deleteNonOfficialPlan(hashMap);
     }
 
-
+    public NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId){
+        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
+        return mapper.nonOfficialPlanShare(nonOfficialPlanLogId);
+    }
 }
