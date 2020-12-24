@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Random;
 
 @RestController
@@ -27,9 +29,12 @@ public class MemberController {
     @Setter(onMethod_ = {@Autowired})
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Setter(onMethod_ = {@Autowired})
+    private TokenGeneratorService tokenGeneratorService;
+
     @PostMapping(value = "/register.do")
-    @Transactional
-    public String insertMember(@RequestBody MemberDTO memberDTO) {
+    @Transactional(rollbackFor = RuntimeException.class)
+    public int insertMember(@RequestBody MemberDTO memberDTO) {
         String salt = generateSalt();
         String pw = memberDTO.getPw();
         // todo 1. pw check(right format?)
@@ -41,9 +46,9 @@ public class MemberController {
         int affectedRowOfRegisterMember = memberService.registerMember(memberDTO);
         int affectedRowOfInsertSalt = memberService.insertSalt(memberDTO.getEmail(), salt);
         if (affectedRowOfInsertSalt == 1 && affectedRowOfRegisterMember == 1) {
-            return "success";
+            return 100;
         }
-        return "fail";
+        return 101;
     }
 
     @PostMapping(value = "/get/salt")
@@ -75,6 +80,7 @@ public class MemberController {
         return sb.toString();
     }
 
+    @RequestMapping(value = "/check/nick")
     public String getNickname(HttpServletRequest request) {
         String nickname = request.getParameter("nickname");
         return memberService.isExistNickname(nickname);

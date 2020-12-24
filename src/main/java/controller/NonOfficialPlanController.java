@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 
 @RestController
 @RequestMapping(value = "/nonplan")
@@ -27,8 +29,9 @@ public class NonOfficialPlanController {
         return "success";
     }
 
-    @PostMapping(value = "/reserve.do")
+    @RequestMapping(value = "/reserve.do")
     public int insertNonOfficialPlan(@RequestBody NonOfficialPlanDTO nonOfficialPlanDTO) {
+
         int value = nonOfficialPlanService.insertNonOfficialPlan(nonOfficialPlanDTO);
         if (value == 0) {
             return 202;

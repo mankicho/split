@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.Random;
 
 @RestController
@@ -24,23 +25,28 @@ public class MailController {
     private MemberService memberService;
 
     @PostMapping(value = "/send/code")
-    public String sendAuthCode(HttpServletRequest request) {
+    public int sendAuthCode(HttpServletRequest request) {
         String email = request.getParameter("email");
         String recordedEmail = memberService.isExistEmail(email);
 
         if (!email.equals(recordedEmail)) {
-            return "F";
+            return 115; // DB 에 존재하지 않는 email (어플 개발도중 코딩 실수로 예상)
         }
 
+        Enumeration<String> myEnum =request.getHeaderNames();
+        while(myEnum.hasMoreElements()){
+            String key = myEnum.nextElement();
+            System.out.println(key+" " +request.getHeader(key));
+        }
         String subject = "[SPLIT] 비밀번호 찾기 코드입니다.";
         String randomMessage = generateSalt();
         String message = randomMessage + "\n 를 입력해주세요";
         boolean send = mailService.send(subject, message, "icnogari@studyplanet.kr", email);
 
         if (send) {
-            return randomMessage;
+            return 100; // 성공적으로 메일을 보냄
         } else {
-            return "F";
+            return 101; // 메일 전송 실패
         }
     }
 

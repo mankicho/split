@@ -1,0 +1,39 @@
+package controller;
+
+import lombok.Setter;
+import org.springframework.web.bind.annotation.*;
+import security.token.TokenGeneratorService;
+import security.token.TokenGeneratorServiceImpl;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping(value = "/token")
+public class TokenController {
+
+    private TokenGeneratorService tokenGeneratorService; // Bean 으로 관리를 해야하는가??
+
+    public TokenController() {
+        this.tokenGeneratorService = new TokenGeneratorServiceImpl();
+    }
+
+    @RequestMapping(value = "/get.do")
+    public Map<String, Object> genToken(@RequestParam(value = "subject") String subject) {
+        String token = tokenGeneratorService.createToken(subject, (20 * 1000 * 60));
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("result", token);
+        return map;
+    }
+
+    @ResponseBody
+    @GetMapping("/get/subject")
+    public Map<String, Object> getSubject(@RequestParam("token") String token) {
+        String subject = tokenGeneratorService.getSubject(token);
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("result", subject);
+        return map;
+    }
+
+
+}
