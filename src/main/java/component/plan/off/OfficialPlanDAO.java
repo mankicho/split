@@ -13,7 +13,7 @@ public class OfficialPlanDAO {
     @Setter(onMethod_ = {@Autowired})
     private SqlSession sqlSession;
 
-    public List<OfficialPlanDTO> selects() {
+    public List<OfficialPlanVO> selects() {
         OfficialPlanMapper mapper = sqlSession.getMapper(OfficialPlanMapper.class);
         return mapper.selects();
     }

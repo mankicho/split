@@ -14,7 +14,7 @@ public class OfficialPlanServiceImpl implements OfficialPlanService {
     private OfficialPlanDAO officialPlanDAO;
 
     @Override
-    public List<OfficialPlanDTO> selects() {
+    public List<OfficialPlanVO> selects() {
         return officialPlanDAO.selects();
     }
 

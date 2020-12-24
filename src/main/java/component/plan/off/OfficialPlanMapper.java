@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface OfficialPlanMapper {
-    List<OfficialPlanDTO> selects();
+    List<OfficialPlanVO> selects();
 
     int insertOfficialPlan(OfficialPlanDTO officialPlanDTO);
 

@@ -15,4 +15,5 @@ public interface NonOfficialPlanMapper {
 
     NonOfficialPlanDTO nonOfficialPlanShare(@Param("npid") int nonOfficialPlanLogId);
 
+    int selectNonOfficialPlanId(@Param("email") String email);
 }
