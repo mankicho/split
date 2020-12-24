@@ -10,6 +10,7 @@
         <typeAlias alias="NonOfficialPlanDTO" type="component.plan.nonoff.NonOfficialPlanDTO"/>
         <typeAlias alias="TodoDTO" type="component.plan.nonoff.todolist.TodoDTO"/>
         <typeAlias type="component.plan.off.OfficialPlanDTO" alias="PlanDTO"/>
+        <typeAlias type="component.plan.off.OfficialPlanVO" alias="PlanVO"/>
 
     </typeAliases>
     <mappers>

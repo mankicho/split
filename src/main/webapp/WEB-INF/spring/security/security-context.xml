@@ -7,6 +7,8 @@
        http://www.springframework.org/schema/security/spring-security.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="tokenAuthenticationEntryPoint" class="security.token.TokenAuthenticationEntryPoint"/>
+    <bean id="tokenAuthenticationProvider" class="security.token.TokenAuthenticationProvider"/>
     <!-- security password encoding -->
     <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <!-- authorization for member -->
@@ -16,31 +18,33 @@
     <!-- custom passwordEncoder -->
     <bean id="customPasswordEncoder" class="security.encoder.CustomNoOpPasswordEncoder"/>
     <!-- 적절한 권한을 가진사람인지 판단 -->
-    <security:http>
-        <security:intercept-url pattern="/sample/all" access="permitAll()"/> <!-- 모든 사람이 볼 수 있음. -->
-        <security:intercept-url pattern="/nonplan/*" access="hasRole('ROLE_MEMBER')"/> <!-- 인하대 학생만 볼 수 있음 -->
-        <security:intercept-url pattern="/*" access="hasRole('ROLE_MEMBER')"/> <!-- 인하대 학생만 볼 수 있음 -->
+
+    <!-- SPLIT member register, login, and so on.. -->
+    <security:http pattern="/member/" authentication-manager-ref="member">
+        <security:intercept-url pattern="/member/login.do" access="hasRole('ROLE_MEMBER')"/>
         <security:form-login authentication-success-handler-ref="customLoginSuccess"/>
         <security:csrf disabled="true"/>
     </security:http>
-    <security:authentication-manager>
-        <!-- authentication-manager 의 속성으로 provider 지정 -->
-        <security:authentication-provider>
-            <security:user-service>
-                <!-- ROLE-MEMBER 권한을 갖는 객체 -->
-                <security:user name="member" password="{noop}member"
-                               authorities="ROLE_MEMBER"/> <!-- user name = 인증정보를 가진 객체의 이름이 member -->
-            </security:user-service>
-        </security:authentication-provider>
+    <security:authentication-manager alias="member">
         <security:authentication-provider>
             <security:jdbc-user-service data-source-ref="dataSource"
-            users-by-username-query="SELECT username,password,enabled from users where username = ?"
-            authorities-by-username-query="SELECT member_email,auth from members_auth where member_email = ?"/>
-            <!-- use Bcrypt to password encoding -->
+                                        users-by-username-query="SELECT username,password,enabled from users where username = ?"
+                                        authorities-by-username-query="SELECT member_email,auth from members_auth where member_email = ?"/>
+        </security:authentication-provider>
+        <security:authentication-provider user-service-ref="memberDetailsService">
             <security:password-encoder ref="bcryptPasswordEncoder"/>
         </security:authentication-provider>
-        <securityy:authentication-provider user-service-ref="memberDetailsService">
-            <security:password-encoder ref="bcryptPasswordEncoder"/>
-        </securityy:authentication-provider>
+    </security:authentication-manager>
+
+    <!-- service only for SPLIT member -->
+    <security:http entry-point-ref="tokenAuthenticationEntryPoint">
+        <security:intercept-url pattern="/home/today/allUser/get.do" access="permitAll()"/>
+        <security:intercept-url pattern="/plan/*" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/*" access="permitAll()"/>
+        <security:custom-filter ref="tokenAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
+        <security:csrf disabled="true"/>
+    </security:http>
+    <security:authentication-manager>
+        <security:authentication-provider ref="tokenAuthenticationProvider"/>
     </security:authentication-manager>
 </beans>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.plan.off.OfficialPlanMapper">
-    <select id="selects" resultType="OfficialPlanDTO">
+    <select id="selects" resultType="hashmap">
         select plan_id,plan_name,need_auth_num from official_plan
     </select>
 
