@@ -3,7 +3,7 @@ package component.member;
 import org.apache.ibatis.annotations.Param;
 
 public interface MemberService {
-    MemberDTO selects(String phoneNumber);
+    MemberDTO selects(String email);
 
     int registerMember(MemberDTO memberDTO);
 
@@ -16,5 +16,6 @@ public interface MemberService {
     String isExistNickname(String nickname);
 
     String isExistEmail(String email);
+
 
 }

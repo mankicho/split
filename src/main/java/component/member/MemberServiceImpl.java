@@ -3,6 +3,7 @@ package component.member;
 import lombok.Setter;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,9 +12,12 @@ public class MemberServiceImpl implements MemberService {
     @Setter(onMethod_ = {@Autowired})
     private MemberDAO memberDAO;
 
+    @Setter(onMethod_ = {@Autowired})
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Override
-    public MemberDTO selects(String phoneNumber) {
-        return memberDAO.selects(phoneNumber);
+    public MemberDTO selects(String email) {
+        return memberDAO.selects(email);
     }
 
     @Override
@@ -47,4 +51,5 @@ public class MemberServiceImpl implements MemberService {
     public String isExistEmail(String email) {
         return memberDAO.isExistEmail(email);
     }
+
 }

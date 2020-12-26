@@ -4,6 +4,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 @Log4j
@@ -49,4 +50,5 @@ public class MemberDAO {
         String reVal = memberMapper.isExistEmail(email);
         return reVal == null ? "" : reVal;
     }
+
 }

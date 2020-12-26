@@ -16,4 +16,5 @@ public interface MemberMapper {
     int deleteMember(@Param("email") String email);
 
     String isExistNickname(@Param("nickname") String nickname);
+
 }
