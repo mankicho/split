@@ -29,11 +29,6 @@ public class MemberDAO {
         return memberMapper.insertSalt(email, salt);
     }
 
-    public String getSalt(String email) {
-        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
-        return memberMapper.getSalt(email);
-    }
-
     public int deleteMember(String email) {
         MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
         return memberMapper.deleteMember(email);

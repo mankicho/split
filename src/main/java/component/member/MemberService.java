@@ -9,8 +9,6 @@ public interface MemberService {
 
     int insertSalt(String email, String salt);
 
-    String getSalt(String email);
-
     int deleteMember(String email);
 
     String isExistNickname(String nickname);

@@ -32,12 +32,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String getSalt(String email) {
-        return memberDAO.getSalt(email);
-    }
-
-
-    @Override
     public int deleteMember(String email) {
         return memberDAO.deleteMember(email);
     }
