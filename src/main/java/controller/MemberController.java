@@ -32,6 +32,18 @@ public class MemberController {
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 
+    @RequestMapping(value = "/login.do")
+    public String memberLogin(HttpServletRequest request) {
+        String email = request.getParameter("email");
+        String pw = request.getParameter("pw");
+
+        MemberDTO memberDTO = memberService.selects(email);
+        if (memberDTO != null && passwordEncoder.matches(pw, memberDTO.getPw())) {
+            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
+        }
+        return "fail";
+    }
+
     @PostMapping(value = "/register.do")
     @Transactional(rollbackFor = RuntimeException.class)
     public int insertMember(@RequestBody MemberDTO memberDTO) {

@@ -20,7 +20,7 @@ public class CustomMember extends User {
     }
 
     public CustomMember(MemberDTO memberDTO) {
-        super(memberDTO.getEmail(), "", memberDTO.getAuthList().stream().
+        super(memberDTO.getEmail(), memberDTO.getPw(), memberDTO.getAuthList().stream().
                 map(auth -> new SimpleGrantedAuthority(auth.getAuth())).collect(Collectors.toList()));
         this.memberDTO = memberDTO;
     }

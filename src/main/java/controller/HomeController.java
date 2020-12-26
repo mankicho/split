@@ -23,6 +23,10 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping(value = "/customLogin")
+    public void login() {
+    }
+
     @ResponseBody
     @GetMapping(value = "/home/today/allUser/get.do")
     public int selectPlanAuthLogsOfToday() {
