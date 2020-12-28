@@ -32,14 +32,6 @@
         values (#{email},#{pw},#{phoneNumber},#{sex},#{bornTime},#{nickname})
     </insert>
 
-    <insert id="insertSalt" parameterType="string">
-        INSERT INTO members_salt(member_email,salt) values(#{email},#{salt})
-    </insert>
-
-    <select id="getSalt" resultType="string">
-        SELECT salt from members_salt where member_email = #{email}
-    </select>
-
     <delete id="deleteMember" parameterType="string">
         DELETE FROM members where email = #{email}
     </delete>
@@ -50,5 +42,17 @@
 
     <select id="isExistEmail" resultType="string" parameterType="string">
         SELECT email from members where email = #{email}
+    </select>
+
+    <insert id="tmpDeleteMember" parameterType="string">
+        INSERT into delete_members(email,delete_date) values (#{email},now())
+    </insert>
+
+    <delete id="restoreDeletedMember" parameterType="string">
+        DELETE FROM delete_members where email = #{email}
+    </delete>
+
+    <select id="isExistPhoneNumber" parameterType="string" resultType="string">
+        SELECT phone_num from members where phone_num = #{pNum}
     </select>
 </mapper>

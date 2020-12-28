@@ -1,5 +1,5 @@
 package component.sms;
 
 public interface SMSService {
-    String sendSMS(String phoneNumber,String msg);
+    int sendSMS(String phoneNumber, String msg, int code);
 }

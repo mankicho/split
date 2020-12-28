@@ -2,6 +2,8 @@ package component.member;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,11 +26,6 @@ public class MemberDAO {
         return memberMapper.registerMember(memberDTO);
     }
 
-    public int insertSalt(String email, String salt) {
-        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
-        return memberMapper.insertSalt(email, salt);
-    }
-
     public int deleteMember(String email) {
         MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
         return memberMapper.deleteMember(email);
@@ -46,4 +43,18 @@ public class MemberDAO {
         return reVal == null ? "" : reVal;
     }
 
+    public int tmpDeleteMember(String email) {
+        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        return memberMapper.tmpDeleteMember(email);
+    }
+
+    public int restoreDeletedMember(String email) {
+        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        return memberMapper.restoreDeletedMember(email);
+    }
+
+    public String isExistPhoneNumber(String pNum) {
+        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        return memberMapper.isExistPhoneNumber(pNum);
+    }
 }

@@ -9,12 +9,14 @@ public interface MemberMapper {
 
     String isExistEmail(@Param("email") String email);
 
-    int insertSalt(@Param("email") String email, @Param("salt") String salt); // salt 삽입
-
-    String getSalt(@Param("email") String email);
+    String isExistPhoneNumber(@Param("pNum") String pNum);
 
     int deleteMember(@Param("email") String email);
 
     String isExistNickname(@Param("nickname") String nickname);
+
+    int tmpDeleteMember(@Param("email") String email);
+
+    int restoreDeletedMember(@Param("email") String email);
 
 }

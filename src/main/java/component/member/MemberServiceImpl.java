@@ -27,11 +27,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public int insertSalt(String email, String salt) {
-        return memberDAO.insertSalt(email, salt);
-    }
-
-    @Override
     public int deleteMember(String email) {
         return memberDAO.deleteMember(email);
     }
@@ -46,4 +41,19 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.isExistEmail(email);
     }
 
+    @Override
+    public int tmpDeleteMember(String email) {
+        return memberDAO.tmpDeleteMember(email);
+    }
+
+    @Override
+    public int restoreDeletedMember(String email) {
+        return memberDAO.restoreDeletedMember(email);
+    }
+
+
+    @Override
+    public String isExistPhoneNumber(String pNum) {
+        return memberDAO.isExistPhoneNumber(pNum);
+    }
 }

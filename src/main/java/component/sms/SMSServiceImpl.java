@@ -15,7 +15,7 @@ import java.util.Random;
 @Log4j
 public class SMSServiceImpl implements SMSService {
     @Override
-    public String sendSMS(String phoneNumber, String msg) {
+    public int sendSMS(String phoneNumber, String msg, int code) {
         String[] str = new String[]{phoneNumber};
         try {
             URL url = new URL("https://api-sens.ncloud.com/v1/sms/services/ncp:sms:kr:261072792575:split/messages");
@@ -38,17 +38,17 @@ public class SMSServiceImpl implements SMSService {
             OutputStream os = connection.getOutputStream();
             os.write(object.toString().getBytes(StandardCharsets.UTF_8));
             os.flush();
-
             int status = connection.getResponseCode();
 
             if (status == 202) {
-                return msg;
+                return code;
             } else {
-                return "invalid";
+                return -1;
             }
+
         } catch (Exception e) {
             log.error("error occurs while SMS send ==> " + e.getLocalizedMessage());
-            return "server error";
+            return 500;
         }
     }
 }

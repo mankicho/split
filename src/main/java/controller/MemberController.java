@@ -30,6 +30,8 @@ public class MemberController {
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 
+    // parameter 가 null 값인가
+    // service 의 selects 함수에서 결과가 여러개 리턴이 되는가
     @RequestMapping(value = "/login.do")
     public String memberLogin(HttpServletRequest request) {
         String email = request.getParameter("email");
@@ -43,7 +45,6 @@ public class MemberController {
     }
 
     @PostMapping(value = "/register.do")
-    @Transactional(rollbackFor = RuntimeException.class)
     public int insertMember(@RequestBody MemberDTO memberDTO) {
         String pw = memberDTO.getPw();
         // todo 1. pw check(right format?)
@@ -59,17 +60,45 @@ public class MemberController {
         return 101;
     }
 
+    // email 이 null 인지
     @PostMapping(value = "/delete.do")
-    public int deleteMember(HttpServletRequest request) {
+    public HashMap<String, String> deleteMember(HttpServletRequest request) {
+        HashMap<String, String> hashMap = new HashMap<>();
         String email = request.getParameter("email");
-
-        return memberService.deleteMember(email);
+        // 1이면 삭제, 0이면 삭제 x
+        int delete = memberService.deleteMember(email);
+        if (delete == 1) {
+            hashMap.put("test", "1");
+        } else {
+            hashMap.put("test", "2");
+        }
+        return hashMap;
     }
 
     @RequestMapping(value = "/check/nick")
     public String getNickname(HttpServletRequest request) {
         String nickname = request.getParameter("nickname");
         return memberService.isExistNickname(nickname);
+    }
+
+    @PostMapping(value = "/tmp/delete.do")
+    public int tmpDeleteMember(@RequestParam String email) {
+        return memberService.tmpDeleteMember(email);
+    }
+
+    @PostMapping(value = "/tmp/restore.do")
+    public int restoreDeletedMember(@RequestParam String email) {
+        return memberService.restoreDeletedMember(email);
+    }
+
+    @PostMapping(value = "/email/get.do")
+    public String isExistEmail(@RequestParam String email) {
+        return memberService.isExistEmail(email);
+    }
+
+    @PostMapping(value = "/pNum/get.do")
+    public String isExistPhoneNumber(@RequestParam String pNum) {
+        return memberService.isExistPhoneNumber(pNum);
     }
 
 }
