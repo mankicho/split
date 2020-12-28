@@ -41,7 +41,7 @@ public class MailController {
         String subject = "[SPLIT] 비밀번호 찾기 코드입니다.";
         String randomMessage = generateSalt();
         String message = randomMessage + "\n 를 입력해주세요";
-        boolean send = mailService.send(subject, message, "icnogari@studyplanet.kr", email);
+        boolean send = mailService.send(subject, message, "split@studyplanet.kr", email);
 
         if (send) {
             return 100; // 성공적으로 메일을 보냄
