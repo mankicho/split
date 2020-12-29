@@ -1,9 +1,11 @@
 package websocket;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import component.alarm.AlarmMessageDTO;
 import component.alarm.AlarmMessageMapper;
 import component.member.MemberMapper;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Log4j
 public class EchoHandler extends TextWebSocketHandler {
 
     @Setter(onMethod_ = {@Autowired})
@@ -88,7 +91,11 @@ public class EchoHandler extends TextWebSocketHandler {
         AlarmMessageMapper messageMapper = sqlSession.getMapper(AlarmMessageMapper.class);
         AlarmMessageDTO alarmMessageDTO = setAlarmMessageDTO(message, messageMapper);
 
-        messageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
+        try {
+            int status = messageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
+        } catch (MysqlDataTruncation trunc) {
+            System.out.println("mysql Data Truncation 에러");
+        }
     }
 
 

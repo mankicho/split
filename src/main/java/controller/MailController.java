@@ -29,6 +29,7 @@ public class MailController {
         String email = request.getParameter("email");
         String recordedEmail = memberService.isExistEmail(email);
 
+        // todo 1. email, phoneNumber 정보로 조회하기
         if (!email.equals(recordedEmail)) {
             return 115; // DB 에 존재하지 않는 email (어플 개발도중 코딩 실수로 예상)
         }
