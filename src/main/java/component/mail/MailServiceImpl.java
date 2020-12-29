@@ -16,6 +16,14 @@ public class MailServiceImpl implements MailService {
     @Setter(onMethod_ = {@Autowired})
     private JavaMailSender javaMailSender;
 
+    /**
+     * @param subject
+     * @param text
+     * @param from
+     * @param to
+     * SPLIT main email -> SPLIT user (for finding user's password)
+     * @return
+     */
     @Override
     public boolean send(String subject, String text, String from, String to) {
         MimeMessage message = javaMailSender.createMimeMessage();
