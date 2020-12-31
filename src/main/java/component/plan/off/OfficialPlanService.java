@@ -12,6 +12,5 @@ public interface OfficialPlanService {
 
     int deleteOfficialPlan(HashMap<String, Object> hashMap);
 
-    OfficialPlanDTO selectById(HashMap<String, Object> hashMap);
 
 }

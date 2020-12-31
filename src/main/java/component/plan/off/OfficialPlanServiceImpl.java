@@ -28,8 +28,4 @@ public class OfficialPlanServiceImpl implements OfficialPlanService {
         return officialPlanDAO.deleteOfficialPlan(hashMap);
     }
 
-    @Override
-    public OfficialPlanDTO selectById(HashMap<String, Object> hashMap) {
-        return null;
-    }
 }

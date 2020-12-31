@@ -33,4 +33,5 @@ public class NonOfficialPlanServiceImpl implements NonOfficialPlanService {
     public NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId) {
         return nonOfficialPlanDAO.nonOfficialPlanShare(nonOfficialPlanLogId);
     }
+
 }

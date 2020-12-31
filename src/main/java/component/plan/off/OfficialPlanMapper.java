@@ -13,7 +13,7 @@ public interface OfficialPlanMapper {
 
     int deleteOfficialPlan(HashMap<String, Object> hashMap);
 
-    OfficialPlanDTO selectById(HashMap<String, Object> hashMap);
+    int selectByIdAndEmail(HashMap<String, Object> hashMap);
 
 }
 
