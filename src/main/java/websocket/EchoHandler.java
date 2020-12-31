@@ -91,11 +91,7 @@ public class EchoHandler extends TextWebSocketHandler {
         AlarmMessageMapper messageMapper = sqlSession.getMapper(AlarmMessageMapper.class);
         AlarmMessageDTO alarmMessageDTO = setAlarmMessageDTO(message, messageMapper);
 
-        try {
-            int status = messageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
-        } catch (MysqlDataTruncation trunc) {
-            System.out.println("mysql Data Truncation 에러");
-        }
+        messageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
     }
 
 

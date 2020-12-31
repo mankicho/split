@@ -12,6 +12,10 @@
         <typeAlias type="component.plan.off.OfficialPlanDTO" alias="PlanDTO"/>
         <typeAlias type="component.plan.off.OfficialPlanVO" alias="PlanVO"/>
         <typeAlias type="component.alarm.AlarmMessageDTO" alias="AlarmMessageDTO"/>
+        <typeAlias type="component.zone.ZoneDTO" alias="ZoneDTO"/>
+        <typeAlias type="component.zone.ZoneOperDTO" alias="ZoneOperDTO"/>
+        <typeAlias type="component.zone.ZoneImageDTO" alias="ZoneImageDTO"/>
+        <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
 
     </typeAliases>
     <mappers>
@@ -20,6 +24,7 @@
         <mapper class="component.plan.nonoff.NonOfficialPlanMapper"/>
         <mapper class="component.plan.nonoff.todolist.TodoMapper"/>
         <mapper class="component.home.HomeDataMapper"/>
+        <mapper class="component.zone.ZoneMapper"/>
         <mapper class="component.alarm.AlarmMessageMapper"/>
     </mappers>
 

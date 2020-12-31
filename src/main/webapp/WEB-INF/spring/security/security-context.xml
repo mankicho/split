@@ -10,6 +10,7 @@
     <!-- token -->
     <bean id="tokenAuthenticationEntryPoint" class="security.token.TokenAuthenticationEntryPoint"/>
     <bean id="tokenAuthenticationProvider" class="security.token.TokenAuthenticationProvider"/>
+    <bean id="tokenAuthenticationFilter" class="security.token.TokenAuthenticationFilter"/>
     <!-- security password encoding -->
     <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <!-- authorization for member -->
@@ -22,23 +23,23 @@
     <!-- 적절한 권한을 가진사람인지 판단 -->
 
     <!-- SPLIT member register, login, and so on.. -->
-<!--    <security:http pattern="/member/*" auto-config="true" authentication-manager-ref="member">-->
-<!--        <security:intercept-url pattern="/member/register.do" access="hasRole('ROLE_MEMBER')"/>-->
-<!--        <security:form-login authentication-success-handler-ref="customLoginSuccess"/>-->
-<!--        <security:access-denied-handler ref="customDeniedHandler"/>-->
-<!--        <security:csrf disabled="true"/>-->
-<!--    </security:http>-->
-<!--    <security:authentication-manager alias="member">-->
-<!--        <security:authentication-provider>-->
-<!--            <security:jdbc-user-service data-source-ref="dataSource"-->
-<!--                                        users-by-username-query="SELECT username,password,enabled from users where username = ?"-->
-<!--                                        authorities-by-username-query="SELECT member_email,auth from members_auth where member_email = ?"/>-->
-<!--            <security:password-encoder ref="bcryptPasswordEncoder"/>-->
-<!--        </security:authentication-provider>-->
-<!--        <security:authentication-provider user-service-ref="memberDetailsService">-->
-<!--            <security:password-encoder ref="bcryptPasswordEncoder"/>-->
-<!--        </security:authentication-provider>-->
-<!--    </security:authentication-manager>-->
+    <!--    <security:http pattern="/member/*" auto-config="true" authentication-manager-ref="member">-->
+    <!--        <security:intercept-url pattern="/member/register.do" access="hasRole('ROLE_MEMBER')"/>-->
+    <!--        <security:form-login authentication-success-handler-ref="customLoginSuccess"/>-->
+    <!--        <security:access-denied-handler ref="customDeniedHandler"/>-->
+    <!--        <security:csrf disabled="true"/>-->
+    <!--    </security:http>-->
+    <!--    <security:authentication-manager alias="member">-->
+    <!--        <security:authentication-provider>-->
+    <!--            <security:jdbc-user-service data-source-ref="dataSource"-->
+    <!--                                        users-by-username-query="SELECT username,password,enabled from users where username = ?"-->
+    <!--                                        authorities-by-username-query="SELECT member_email,auth from members_auth where member_email = ?"/>-->
+    <!--            <security:password-encoder ref="bcryptPasswordEncoder"/>-->
+    <!--        </security:authentication-provider>-->
+    <!--        <security:authentication-provider user-service-ref="memberDetailsService">-->
+    <!--            <security:password-encoder ref="bcryptPasswordEncoder"/>-->
+    <!--        </security:authentication-provider>-->
+    <!--    </security:authentication-manager>-->
 
     <!-- service only for SPLIT member -->
     <security:http entry-point-ref="tokenAuthenticationEntryPoint">
