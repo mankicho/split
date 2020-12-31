@@ -25,7 +25,7 @@ public class OfficialPlanController {
         return officialPlanService.selects();
     }
 
-    @RequestMapping(value = "/insert.do")
+    @PostMapping(value = "/insert.do")
     public int insertOfficialPlan(@RequestBody OfficialPlanDTO officialPlanDTO) {
 
         return officialPlanService.insertOfficialPlan(officialPlanDTO);

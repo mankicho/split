@@ -54,7 +54,7 @@ public class MailController {
     private String generateSalt() {
         Random random = new Random();
 
-        byte[] salt = new byte[5];
+        byte[] salt = new byte[4];
         random.nextBytes(salt);
 
         StringBuilder sb = new StringBuilder();

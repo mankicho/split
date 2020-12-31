@@ -18,15 +18,14 @@ public class TokenController {
         this.tokenGeneratorService = new TokenGeneratorServiceImpl();
     }
 
-    @RequestMapping(value = "/get.do")
+    @GetMapping(value = "/get.do")
     public Map<String, Object> genToken(@RequestParam(value = "subject") String subject) {
-        String token = tokenGeneratorService.createToken(subject, (20 * 1000 * 60));
+        String token = tokenGeneratorService.createToken(subject, (200 * 1000 * 60));
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("result", token);
         return map;
     }
 
-    @ResponseBody
     @GetMapping("/get/subject")
     public Map<String, Object> getSubject(@RequestParam("token") String token) {
         String subject = tokenGeneratorService.getSubject(token);

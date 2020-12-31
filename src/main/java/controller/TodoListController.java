@@ -21,7 +21,7 @@ public class TodoListController {
     @Setter(onMethod_ = {@Autowired})
     private TodoService todoService;
 
-    @RequestMapping(value = "/todoList/get.do")
+    @PostMapping(value = "/todoList/get.do")
     public List<TodoDTO> getTodoList(HttpServletRequest request) {
         String email = request.getParameter("email");
         String date = request.getParameter("date");

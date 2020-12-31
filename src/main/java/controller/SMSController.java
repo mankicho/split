@@ -21,6 +21,7 @@ public class SMSController {
     @PostMapping(value = "/reg/receive.do")
     public int sendMessageForReg(HttpServletRequest request) {
         String phoneNumber = request.getParameter("pNum");
+
         int code = new Random().nextInt(8999) + 1000;
         String msg = "[split] 회원가입 메세지 입니다. [" + code + "]를 입력해주세요";
 

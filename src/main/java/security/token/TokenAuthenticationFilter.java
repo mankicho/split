@@ -19,21 +19,16 @@ import java.io.IOException;
 import java.util.Date;
 
 
-@Component
 @Log4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private TokenGeneratorService tokenGeneratorService = new TokenGeneratorServiceImpl();
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        log.info("tokenAuthenticationFilter intercept request");
         if (isContainToken(httpServletRequest)) {
-            System.out.println("토큰있음");
-            log.info("http header contains member-token");
             String token = httpServletRequest.getHeader("member-token");
             String userEmail = httpServletRequest.getHeader("member-email");
             if (tokenGeneratorService.getExpiration(token).after(new Date())) {
-                log.info("token has not expired");
                 MemberToken memberToken = new MemberToken(token, userEmail);
                 SecurityContextHolder.getContext().setAuthentication(memberToken);
             }
