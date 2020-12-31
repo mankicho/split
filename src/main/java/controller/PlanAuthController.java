@@ -20,7 +20,7 @@ public class PlanAuthController {
     private TokenGeneratorService tokenGeneratorService;
 
     @GetMapping(value = "/check.do")
-    public HashMap<String, Object> test(@RequestParam(value = "token/") String token) {
+    public HashMap<String, Object> test(@RequestParam(value = "token") String token) {
         HashMap<String, Object> hashMap = new HashMap<>();
         if (tokenGeneratorService.getExpiration(token).before(new Date())) {
             hashMap.put("msg", "인증을 성공했습니다");
