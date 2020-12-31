@@ -51,13 +51,11 @@ public class NonOfficialPlanDAO {
     }
 
     /**
-     * @param nonId
-     * @param email
-     * select non plan by non_plan_id(primary key), user_email
+     * @param hashMap select non plan by non_plan_id(primary key), user_email
      * @return
      */
-    public NonOfficialPlanDTO selectByIdAndEmail(int nonId, String email) {
-        return mapper.selectByIdAndEmail(nonId, email);
+    public int selectByIdAndEmail(HashMap<String, Object> hashMap) {
+        return mapper.selectByIdAndEmail(hashMap);
     }
 
 }

@@ -4,6 +4,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 public class PlanAuthServiceImpl implements PlanAuthService {
 
@@ -11,7 +13,8 @@ public class PlanAuthServiceImpl implements PlanAuthService {
     private PlanAuthDAO planAuthDAO;
 
     @Override
-    public int planAuth(int planId, int planType) {
-        return planAuthDAO.planAuth(planId, planType);
+    public int planAuth(HashMap<String, Object> hashMap) {
+        return 0;
     }
 }
+

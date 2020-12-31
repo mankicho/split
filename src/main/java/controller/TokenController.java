@@ -34,5 +34,13 @@ public class TokenController {
         return map;
     }
 
+    @GetMapping("/qr/auth/get.do")
+    public Map<String, Object> genTokenForQrAuth(@RequestParam(value = "subject") String subject) {
+        String token = tokenGeneratorService.createToken(subject, (1000 * 15));
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("result", token);
+        return map;
+    }
+
 
 }

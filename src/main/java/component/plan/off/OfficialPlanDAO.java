@@ -25,8 +25,8 @@ public class OfficialPlanDAO {
         return mapper.deleteOfficialPlan(hashMap);
     }
 
-    public OfficialPlanDTO selectById(HashMap<String, Object> hashMap) {
-        return mapper.selectById(hashMap);
+    public int selectById(HashMap<String, Object> hashMap) {
+        return mapper.selectByIdAndEmail(hashMap);
     }
 
 }
