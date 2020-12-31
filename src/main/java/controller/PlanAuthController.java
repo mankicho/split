@@ -10,6 +10,7 @@ import security.token.TokenGeneratorService;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping(value = "/plan/auth")
@@ -19,11 +20,15 @@ public class PlanAuthController {
     private TokenGeneratorService tokenGeneratorService;
 
     @GetMapping(value = "/check.do")
-    public String test(@RequestParam(value = "token") String token) {
+    public HashMap<String, Object> test(@RequestParam(value = "token/") String token) {
+        HashMap<String, Object> hashMap = new HashMap<>();
         if (tokenGeneratorService.getExpiration(token).before(new Date())) {
-            return "인증을 성공했습니다.";
-        }else{
-            return "인증 실패했습니다.";
+            hashMap.put("msg", "인증을 성공했습니다");
+            hashMap.put("code", "success");
+        } else {
+            hashMap.put("msg", "인증을 실패했습니다.");
+            hashMap.put("code", "fail.");
         }
+        return hashMap;
     }
 }
