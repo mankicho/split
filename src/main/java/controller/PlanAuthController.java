@@ -22,7 +22,7 @@ public class PlanAuthController {
     @GetMapping(value = "/check.do")
     public HashMap<String, Object> test(@RequestParam(value = "token") String token) {
         HashMap<String, Object> hashMap = new HashMap<>();
-        if (tokenGeneratorService.getExpiration(token).before(new Date())) {
+        if (tokenGeneratorService.getExpiration(token).after(new Date())) {
             hashMap.put("msg", "인증을 성공했습니다");
             hashMap.put("code", "success");
         } else {
