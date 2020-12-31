@@ -11,21 +11,22 @@ import java.util.List;
 @Repository
 public class OfficialPlanDAO {
     @Setter(onMethod_ = {@Autowired})
-    private SqlSession sqlSession;
+    private OfficialPlanMapper mapper;
 
     public List<OfficialPlanVO> selects() {
-        OfficialPlanMapper mapper = sqlSession.getMapper(OfficialPlanMapper.class);
         return mapper.selects();
     }
 
     public int insertOfficialPlan(OfficialPlanDTO officialPlanDTO) {
-        OfficialPlanMapper mapper = sqlSession.getMapper(OfficialPlanMapper.class);
         return mapper.insertOfficialPlan(officialPlanDTO);
     }
 
     public int deleteOfficialPlan(HashMap<String, Object> hashMap) {
-        OfficialPlanMapper mapper = sqlSession.getMapper(OfficialPlanMapper.class);
         return mapper.deleteOfficialPlan(hashMap);
+    }
+
+    public OfficialPlanDTO selectById(HashMap<String, Object> hashMap) {
+        return mapper.selectById(hashMap);
     }
 
 }

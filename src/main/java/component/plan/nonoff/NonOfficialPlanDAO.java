@@ -13,25 +13,21 @@ import java.util.List;
 public class NonOfficialPlanDAO {
 
     @Setter(onMethod_ = {@Autowired})
-    private SqlSession sqlSession;
+    private NonOfficialPlanMapper mapper;
 
     public int insertNonOfficialPlan(NonOfficialPlanDTO nonOfficialPlanDTO) {
-        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
         return mapper.insertNonOfficialPlan(nonOfficialPlanDTO);
     }
 
     public List<NonOfficialPlanDTO> getNonPlan(HashMap<String, Object> hashMap) {
-        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
         return mapper.getNonPlan(hashMap);
     }
 
     public int deleteNonOfficialPlan(HashMap<String, Object> hashMap) {
-        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
         return mapper.deleteNonOfficialPlan(hashMap);
     }
 
-    public NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId){
-        NonOfficialPlanMapper mapper = sqlSession.getMapper(NonOfficialPlanMapper.class);
+    public NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId) {
         return mapper.nonOfficialPlanShare(nonOfficialPlanLogId);
     }
 }

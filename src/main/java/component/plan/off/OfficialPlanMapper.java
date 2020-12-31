@@ -1,6 +1,7 @@
 package component.plan.off;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +11,9 @@ public interface OfficialPlanMapper {
 
     int insertOfficialPlan(OfficialPlanDTO officialPlanDTO);
 
-    int deleteOfficialPlan(HashMap<String,Object> hashMap);
+    int deleteOfficialPlan(HashMap<String, Object> hashMap);
 
+    OfficialPlanDTO selectById(HashMap<String, Object> hashMap);
 
 }
 

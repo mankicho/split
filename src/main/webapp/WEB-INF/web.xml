@@ -8,6 +8,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
+            /WEB-INF/spring/mapper/mapper-context.xml
             /WEB-INF/spring/security/security-context.xml
             /WEB-INF/spring/mail/mail-context.xml
             /WEB-INF/spring/applicationContext.xml
@@ -56,5 +57,25 @@
     <error-page>
         <error-code>500</error-code>
         <location>/errors/error500.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/errors/error400.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/errors/error401.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/errors/error403.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/errors/error405.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>408</error-code>
+        <location>/errors/error408.jsp</location>
     </error-page>
 </web-app>

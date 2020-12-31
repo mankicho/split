@@ -11,25 +11,21 @@ import java.util.HashMap;
 public class HomeDataDAO {
 
     @Setter(onMethod_ = {@Autowired})
-    private SqlSession sqlSession;
+    private HomeDataMapper homeDataMapper;
 
     public int insertPlanAuth(int planId, int planType) {
-        HomeDataMapper homeDataMapper = sqlSession.getMapper(HomeDataMapper.class);
         return homeDataMapper.insertPlanAuth(planId, planType);
     }
 
     public int selectPlanAuthLogsOfToday() {
-        HomeDataMapper homeDataMapper = sqlSession.getMapper(HomeDataMapper.class);
         return homeDataMapper.selectPlanAuthLogsOfToday();
     }
 
     public int selectPlanAuthLogsFor30Minutes(HashMap<String, String> hashMap) {
-        HomeDataMapper homeDataMapper = sqlSession.getMapper(HomeDataMapper.class);
         return homeDataMapper.selectPlanAuthLogsFor30Minutes(hashMap);
     }
 
     public int selectPlanAuthLogsFor30MinutesOfSuccessUsers(String fromTime, String toTime) {
-        HomeDataMapper homeDataMapper = sqlSession.getMapper(HomeDataMapper.class);
         return homeDataMapper.selectPlanAuthLogsFor30MinutesOfSuccessUsers(fromTime, toTime);
     }
 }
