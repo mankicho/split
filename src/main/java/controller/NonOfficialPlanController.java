@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 
+/**
+ * free plan (non-official-plan)
+ */
 @RestController
 @RequestMapping(value = "/nonplan")
 @Log4j

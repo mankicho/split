@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * real-time alarm service(if user A shares user B then system tell B that A shared B's plan)
+ */
 @RestController
 @RequestMapping(value = "/alarm")
 public class AlarmMessageController {

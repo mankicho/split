@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Random;
 
+/**
+ * for sending message on phone
+ */
 @RestController
 @RequestMapping(value = "/sms")
 public class SMSController {

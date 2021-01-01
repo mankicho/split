@@ -8,6 +8,9 @@ import security.token.TokenGeneratorServiceImpl;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * for generating, parsing token
+ */
 @RestController
 @RequestMapping(value = "/token")
 public class TokenController {

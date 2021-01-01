@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.Random;
 
+/**
+ * for sending email to find password
+ */
 @RestController
 @RequestMapping(value = "/mail")
 public class MailController {

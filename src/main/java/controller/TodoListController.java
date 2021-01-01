@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * for user's todo list
+ */
 @RestController
 @RequestMapping(value = "/todo")
 @Log4j

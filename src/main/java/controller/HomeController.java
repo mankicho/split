@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * home data(today users using application, by 30minutes users, by 30minutes successful authenticating users)
+ */
 @Controller
 @RequestMapping(value = "/")
 public class HomeController {

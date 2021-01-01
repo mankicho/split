@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * for bringing zone(normal cafe, study cafe, library and so on) data
+ */
 @ControllerAdvice
 @RestController
 @RequestMapping(value = "/split/zone")

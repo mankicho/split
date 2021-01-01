@@ -17,6 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Random;
 
+/**
+ * handle member's service (register, login, find password and so on)
+ */
 @RestController
 @RequestMapping(value = "/member")
 @Log4j
