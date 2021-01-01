@@ -16,7 +16,7 @@ import java.util.HashMap;
  * for user's authentication of plan
  */
 @RestController
-@RequestMapping(value = "/plan/auth")
+@RequestMapping(value = "/split/plan/auth")
 @ControllerAdvice
 public class PlanAuthController {
 

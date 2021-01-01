@@ -18,7 +18,7 @@ import java.util.Random;
  * for sending email to find password
  */
 @RestController
-@RequestMapping(value = "/mail")
+@RequestMapping(value = "/split/mail")
 public class MailController {
 
     @Setter(onMethod_ = {@Autowired})

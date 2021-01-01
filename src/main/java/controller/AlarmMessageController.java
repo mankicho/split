@@ -18,7 +18,7 @@ import java.util.List;
  * real-time alarm service(if user A shares user B then system tell B that A shared B's plan)
  */
 @RestController
-@RequestMapping(value = "/alarm")
+@RequestMapping(value = "/split/alarm")
 public class AlarmMessageController {
 
     @Setter(onMethod_ = {@Autowired})

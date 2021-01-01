@@ -84,14 +84,13 @@ public class EchoHandler extends TextWebSocketHandler {
             session.sendMessage(errorMessage);
             return;
         }
+        AlarmMessageMapper messageMapper = sqlSession.getMapper(AlarmMessageMapper.class);
+        AlarmMessageDTO alarmMessageDTO = setAlarmMessageDTO(message, messageMapper);
+        messageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
         WebSocketSession loginClient = userSessionsMap.get(userEmail); // 유저 세션 map 에서 email 기반 세션 추출
         if (loginClient != null) { // 로그인한 유저가 있으면
             loginClient.sendMessage(message); // 메세지를 보낸다
         }
-        AlarmMessageMapper messageMapper = sqlSession.getMapper(AlarmMessageMapper.class);
-        AlarmMessageDTO alarmMessageDTO = setAlarmMessageDTO(message, messageMapper);
-
-        messageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
     }
 
 

@@ -17,7 +17,7 @@ import java.util.List;
  * official plan
  */
 @RestController
-@RequestMapping(value = "/plan")
+@RequestMapping(value = "/split/plan")
 public class OfficialPlanController {
 
     @Setter(onMethod_ = {@Autowired})

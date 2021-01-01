@@ -43,8 +43,7 @@
 
     <!-- service only for SPLIT member -->
     <security:http entry-point-ref="tokenAuthenticationEntryPoint">
-        <security:intercept-url pattern="/nonplan/*" access="isAuthenticated()"/>
-        <security:intercept-url pattern="/plan/*" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/split/*" access="isAuthenticated()"/>
         <security:custom-filter ref="tokenAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
         <security:csrf disabled="true"/>
     </security:http>

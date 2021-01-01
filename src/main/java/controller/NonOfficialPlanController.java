@@ -17,7 +17,7 @@ import java.util.Enumeration;
  * free plan (non-official-plan)
  */
 @RestController
-@RequestMapping(value = "/nonplan")
+@RequestMapping(value = "/split/nonplan")
 @Log4j
 public class NonOfficialPlanController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

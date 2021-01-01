@@ -17,7 +17,7 @@ import java.util.List;
  * for user's todo list
  */
 @RestController
-@RequestMapping(value = "/todo")
+@RequestMapping(value = "/split/todo")
 @Log4j
 public class TodoListController {
 
