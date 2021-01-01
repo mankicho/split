@@ -24,13 +24,11 @@
     </filter>
     <filter-mapping>
         <filter-name>memberTokenFilter</filter-name>
-        <url-pattern>/plan/*</url-pattern>
-        <url-pattern>/nonplan/*</url-pattern>
+        <url-pattern>/split/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/plan/*</url-pattern>
-        <url-pattern>/nonplan/*</url-pattern>
+        <url-pattern>/split/*</url-pattern>
     </filter-mapping>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

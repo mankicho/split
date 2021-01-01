@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * for bringing zone(normal cafe, study cafe, library and so on) data
  */
-@ControllerAdvice
 @RestController
 @RequestMapping(value = "/split/zone")
 @Log4j
@@ -27,7 +26,7 @@ public class ZoneController {
     public HashMap<String, Object> handleNumberFormatException(NumberFormatException e) {
         log.error("error", e);
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("error", "numberFormatException");
+        hashMap.put("error", e.getClass().getName());
         hashMap.put("message", e.getMessage());
         return hashMap;
     }

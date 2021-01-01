@@ -25,6 +25,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("filter??");
         if (isContainToken(httpServletRequest)) {
             String token = httpServletRequest.getHeader("member-token");
             String userEmail = httpServletRequest.getHeader("member-email");

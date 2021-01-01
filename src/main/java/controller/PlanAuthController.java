@@ -17,7 +17,6 @@ import java.util.HashMap;
  */
 @RestController
 @RequestMapping(value = "/split/plan/auth")
-@ControllerAdvice
 public class PlanAuthController {
 
     @ExceptionHandler({MalformedJwtException.class, ExpiredJwtException.class, SignatureException.class})
