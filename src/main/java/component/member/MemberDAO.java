@@ -49,4 +49,9 @@ public class MemberDAO {
     public String isExistPhoneNumber(String pNum) {
         return mapper.isExistPhoneNumber(pNum);
     }
+
+    public String findEmail(String pNum) {
+        return mapper.findEmail(pNum);
+    }
+
 }

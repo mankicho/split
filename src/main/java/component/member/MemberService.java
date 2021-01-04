@@ -19,4 +19,5 @@ public interface MemberService {
 
     String isExistPhoneNumber(String pNum);
 
+    String findEmail(String pNum);
 }

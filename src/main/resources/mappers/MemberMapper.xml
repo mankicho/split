@@ -55,4 +55,8 @@
     <select id="isExistPhoneNumber" parameterType="string" resultType="string">
         SELECT phone_num from members where phone_num = #{pNum}
     </select>
+
+    <select id="findEmail" parameterType="string" resultType="string">
+        SELECT email from members where phone_num = #{pNum}
+    </select>
 </mapper>

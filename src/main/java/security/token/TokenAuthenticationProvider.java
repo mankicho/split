@@ -24,17 +24,19 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        MemberToken memberToken = (MemberToken) authentication;
-        String token = (String) memberToken.getPrincipal();
-        String userEmail = (String) authentication.getCredentials();
-        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        MemberToken memberToken = (MemberToken) authentication; // 인증 수신
+        String token = (String) memberToken.getPrincipal(); // 인증에서 토큰 값 추출
+        String userEmail = (String) authentication.getCredentials(); // 인증에서 이메일 추출
+        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class); // 추출 값이 DB 에 존재하는지 확인
         String searchedEmail = memberMapper.isExistEmail(userEmail);
-        if (searchedEmail == null || searchedEmail.equals("")) {
-            return null;
-        }
         if (userEmail == null || token == null) {
-            return null;
+            return null; // 인증에서 값이 비어있으면 실패
         }
+
+        if (searchedEmail == null || searchedEmail.equals("")) {
+            return null; // 없으면 인증 실패
+        }
+
         if (userEmail.equals(tokenGeneratorService.getSubject(token))) {
             authentication.setAuthenticated(true);
             return authentication;

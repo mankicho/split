@@ -84,23 +84,39 @@ public class MemberController {
         return memberService.isExistNickname(nickname);
     }
 
+    @PostMapping(value = "/find/email")
+    public HashMap<String, String> findEmail(@RequestParam("pNum") String phoneNumber) {
+        HashMap<String, String> hashMap = new HashMap<>();
+
+        String email = memberService.findEmail(phoneNumber);
+        if (email != null && !email.equals("")) {
+            hashMap.put("email", email);
+            hashMap.put("status", "202");
+        }else{
+            hashMap.put("email","null");
+            hashMap.put("status","400");
+        }
+
+        return hashMap;
+    }
+
     @PostMapping(value = "/tmp/delete.do")
-    public int tmpDeleteMember(@RequestParam String email) {
+    public int tmpDeleteMember(@RequestParam("email") String email) {
         return memberService.tmpDeleteMember(email);
     }
 
     @PostMapping(value = "/tmp/restore.do")
-    public int restoreDeletedMember(@RequestParam String email) {
+    public int restoreDeletedMember(@RequestParam("email") String email) {
         return memberService.restoreDeletedMember(email);
     }
 
     @PostMapping(value = "/email/get.do")
-    public String isExistEmail(@RequestParam String email) {
+    public String isExistEmail(@RequestParam("email") String email) {
         return memberService.isExistEmail(email);
     }
 
     @PostMapping(value = "/pNum/get.do")
-    public String isExistPhoneNumber(@RequestParam String pNum) {
+    public String isExistPhoneNumber(@RequestParam("pNum") String pNum) {
         return memberService.isExistPhoneNumber(pNum);
     }
 

@@ -19,4 +19,6 @@ public interface MemberMapper {
 
     int restoreDeletedMember(@Param("email") String email);
 
+    String findEmail(@Param("pNum") String pNum);
+
 }

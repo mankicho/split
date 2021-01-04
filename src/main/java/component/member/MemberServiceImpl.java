@@ -86,5 +86,12 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.restoreDeletedMember(email);
     }
 
-
+    /**
+     * @param pNum find email if users forgot his or her email
+     * @return
+     */
+    @Override
+    public String findEmail(String pNum) {
+        return memberDAO.findEmail(pNum);
+    }
 }
