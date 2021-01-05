@@ -2,6 +2,8 @@ package component.member;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
+
 public interface MemberMapper {
     MemberDTO selects(String email); // 회원조회 (삭제예정)
 
@@ -21,4 +23,9 @@ public interface MemberMapper {
 
     String findEmail(@Param("pNum") String pNum);
 
+    MemberTmpInfoDTO selectsByTmpInfo(@Param("email") String email);
+
+    int generateTmpPassword(HashMap<String, String> hashMap);
+
+    int updatePassword(@Param("email") String email,@Param("pw")String pw);
 }

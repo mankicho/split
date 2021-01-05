@@ -2,6 +2,8 @@ package component.member;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
+
 public interface MemberService {
     MemberDTO selects(String email);
 
@@ -20,4 +22,11 @@ public interface MemberService {
     String isExistPhoneNumber(String pNum);
 
     String findEmail(String pNum);
+
+    MemberTmpInfoDTO selectsByTmpInfo(String email);
+
+    int generateTmpPassword(HashMap<String, String> hashMap);
+
+    int updatePassword(String email, String pw);
+
 }

@@ -59,4 +59,18 @@
     <select id="findEmail" parameterType="string" resultType="string">
         SELECT email from members where phone_num = #{pNum}
     </select>
+
+    <select id="selectsByTmpInfo" parameterType="string" resultType="MemberTmpInfoDTO">
+        SELECT email,pw FROM member_tmpinfo where email = #{email}
+    </select>
+
+    <insert id="generateTmpPassword" parameterType="hashmap">
+        INSERT INTO member_tmpinfo(email,pw) values (#{valEmail},#{valPw}) on duplicate key update email = #{upEmail}, pw=#{upPw}
+    </insert>
+
+    <update id="updatePassword" parameterType="string">
+        UPDATE members set pw = #{pw} where email = #{email}
+    </update>
 </mapper>
+
+        <!--        insert into member_tmpinfo values ('zkspffh@naver.com','123') on duplicate key update email ='zkspffh@naver.com',pw='123';-->

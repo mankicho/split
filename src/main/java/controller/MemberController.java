@@ -3,6 +3,7 @@ package controller;
 import component.member.MemberDAO;
 import component.member.MemberDTO;
 import component.member.MemberService;
+import component.member.MemberTmpInfoDTO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Random;
@@ -24,22 +26,50 @@ import java.util.Random;
 @RequestMapping(value = "/member")
 @Log4j
 public class MemberController {
+
+    /**
+     * member service(register, login, find password and so on)
+     */
     @Setter(onMethod_ = @Autowired)
     private MemberService memberService;
 
+    /**
+     * password encoder
+     */
     @Setter(onMethod_ = {@Autowired})
     private BCryptPasswordEncoder passwordEncoder;
 
+    /**
+     * for generating token (to use application service)
+     */
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 
-    // parameter 가 null 값인가
-    // service 의 selects 함수에서 결과가 여러개 리턴이 되는가
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public HashMap<String, String> handleExceptionWhileSQLQuery(Exception e) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("code", "500");
+        hashMap.put("error", "데이터베이스 통신 중 에러");
+        return hashMap;
+    }
+
+    /**
+     * @param request member login(normal or tmp password)
+     * @return
+     */
     @RequestMapping(value = "/login.do")
     public String memberLogin(HttpServletRequest request) {
         String email = request.getParameter("email");
         String pw = request.getParameter("pw");
-
+        String type = request.getParameter("type");
+        System.out.println("type = " + type);
+        if (type != null) {
+            MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
+            if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
+                System.out.println(tmpInfoDTO.getEmail() + "," + tmpInfoDTO.getPw());
+                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
+            }
+        }
         MemberDTO memberDTO = memberService.selects(email);
         if (memberDTO != null && pw != null && passwordEncoder.matches(pw, memberDTO.getPw())) {
             return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
@@ -61,6 +91,25 @@ public class MemberController {
             return 100;
         }
         return 101;
+    }
+
+    @PostMapping(value = "/update.do")
+    public HashMap<String, String> updatePassword(@RequestParam("email") String email, @RequestParam("pw") String pw) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        if (email == null || pw == null) {
+            hashMap.put("code", "400");
+            return hashMap;
+        }
+
+        String encodedPw = passwordEncoder.encode(pw);
+        int updatedRow = memberService.updatePassword(email, encodedPw);
+
+        if (updatedRow == 0) {
+            hashMap.put("code", "500");
+        } else {
+            hashMap.put("code", "200");
+        }
+        return hashMap;
     }
 
     // email 이 null 인지
@@ -92,11 +141,33 @@ public class MemberController {
         if (email != null && !email.equals("")) {
             hashMap.put("email", email);
             hashMap.put("status", "202");
-        }else{
-            hashMap.put("email","null");
-            hashMap.put("status","400");
+        } else {
+            hashMap.put("email", "null");
+            hashMap.put("status", "400");
         }
+        return hashMap;
+    }
 
+    @PostMapping(value = "/gen/tmp/pw")
+    public HashMap<String, String> generateTmpPassword(@RequestParam("email") String email, @RequestParam("pw") String pw) {
+        HashMap<String, String> hashMap = new HashMap<>();
+
+        if (email == null || pw == null) {
+            hashMap.put("code", "500");
+            return hashMap;
+        }
+        hashMap.put("valEmail", email);
+        hashMap.put("valPw", passwordEncoder.encode(pw));
+        hashMap.put("upEmail", email);
+        hashMap.put("upPw", passwordEncoder.encode(pw));
+
+        int affectedRow = memberService.generateTmpPassword(hashMap);
+
+        if (affectedRow == 0) {
+            hashMap.put("code", "400");
+        } else {
+            hashMap.put("code", "202");
+        }
         return hashMap;
     }
 

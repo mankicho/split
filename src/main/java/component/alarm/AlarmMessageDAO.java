@@ -16,14 +16,14 @@ import java.util.List;
 public class AlarmMessageDAO {
 
     @Setter(onMethod_ = {@Autowired})
-    private AlarmMessageMapper messageMapper;
+    private AlarmMessageMapper alarmMessageMapper;
 
     /**
      * @param hashMap get users' unreceived message
      * @return
      */
     public List<AlarmMessageDTO> selectMessages(HashMap<String, Object> hashMap) {
-        return messageMapper.selectMessages(hashMap);
+        return alarmMessageMapper.selectMessages(hashMap);
     }
 
     /**
@@ -31,7 +31,7 @@ public class AlarmMessageDAO {
      * @return
      */
     public int updateCheckFlag(int messageId) {
-        return messageMapper.updateCheckFlag(messageId);
+        return alarmMessageMapper.updateCheckFlag(messageId);
     }
 
     /**
@@ -39,7 +39,7 @@ public class AlarmMessageDAO {
      * @return
      */
     public int getMaxSeq(@Param("email") String email) {
-        return messageMapper.getMaxSeq(email);
+        return alarmMessageMapper.getMaxSeq(email);
     }
 
     /**
@@ -48,7 +48,7 @@ public class AlarmMessageDAO {
      */
     public int saveMessage(AlarmMessageDTO messageDTO) {
         try {
-            return messageMapper.saveMessage(messageDTO);
+            return alarmMessageMapper.saveMessage(messageDTO);
         } catch (MysqlDataTruncation trunc) {
             log.info(trunc.getMessage());
             return -1;

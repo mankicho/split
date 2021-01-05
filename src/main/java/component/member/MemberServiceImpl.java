@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 public class MemberServiceImpl implements MemberService {
 
@@ -93,5 +95,20 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public String findEmail(String pNum) {
         return memberDAO.findEmail(pNum);
+    }
+
+    @Override
+    public MemberTmpInfoDTO selectsByTmpInfo(String email) {
+        return memberDAO.selectsByTmpInfo(email);
+    }
+
+    @Override
+    public int generateTmpPassword(HashMap<String, String> hashMap) {
+        return memberDAO.generateTmpPassword(hashMap);
+    }
+
+    @Override
+    public int updatePassword(String email, String pw) {
+        return memberDAO.updatePassword(email,pw);
     }
 }

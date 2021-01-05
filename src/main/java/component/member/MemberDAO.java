@@ -4,10 +4,13 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.exceptions.TooManyResultsException;
+import org.apache.ibatis.javassist.scopedpool.SoftValueHashMap;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
 
 @Log4j
 @Repository
@@ -52,6 +55,18 @@ public class MemberDAO {
 
     public String findEmail(String pNum) {
         return mapper.findEmail(pNum);
+    }
+
+    public MemberTmpInfoDTO selectsByTmpInfo(String email) {
+        return mapper.selectsByTmpInfo(email);
+    }
+
+    public int generateTmpPassword(HashMap<String, String> hashMap) {
+        return mapper.generateTmpPassword(hashMap);
+    }
+
+    public int updatePassword(String email, String pw) {
+        return mapper.updatePassword(email, pw);
     }
 
 }
