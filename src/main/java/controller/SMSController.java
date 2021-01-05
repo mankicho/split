@@ -15,7 +15,7 @@ import java.util.Random;
  * for sending message on phone
  */
 @RestController
-@RequestMapping(value = "/split/sms")
+@RequestMapping(value = "/sms")
 public class SMSController {
 
     @Setter(onMethod_ = {@Autowired})
