@@ -19,14 +19,6 @@ import java.util.HashMap;
 @RequestMapping(value = "/split/plan/auth")
 public class PlanAuthController {
 
-    @ExceptionHandler({MalformedJwtException.class, ExpiredJwtException.class, SignatureException.class})
-    public HashMap<String, String> tokenHandle(Exception e) {
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("msg", "유효하지 않은 토큰 값입니다.");
-        hashMap.put("error", e.getMessage());
-        return hashMap;
-    }
-
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 

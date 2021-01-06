@@ -6,6 +6,7 @@ import component.member.MemberService;
 import component.member.MemberTmpInfoDTO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,7 @@ public class MemberController {
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, TooManyResultsException.class})
     public HashMap<String, String> handleExceptionWhileSQLQuery(Exception e) {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("code", "500");
@@ -69,10 +70,11 @@ public class MemberController {
                 System.out.println(tmpInfoDTO.getEmail() + "," + tmpInfoDTO.getPw());
                 return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
             }
-        }
-        MemberDTO memberDTO = memberService.selects(email);
-        if (memberDTO != null && pw != null && passwordEncoder.matches(pw, memberDTO.getPw())) {
-            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
+        } else {
+            MemberDTO memberDTO = memberService.selects(email);
+            if (memberDTO != null && pw != null && passwordEncoder.matches(pw, memberDTO.getPw())) {
+                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
+            }
         }
         return "fail";
     }

@@ -20,10 +20,6 @@ import java.util.Enumeration;
 @RequestMapping(value = "/split/nonplan")
 @Log4j
 public class NonOfficialPlanController {
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-
     @Setter(onMethod_ = {@Autowired})
     private NonOfficialPlanService nonOfficialPlanService;
 
