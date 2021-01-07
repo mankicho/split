@@ -1,7 +1,7 @@
 package security.login;
 
-import component.member.MemberDTO;
 import component.member.MemberMapper;
+import component.member.MemberVO;
 import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -26,9 +26,9 @@ public class MemberDetailsService implements UserDetailsService {
         MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
         log.warn("Load User By UserName : " + s);
 
-        MemberDTO memberDTO = memberMapper.selects(s);
+        MemberVO memberVO = memberMapper.selects(s);
 
-        log.warn("queried by member mapper : " + memberDTO);
-        return memberDTO == null ? null : new CustomMember(memberDTO);
+        log.warn("queried by member mapper : " + memberVO);
+        return memberVO == null ? null : new CustomMember(memberVO);
     }
 }

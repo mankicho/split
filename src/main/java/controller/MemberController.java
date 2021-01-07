@@ -1,9 +1,6 @@
 package controller;
 
-import component.member.MemberDAO;
-import component.member.MemberDTO;
-import component.member.MemberService;
-import component.member.MemberTmpInfoDTO;
+import component.member.*;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.exceptions.TooManyResultsException;
@@ -59,8 +56,8 @@ public class MemberController {
             System.out.println(tmpInfoDTO.getEmail() + "," + tmpInfoDTO.getPw());
             return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
         }
-        MemberDTO memberDTO = memberService.selects(email);
-        if (memberDTO != null && pw != null && passwordEncoder.matches(pw, memberDTO.getPw())) {
+        MemberVO memberVO = memberService.selects(email);
+        if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) {
             return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
         }
         return "fail";

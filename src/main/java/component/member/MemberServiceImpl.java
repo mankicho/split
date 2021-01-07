@@ -27,7 +27,7 @@ public class MemberServiceImpl implements MemberService {
      * @return
      */
     @Override
-    public MemberDTO selects(String email) {
+    public MemberVO selects(String email) {
         return memberDAO.selects(email);
     }
 

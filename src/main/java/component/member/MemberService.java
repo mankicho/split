@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.HashMap;
 
 public interface MemberService {
-    MemberDTO selects(String email);
+    MemberVO selects(String email);
 
     int registerMember(MemberDTO memberDTO);
 

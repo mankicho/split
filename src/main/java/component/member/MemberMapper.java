@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.HashMap;
 
 public interface MemberMapper {
-    MemberDTO selects(String email); // 회원조회 (삭제예정)
+    MemberVO selects(String email); // 회원조회 (삭제예정)
 
     int registerMember(MemberDTO memberDTO); // 회원가입
 

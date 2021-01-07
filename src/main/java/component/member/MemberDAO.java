@@ -19,7 +19,7 @@ public class MemberDAO {
     @Setter(onMethod_ = {@Autowired})
     private MemberMapper mapper;
 
-    public MemberDTO selects(String email) {
+    public MemberVO selects(String email) {
         return mapper.selects(email);
     }
 
