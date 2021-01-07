@@ -22,13 +22,16 @@
     <bean id="customPasswordEncoder" class="security.encoder.CustomNoOpPasswordEncoder"/>
     <!-- 적절한 권한을 가진사람인지 판단 -->
 
+    <!-- admin -->
+    <bean id="myAdminFilter" class="security.admin.AdminFilter"/>
+    <bean id="myAdminEntryPoint" class="security.admin.AdminAuthenticationEntryPoint"/>
     <!--     SPLIT member register, login, and so on.. -->
-    <security:http pattern="/admin/*" authentication-manager-ref="admin">
-        <security:intercept-url pattern="admin/get/errors/for/debug" access="hasRole('ROLE_ADMIN')"/>
-        <security:form-login/>
+    <security:http pattern="/admin/**" authentication-manager-ref="myAdmin" entry-point-ref="myAdminEntryPoint">
+        <security:intercept-url pattern="admin/get/errors/for/debug" access="denyAll()"/>
+        <security:custom-filter ref="myAdminFilter" position="FORM_LOGIN_FILTER"/>
         <security:csrf disabled="true"/>
     </security:http>
-    <security:authentication-manager alias="admin">
+    <security:authentication-manager alias="myAdmin">
         <security:authentication-provider>
             <security:user-service>
                 <security:user name="admin" authorities="ROLE_ADMIN" password="{noop}a159g5l753!"/>

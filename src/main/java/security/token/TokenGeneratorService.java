@@ -8,4 +8,8 @@ public interface TokenGeneratorService {
     String getSubject(String token);
 
     Date getExpiration(String token);
+
+    String privateToken(String subject, long ttlMillis);
+
+    String privateGetSubject(String token);
 }

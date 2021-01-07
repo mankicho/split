@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -8,7 +9,12 @@
        http://www.springframework.org/schema/context
        https://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/aop
-       https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       https://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+    <util:properties id="admin_config" location="classpath:/config/admin.properties"/>
     <tx:annotation-driven/>
     <context:component-scan base-package="security"/>
     <context:component-scan base-package="aop"/>
@@ -39,5 +45,11 @@
     <bean id="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="admin" class="security.admin.Admin">
+        <property name="dd06pl742" value="an28ccnAXW8c@k"/>
+        <property name="de07zx11783" value="95eorkfl!!@asd123"/>
+        <property name="zcw16ggf2k4v88hb3" value="zl59aav244hhqghm688gdfb44gwAA2c$N@@ceve5MMz9*jd2bSA"/>
     </bean>
 </beans>
