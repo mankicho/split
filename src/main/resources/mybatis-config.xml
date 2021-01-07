@@ -4,6 +4,7 @@
 
 <configuration>
     <typeAliases>
+        <typeAlias type="component.member.MemberVO" alias="MemberVO"/>
         <typeAlias alias="MemberDTO" type="component.member.MemberDTO"/>
         <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
         <typeAlias alias="OfficialPlanDTO" type="component.plan.off.OfficialPlanDTO"/>

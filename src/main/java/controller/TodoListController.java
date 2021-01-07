@@ -18,7 +18,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/split/todo")
-@Log4j
 public class TodoListController {
 
     @Setter(onMethod_ = {@Autowired})
@@ -28,7 +27,6 @@ public class TodoListController {
     public List<TodoDTO> getTodoList(HttpServletRequest request) {
         String email = request.getParameter("email");
         String date = request.getParameter("date");
-        log.info(email+" "+date);
         return todoService.getTodoList(email, date);
     }
 }
