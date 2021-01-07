@@ -5,6 +5,10 @@ import lombok.Data;
 import java.sql.Date;
 import java.sql.Time;
 
+/**
+ * 유저의 플랜 예약 내역
+ *
+ */
 @Data
 public class OfficialPlanLogVO {
     private int planLogId;
