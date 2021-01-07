@@ -9,11 +9,11 @@ import java.util.List;
 public interface NonOfficialPlanService {
     int insertNonOfficialPlan(NonOfficialPlanDTO nonOfficialPlanDTO);
 
-    List<NonOfficialPlanDTO> getNonPlan(HashMap<String, Object> hashMap);
+    List<NonOfficialPlanVO> getNonPlan(HashMap<String, Object> hashMap);
 
     int deleteNonOfficialPlan(HashMap<String, Object> hashMap);
 
-    NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId);
+    NonOfficialPlanVO nonOfficialPlanShare(String nonOfficialPlanLogId);
 
     Integer selectByIdAndEmail(HashMap<String, Object> hashMap);
 

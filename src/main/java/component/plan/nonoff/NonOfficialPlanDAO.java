@@ -28,7 +28,7 @@ public class NonOfficialPlanDAO {
      * @param hashMap bring all non plan of user
      * @return
      */
-    public List<NonOfficialPlanDTO> getNonPlan(HashMap<String, Object> hashMap) {
+    public List<NonOfficialPlanVO> getNonPlan(HashMap<String, Object> hashMap) {
         return mapper.getNonPlan(hashMap);
     }
 
@@ -46,7 +46,7 @@ public class NonOfficialPlanDAO {
      *                             user A brings user B's non plan(title,content,period)
      * @return
      */
-    public NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId) {
+    public NonOfficialPlanVO nonOfficialPlanShare(String nonOfficialPlanLogId) {
         return mapper.nonOfficialPlanShare(nonOfficialPlanLogId);
     }
 

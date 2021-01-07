@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.plan.nonoff.NonOfficialPlanMapper">
 
-    <resultMap id="nonOfficialDTOList" type="component.plan.nonoff.NonOfficialPlanDTO">
+    <resultMap id="nonOfficialDTOList" type="component.plan.nonoff.NonOfficialPlanVO">
         <result property="nonOfficialPlanId" column="non_official_plan_id"/>
         <result property="memberEmail" column="member_email"/>
         <result property="planName" column="plan_name"/>
@@ -30,8 +30,8 @@
         where member_email = #{email} AND startdate = date_format(#{sDate},'%Y-%m-%d') AND authtime = time_format(#{aTime},'%H:%i:%s')
     </delete>
 
-    <select id="nonOfficialPlanShare" parameterType="int" resultType="NonOfficialPlanDTO">
-        SELECT non_official_plan_id,member_email,plan_name,startdate,enddate,authtime
+    <select id="nonOfficialPlanShare" parameterType="string" resultType="NonOfficialPlanVO">
+        SELECT non_official_plan_id as nonOfficialPlanId,member_email as memberEmail,plan_name as planName,startdate,enddate,authtime,regtime
         from non_official_plan
         where non_official_plan_id = #{npid}
     </select>

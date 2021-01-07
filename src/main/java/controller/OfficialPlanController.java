@@ -1,6 +1,7 @@
 package controller;
 
 import component.plan.off.OfficialPlanDTO;
+import component.plan.off.OfficialPlanLogVO;
 import component.plan.off.OfficialPlanService;
 import component.plan.off.OfficialPlanVO;
 import lombok.Setter;
@@ -41,7 +42,7 @@ public class OfficialPlanController {
     }
 
     @PostMapping(value = "/selectsAllPlans.do")
-    public List<OfficialPlanDTO> selectsAllPlans(HttpServletRequest request) {
+    public List<OfficialPlanLogVO> selectsAllPlans(HttpServletRequest request) {
         String email = request.getParameter("email");
         String sDate = request.getParameter("sDate");
         return officialPlanService.selectsAllPlans(email,sDate);

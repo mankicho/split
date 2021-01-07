@@ -7,9 +7,11 @@
         <typeAlias alias="MemberDTO" type="component.member.MemberDTO"/>
         <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
         <typeAlias alias="OfficialPlanDTO" type="component.plan.off.OfficialPlanDTO"/>
+        <typeAlias type="component.plan.off.OfficialPlanVO" alias="OfficialPlanVO"/>
+        <typeAlias type="component.plan.off.OfficialPlanLogVO" alias="OfficialPlanLogVO"/>
         <typeAlias alias="NonOfficialPlanDTO" type="component.plan.nonoff.NonOfficialPlanDTO"/>
+        <typeAlias alias="NonOfficialPlanVO" type="component.plan.nonoff.NonOfficialPlanVO"/>
         <typeAlias alias="TodoDTO" type="component.plan.nonoff.todolist.TodoDTO"/>
-        <typeAlias type="component.plan.off.OfficialPlanVO" alias="PlanVO"/>
         <typeAlias type="component.alarm.AlarmMessageDTO" alias="AlarmMessageDTO"/>
         <typeAlias type="component.zone.ZoneDTO" alias="ZoneDTO"/>
         <typeAlias type="component.zone.ZoneOperDTO" alias="ZoneOperDTO"/>

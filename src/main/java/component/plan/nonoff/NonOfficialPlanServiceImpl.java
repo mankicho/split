@@ -29,7 +29,7 @@ public class NonOfficialPlanServiceImpl implements NonOfficialPlanService {
      * @return
      */
     @Override
-    public List<NonOfficialPlanDTO> getNonPlan(HashMap<String, Object> hashMap) {
+    public List<NonOfficialPlanVO> getNonPlan(HashMap<String, Object> hashMap) {
         return nonOfficialPlanDAO.getNonPlan(hashMap);
     }
 
@@ -47,7 +47,7 @@ public class NonOfficialPlanServiceImpl implements NonOfficialPlanService {
      * @return
      */
     @Override
-    public NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId) {
+    public NonOfficialPlanVO nonOfficialPlanShare(String nonOfficialPlanLogId) {
         return nonOfficialPlanDAO.nonOfficialPlanShare(nonOfficialPlanLogId);
     }
 

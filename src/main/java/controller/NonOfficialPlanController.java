@@ -2,6 +2,7 @@ package controller;
 
 import component.plan.nonoff.NonOfficialPlanDTO;
 import component.plan.nonoff.NonOfficialPlanService;
+import component.plan.nonoff.NonOfficialPlanVO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class NonOfficialPlanController {
      * @return
      */
     @PostMapping(value = "/select.do")
-    public List<NonOfficialPlanDTO> getNonPlan(HttpServletRequest request) {
+    public List<NonOfficialPlanVO> getNonPlan(HttpServletRequest request) {
         String email = request.getParameter("email");
         String sDate = request.getParameter("sDate");
 
@@ -84,12 +85,16 @@ public class NonOfficialPlanController {
     }
 
     /**
-     * @param nonPlanId 플랜 쉐어링 - 특정 유저의 비공식 플랜을 공유하는 기능
+     * 플랜 쉐어링 - 특정 유저의 비공식 플랜을 공유하는 기능
+     *
      * @return
      */
     @PostMapping(value = "/share.do")
-    public NonOfficialPlanDTO nonOfficialPlanShare(@RequestParam("npid") int nonPlanId) {
-        return nonOfficialPlanService.nonOfficialPlanShare(nonPlanId);
+    public NonOfficialPlanVO nonOfficialPlanShare(HttpServletRequest request) {
+        String npid = request.getParameter("npid");
+        NonOfficialPlanVO vo = nonOfficialPlanService.nonOfficialPlanShare(npid);
+        System.out.println(vo);
+        return vo;
     }
 
     /**
