@@ -14,6 +14,6 @@ public interface OfficialPlanService {
 
     int selectByIdAndEmail(HashMap<String, Object> hashMap);
 
-    List<OfficialPlanDTO> selectsAllPlans(String email);
+    List<OfficialPlanDTO> selectsAllPlans(String email,String sDate);
 
 }

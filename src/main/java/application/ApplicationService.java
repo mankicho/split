@@ -15,6 +15,6 @@ public class ApplicationService implements ApplicationListener<ContextClosedEven
 
     @Override
     public void onApplicationEvent(ContextClosedEvent contextClosedEvent) {
-        smsService.sendSMS("01028470440","서버가 종료되었습니다",200);
+//        smsService.sendSMS("01028470440","서버가 종료되었습니다",200);
     }
 }

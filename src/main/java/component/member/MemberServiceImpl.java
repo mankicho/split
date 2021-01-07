@@ -1,5 +1,6 @@
 package component.member;
 
+import component.mail.MailService;
 import lombok.Setter;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Random;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
     @Setter(onMethod_ = {@Autowired})
     private MemberDAO memberDAO;
+
+    @Setter(onMethod_ = {@Autowired})
+    private MailService mailService;
+
+    @Setter(onMethod_ = {@Autowired})
+    private BCryptPasswordEncoder passwordEncoder;
 
     /**
      * @param email for selecting memberDTO
@@ -104,11 +112,37 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public int generateTmpPassword(HashMap<String, String> hashMap) {
-        return memberDAO.generateTmpPassword(hashMap);
+        String subject = "[SPLIT] 비밀번호 찾기 코드입니다.";
+        String randomMessage = generateSalt();
+        String message = randomMessage + "\n 를 입력해주세요";
+        boolean send = mailService.send(subject, message, "split@studyplanet.kr", hashMap.get("valEmail"));
+        hashMap.put("valPw", passwordEncoder.encode(randomMessage));
+        hashMap.put("upPw", passwordEncoder.encode(randomMessage));
+
+        if (send) {
+            return memberDAO.generateTmpPassword(hashMap);
+        } else {
+            return -100;
+        }
     }
 
     @Override
     public int updatePassword(String email, String pw) {
-        return memberDAO.updatePassword(email,pw);
+        return memberDAO.updatePassword(email, pw);
+    }
+
+    private String generateSalt() {
+        Random random = new Random();
+
+        byte[] salt = new byte[4];
+        random.nextBytes(salt);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < salt.length; i++) {
+            // byte 값을 Hex 값으로 바꾸기.
+            sb.append(String.format("%02x", salt[i]));
+        }
+        return sb.toString();
     }
 }
+

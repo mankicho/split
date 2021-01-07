@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -37,6 +38,13 @@ public class OfficialPlanController {
     @PostMapping(value = "/delete.do")
     public int deleteOfficialPlan(@RequestBody HashMap<String, Object> hashMap) {
         return officialPlanService.deleteOfficialPlan(hashMap);
+    }
+
+    @PostMapping(value = "/selectsAllPlans.do")
+    public List<OfficialPlanDTO> selectsAllPlans(HttpServletRequest request) {
+        String email = request.getParameter("email");
+        String sDate = request.getParameter("sDate");
+        return officialPlanService.selectsAllPlans(email,sDate);
     }
 }
 

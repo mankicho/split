@@ -6,7 +6,7 @@
         select plan_id,plan_name,need_auth_num from official_plan
     </select>
 
-    <insert id="insertOfficialPlan" parameterType="PlanDTO">
+    <insert id="insertOfficialPlan" parameterType="OfficialPlanDTO">
         INSERT INTO official_plan_log(member_email,plan_id,startdate,enddate,authtime)
         values (#{memberEmail},#{planId},#{startDate},#{endDate},#{authTime})
     </insert>
@@ -15,4 +15,9 @@
         DELETE FROM official_plan_log where member_email=#{email} and startdate = #{sDate} and authtime = #{authtime}
     </delete>
 
+    <select id="selectsAllPlans" parameterType="string" resultType="OfficialPlanDTO">
+        SELECT l.official_plan_log_id,l.member_email,l.plan_id,l.startdate,l.enddate,l.authtime,l.regtime,p.plan_name,p.need_auth_num
+        from official_plan_log as l natural join official_plan as p
+        where l.member_email = #{email} and date_format(#{sDate},'%Y-%m-%d') between l.startdate and l.enddate
+    </select>
 </mapper>

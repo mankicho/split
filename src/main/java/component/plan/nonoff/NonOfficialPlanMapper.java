@@ -15,5 +15,5 @@ public interface NonOfficialPlanMapper {
 
     NonOfficialPlanDTO nonOfficialPlanShare(@Param("npid") int nonOfficialPlanLogId);
 
-    int selectByIdAndEmail(HashMap<String, Object> hashMap);
+    Integer selectByIdAndEmail(HashMap<String, Object> hashMap);
 }

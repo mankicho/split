@@ -15,6 +15,6 @@ public interface OfficialPlanMapper {
 
     int selectByIdAndEmail(HashMap<String, Object> hashMap);
 
-    List<OfficialPlanDTO> selectsAllPlans(@Param("email") String email);
+    List<OfficialPlanDTO> selectsAllPlans(@Param("email") String email,@Param("sDate") String sDate);
 }
 

@@ -15,6 +15,6 @@ public interface NonOfficialPlanService {
 
     NonOfficialPlanDTO nonOfficialPlanShare(int nonOfficialPlanLogId);
 
-    int selectByIdAndEmail(HashMap<String, Object> hashMap);
+    Integer selectByIdAndEmail(HashMap<String, Object> hashMap);
 
 }

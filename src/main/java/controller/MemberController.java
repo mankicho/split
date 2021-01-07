@@ -137,17 +137,15 @@ public class MemberController {
     }
 
     @PostMapping(value = "/gen/tmp/pw")
-    public HashMap<String, String> generateTmpPassword(@RequestParam("email") String email, @RequestParam("pw") String pw) {
+    public HashMap<String, String> generateTmpPassword(@RequestParam("email") String email) {
         HashMap<String, String> hashMap = new HashMap<>();
 
-        if (email == null || pw == null) {
+        if (email == null) {
             hashMap.put("code", "500");
             return hashMap;
         }
         hashMap.put("valEmail", email);
-        hashMap.put("valPw", passwordEncoder.encode(pw));
         hashMap.put("upEmail", email);
-        hashMap.put("upPw", passwordEncoder.encode(pw));
 
         int affectedRow = memberService.generateTmpPassword(hashMap);
 

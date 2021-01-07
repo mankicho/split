@@ -56,7 +56,7 @@ public class NonOfficialPlanServiceImpl implements NonOfficialPlanService {
      * @return
      */
     @Override
-    public int selectByIdAndEmail(HashMap<String, Object> hashMap) {
+    public Integer selectByIdAndEmail(HashMap<String, Object> hashMap) {
         return nonOfficialPlanDAO.selectByIdAndEmail(hashMap);
     }
 

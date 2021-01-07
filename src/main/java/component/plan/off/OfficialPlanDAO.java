@@ -27,10 +27,11 @@ public class OfficialPlanDAO {
         return mapper.deleteOfficialPlan(hashMap);
     }
 
-    public int selectByIdAndEmail(HashMap<String, Object> hashMap){
+    public int selectByIdAndEmail(HashMap<String, Object> hashMap) {
         return mapper.selectByIdAndEmail(hashMap);
     }
-    public List<OfficialPlanDTO> selectsAllPlans(String email) {
-        return mapper.selectsAllPlans(email);
+
+    public List<OfficialPlanDTO> selectsAllPlans(String email, String sDate) {
+        return mapper.selectsAllPlans(email, sDate);
     }
 }

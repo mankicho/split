@@ -36,7 +36,7 @@
         where non_official_plan_id = #{npid}
     </select>
 
-    <select id="selectByIdAndEmail" parameterType="hashmap" resultType="int">
-        SELECT * from non_official_plan where non_official_plan_id = #{nonId} AND member_email = #{email}
+    <select id="selectByIdAndEmail" parameterType="hashmap" resultType="Integer">
+        SELECT * from non_official_plan where non_official_plan_id = #{npid} AND member_email = #{email}
     </select>
 </mapper>

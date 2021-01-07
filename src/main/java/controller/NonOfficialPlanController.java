@@ -97,13 +97,14 @@ public class NonOfficialPlanController {
      * @return
      */
     @PostMapping(value = "/selectByIdAndEmail.do")
-    public int selectByIdAndEmail(HttpServletRequest request) {
+    public Integer selectByIdAndEmail(HttpServletRequest request) {
         int nonPlanId = Integer.parseInt(request.getParameter("npid"));
         String email = request.getParameter("email");
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("npid", nonPlanId);
         hashMap.put("email", email);
 
-        return nonOfficialPlanService.selectByIdAndEmail(hashMap);
+        Integer reVal = nonOfficialPlanService.selectByIdAndEmail(hashMap);
+        return reVal == null ? -100 : reVal;
     }
 }

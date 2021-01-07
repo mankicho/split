@@ -2,6 +2,7 @@ package component.plan.off;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.sun.org.apache.bcel.internal.generic.DUP;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import util.DateUtil;
@@ -10,6 +11,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class OfficialPlanDTO {
     private int planLogId;
@@ -19,6 +21,8 @@ public class OfficialPlanDTO {
     private Date endDate;
     private Time authTime;
     private Date regDate;
+    private String planName;
+    private int needAuthNum;
 
     public OfficialPlanDTO(String memberEmail, int planId, String startDate, String endDate, String authTime) {
         this.memberEmail = memberEmail;

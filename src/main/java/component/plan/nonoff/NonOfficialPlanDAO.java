@@ -54,7 +54,7 @@ public class NonOfficialPlanDAO {
      * @param hashMap select non plan by non_plan_id(primary key), user_email
      * @return
      */
-    public int selectByIdAndEmail(HashMap<String, Object> hashMap) {
+    public Integer selectByIdAndEmail(HashMap<String, Object> hashMap) {
         return mapper.selectByIdAndEmail(hashMap);
     }
 

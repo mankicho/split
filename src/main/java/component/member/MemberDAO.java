@@ -62,6 +62,7 @@ public class MemberDAO {
     }
 
     public int generateTmpPassword(HashMap<String, String> hashMap) {
+
         return mapper.generateTmpPassword(hashMap);
     }
 
