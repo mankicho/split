@@ -2,25 +2,41 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.plan.nonoff.NonOfficialPlanMapper">
+
+    <resultMap id="nonOfficialDTOList" type="component.plan.nonoff.NonOfficialPlanDTO">
+        <result property="nonOfficialPlanId" column="non_official_plan_id"/>
+        <result property="memberEmail" column="member_email"/>
+        <result property="planName" column="plan_name"/>
+        <result property="startDate" column="startdate"/>
+        <result property="endDate" column="enddate"/>
+        <result property="authTime" column="authtime"/>
+        <result property="regTime" column="regtime"/>
+    </resultMap>
+
     <insert id="insertNonOfficialPlan" parameterType="NonOfficialPlanDTO">
        insert into non_official_plan(member_email,plan_name,startdate,enddate,authtime)
-       values (#{memberEmail},#{planName},#{startDate},#{endDate},#{authTime})
+       values (#{memberEmail},#{planName},date_format(#{startDate},'%Y-%m-%d'),
+       date_format(#{endDate},'%Y-%m-%d'),time_format(#{authTime},'%H:%i:%s'))
     </insert>
 
-    <select id="getNonPlan" resultType="hashmap" parameterType="hashmap">
-        SELECT member_email,plan_name,startdate,enddate,authtime,regtime
+    <select id="getNonPlan" resultMap="nonOfficialDTOList" parameterType="hashmap">
+        SELECT non_official_plan_id,member_email,plan_name,startdate,enddate,authtime,regtime
         from non_official_plan
-        where member_email = #{email} and #{sDate} between startdate and enddate
+        where member_email = #{email} and date_format(#{sDate},'%Y-%m-%d') between startdate and enddate
     </select>
 
     <delete id="deleteNonOfficialPlan" parameterType="hashmap">
         DELETE FROM non_official_plan
-        where member_email = #{email} AND startdate = #{sDate} AND authtime = #{aTime}
+        where member_email = #{email} AND startdate = date_format(#{sDate},'%Y-%m-%d') AND authtime = time_format(#{aTime},'%H:%i:%s')
     </delete>
 
-    <select id="nonOfficialPlanShare" parameterType="int" resultType="hashmap">
-        SELECT member_email,plan_name,startdate,enddate,authtime
+    <select id="nonOfficialPlanShare" parameterType="int" resultType="NonOfficialPlanDTO">
+        SELECT non_official_plan_id,member_email,plan_name,startdate,enddate,authtime
         from non_official_plan
         where non_official_plan_id = #{npid}
+    </select>
+
+    <select id="selectByIdAndEmail" parameterType="hashmap" resultType="int">
+        SELECT * from non_official_plan where non_official_plan_id = #{nonId} AND member_email = #{email}
     </select>
 </mapper>

@@ -2,6 +2,7 @@ package component.plan.nonoff;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import util.DateUtil;
 
 import java.sql.Date;
@@ -9,6 +10,7 @@ import java.sql.Time;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class NonOfficialPlanDTO {
   private int nonOfficialPlanId;
   private String memberEmail;

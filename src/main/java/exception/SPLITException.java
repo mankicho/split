@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,8 +19,10 @@ import java.util.List;
 public class SPLITException {
 
     @ExceptionHandler(Exception.class)
-    public void defaultExceptionHandler(Exception e) {
+    public void defaultExceptionHandler(Exception e, HttpServletResponse response) throws IOException {
         String message = LocalDateTime.now() + " " + e.getMessage();
         ErrorCollector.collect(message);
+        System.out.println("message = " + message);
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
     }
 }

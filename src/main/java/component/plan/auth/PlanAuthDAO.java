@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import security.token.TokenGeneratorService;
 
+import java.util.Date;
 import java.util.HashMap;
 
 @Repository
@@ -39,6 +40,9 @@ public class PlanAuthDAO {
         }
 
         // todo 2. 요청 데이터가 적절한가? (parameter, timestamp 등등)
+        if (tokenGeneratorService.getExpiration((String) hashMap.get("token")).after(new Date())) {
+
+        }
 
         // todo 3. 인증이 가능한 시간대인가?
         // todo 4. 인증 내역 Table 에 insert

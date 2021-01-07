@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ErrorCollector {
@@ -16,12 +17,13 @@ public class ErrorCollector {
         errors.add(message);
     }
 
-    public static String mailMessage() {
-        StringBuilder mailMessage = new StringBuilder();
-        mailMessage.append("----------------------").append("\n");
-        errors.forEach(msg -> mailMessage.append(msg).append("\n"));
-        mailMessage.append("----------------------");
+    public static HashMap<String, String> mailMessage() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        int idx = 1;
+        for (String error : errors) {
+            hashMap.put((idx++) + "", error);
+        }
         errors.clear();
-        return mailMessage.toString();
+        return hashMap;
     }
 }

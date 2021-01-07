@@ -16,6 +16,9 @@ import java.util.Random;
 public class SMSServiceImpl implements SMSService {
     @Override
     public int sendSMS(String phoneNumber, String msg, int code) {
+        if (phoneNumber.length() < 9 || phoneNumber.length() > 13) {
+            return -100;
+        }
         String[] str = new String[]{phoneNumber};
         try {
             URL url = new URL("https://api-sens.ncloud.com/v1/sms/services/ncp:sms:kr:261072792575:split/messages");

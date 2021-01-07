@@ -12,5 +12,8 @@ public interface OfficialPlanService {
 
     int deleteOfficialPlan(HashMap<String, Object> hashMap);
 
+    int selectByIdAndEmail(HashMap<String, Object> hashMap);
+
+    List<OfficialPlanDTO> selectsAllPlans(String email);
 
 }

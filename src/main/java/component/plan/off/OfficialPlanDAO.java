@@ -1,6 +1,7 @@
 package component.plan.off;
 
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Repository
 public class OfficialPlanDAO {
+
     @Setter(onMethod_ = {@Autowired})
     private OfficialPlanMapper mapper;
 
@@ -25,8 +27,10 @@ public class OfficialPlanDAO {
         return mapper.deleteOfficialPlan(hashMap);
     }
 
-    public int selectById(HashMap<String, Object> hashMap) {
+    public int selectByIdAndEmail(HashMap<String, Object> hashMap){
         return mapper.selectByIdAndEmail(hashMap);
     }
-
+    public List<OfficialPlanDTO> selectsAllPlans(String email) {
+        return mapper.selectsAllPlans(email);
+    }
 }

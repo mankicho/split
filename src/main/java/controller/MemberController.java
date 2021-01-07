@@ -46,14 +46,6 @@ public class MemberController {
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 
-    @ExceptionHandler({SQLIntegrityConstraintViolationException.class, TooManyResultsException.class})
-    public HashMap<String, String> handleExceptionWhileSQLQuery(Exception e) {
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("code", "500");
-        hashMap.put("error", "데이터베이스 통신 중 에러");
-        return hashMap;
-    }
-
     /**
      * @param request member login(normal or tmp password)
      * @return
@@ -62,19 +54,14 @@ public class MemberController {
     public String memberLogin(HttpServletRequest request) {
         String email = request.getParameter("email");
         String pw = request.getParameter("pw");
-        String type = request.getParameter("type");
-        System.out.println("type = " + type);
-        if (type != null) {
-            MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
-            if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
-                System.out.println(tmpInfoDTO.getEmail() + "," + tmpInfoDTO.getPw());
-                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
-            }
-        } else {
-            MemberDTO memberDTO = memberService.selects(email);
-            if (memberDTO != null && pw != null && passwordEncoder.matches(pw, memberDTO.getPw())) {
-                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
-            }
+        MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
+        if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
+            System.out.println(tmpInfoDTO.getEmail() + "," + tmpInfoDTO.getPw());
+            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
+        }
+        MemberDTO memberDTO = memberService.selects(email);
+        if (memberDTO != null && pw != null && passwordEncoder.matches(pw, memberDTO.getPw())) {
+            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
         }
         return "fail";
     }
@@ -84,7 +71,6 @@ public class MemberController {
         String pw = memberDTO.getPw();
         // todo 1. pw check(right format?)
 
-        log.info("get parameter memberDTO => " + memberDTO);
         String encodedPassword = passwordEncoder.encode(pw); // salt 와 평문 문자열을 2번 인코딩
         memberDTO.setPw(encodedPassword);
 
