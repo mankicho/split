@@ -1,5 +1,6 @@
 package component.mail;
 
+import component.member.MemberService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,24 +17,32 @@ public class MailServiceImpl implements MailService {
     @Setter(onMethod_ = {@Autowired})
     private JavaMailSender javaMailSender;
 
+    @Setter(onMethod_ = {@Autowired})
+    private MemberService memberService;
+
     /**
-     * @param subject
-     * @param text
-     * @param from
-     * @param to
-     * SPLIT main email -> SPLIT user (for finding user's password)
+     * @param email     SPLIT main email -> SPLIT user (for finding user's password)
      * @return
      */
     @Override
-    public boolean send(String subject, String text, String from, String to) {
-        MimeMessage message = javaMailSender.createMimeMessage();
+    public boolean sendToMemberToFindPassword(String email) {
+        // todo 1. email 이 존재하는지
+        String recordedEmail = memberService.isExistEmail(email);
+        if (!email.equals(recordedEmail)) { // 등록되어있지 않은 이메일이면
+            return false;
+        }
 
+        // todo 2. 메일 전송하기
+        String subject = "[SPLIT] 비밀번호 찾기 코드입니다.";
+        String randomMessage = generateSalt();
+        String content = randomMessage + "\n 를 입력해주세요";
+        MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setSubject(subject);
-            helper.setText(text);
-            helper.setFrom(from);
-            helper.setTo(to);
+            helper.setText(content);
+            helper.setFrom("split@studyplanet.kr");
+            helper.setTo(email);
 
             javaMailSender.send(message);
         } catch (MessagingException e) {
@@ -43,5 +52,17 @@ public class MailServiceImpl implements MailService {
         return true;
     }
 
+    private String generateSalt() {
+        Random random = new Random();
 
+        byte[] salt = new byte[4];
+        random.nextBytes(salt);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < salt.length; i++) {
+            // byte 값을 Hex 값으로 바꾸기.
+            sb.append(String.format("%02x", salt[i]));
+        }
+        return sb.toString();
+    }
 }

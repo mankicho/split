@@ -15,6 +15,20 @@ import java.util.Random;
 @Log4j
 public class SMSServiceImpl implements SMSService {
     @Override
+    public int sendSMSForReg(String phoneNumber) {
+        int code = new Random().nextInt(8999) + 1000;
+        String msg = "[split] 회원가입 메세지 입니다. [" + code + "]를 입력해주세요";
+
+        return sendSMS(phoneNumber, msg, code);
+    }
+
+    @Override
+    public int sendSMSForFindEmail(String phoneNumber) {
+        int code = new Random().nextInt(8999) + 1000;
+        String msg = "[split] 비밀번호를 찾기위한 메세지 입니다. [" + code + "]를 입력해주세요";
+        return sendSMS(phoneNumber, msg, code);
+    }
+
     public int sendSMS(String phoneNumber, String msg, int code) {
         if (phoneNumber.length() < 9 || phoneNumber.length() > 13) {
             return -100;
