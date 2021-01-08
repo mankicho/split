@@ -66,6 +66,14 @@ public class MemberController {
     @PostMapping(value = "/register.do")
     public int insertMember(@RequestBody MemberDTO memberDTO) {
         String pw = memberDTO.getPw();
+        String sex = memberDTO.getSex();
+        String bornTime = memberDTO.getBornTime();
+        if (sex.equals("")) {
+            sex = "N";
+        }
+        if (bornTime.equals("")) {
+            bornTime = "N";
+        }
         // todo 1. pw check(right format?)
 
         String encodedPassword = passwordEncoder.encode(pw); // salt 와 평문 문자열을 2번 인코딩
