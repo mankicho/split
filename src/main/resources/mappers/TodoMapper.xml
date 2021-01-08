@@ -6,4 +6,17 @@
         SELECT todo_id,member_email,todo_date,todo_time,todo_detail from todo_list
         where member_email = #{email} AND todo_date = str_to_date(#{date},'%Y-%m-%d')
     </select>
+
+    <insert id="insertTodo" parameterType="TodoDTO">
+        INSERT INTO todo_list(member_email,todo_date,todo_time,todo_detail) values (#{memberEmail},#{todoDate},#{todoTime},#{todoDetail})
+    </insert>
+
+    <delete id="deleteTodo" parameterType="int">
+        DELETE FROM todo_list where todo_id = #{todo_id}
+    </delete>
+
+    <select id="selectById" parameterType="int" resultType="TodoVO">
+        SELECT todo_id as todoId, member_email as memberEmail, todo_date as todoDate, todo_time as todoTime, todo_detail as todoDetail
+         from todo_list where todo_id = #{todo_id}
+    </select>
 </mapper>

@@ -115,7 +115,7 @@ public class MemberServiceImpl implements MemberService {
         String subject = "[SPLIT] 비밀번호 찾기 코드입니다.";
         String randomMessage = generateSalt();
         String message = randomMessage + "\n 를 입력해주세요";
-        boolean send = mailService.send(subject, message, "split@studyplanet.kr", hashMap.get("valEmail"));
+        boolean send = mailService.sendToMemberToFindPassword(subject, message, "split@studyplanet.kr", hashMap.get("valEmail"));
         hashMap.put("valPw", passwordEncoder.encode(randomMessage));
         hashMap.put("upPw", passwordEncoder.encode(randomMessage));
 

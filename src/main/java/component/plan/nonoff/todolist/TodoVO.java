@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
-public class TodoDTO {
+public class TodoVO {
     private String memberEmail;
     private Date todoDate;
     private Time todoTime;

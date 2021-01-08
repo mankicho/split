@@ -69,10 +69,10 @@ public class MemberController {
         String sex = memberDTO.getSex();
         String bornTime = memberDTO.getBornTime();
         if (sex.equals("")) {
-            sex = "N";
+            memberDTO.setSex("N");
         }
         if (bornTime.equals("")) {
-            bornTime = "N";
+            memberDTO.setBornTime("N");
         }
         // todo 1. pw check(right format?)
 

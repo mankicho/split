@@ -13,7 +13,7 @@ public class TodoDAO {
     @Setter(onMethod_ = {@Autowired})
     private TodoMapper mapper;
 
-    public List<TodoDTO> getTodoList(String email, String date) {
+    public List<TodoVO> getTodoList(String email, String date) {
         return mapper.getTodoList(email, date);
     }
 
@@ -21,7 +21,11 @@ public class TodoDAO {
         return mapper.insertTodo(todoDTO);
     }
 
-    public int deleteTodo(HashMap<String, Object> hashMap) {
-        return mapper.deleteTodo(hashMap);
+    public int deleteTodo(int todoId) {
+        return mapper.deleteTodo(todoId);
+    }
+
+    public TodoVO selectById(int todoId) {
+        return mapper.selectById(todoId);
     }
 }

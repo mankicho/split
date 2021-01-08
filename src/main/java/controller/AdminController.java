@@ -17,9 +17,6 @@ import java.util.Random;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
-    @Setter(onMethod_ = {@Autowired})
-    private MemberMapper memberMapper;
-
     @GetMapping(value = "/get/errors/for/debug")
     public HashMap<String, String> adminPage() {
         return ErrorCollector.mailMessage();

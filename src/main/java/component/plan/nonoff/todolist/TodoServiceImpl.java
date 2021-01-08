@@ -14,7 +14,7 @@ public class TodoServiceImpl implements TodoService {
     private TodoDAO todoDAO;
 
     @Override
-    public List<TodoDTO> getTodoList(String email, String date) {
+    public List<TodoVO> getTodoList(String email, String date) {
         return todoDAO.getTodoList(email, date);
     }
 
@@ -24,7 +24,12 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public int deleteTodo(HashMap<String, Object> hashMap) {
-        return todoDAO.deleteTodo(hashMap);
+    public int deleteTodo(int todoId) {
+        return todoDAO.deleteTodo(todoId);
+    }
+
+    @Override
+    public TodoVO selectById(int todoId) {
+        return todoDAO.selectById(todoId);
     }
 }

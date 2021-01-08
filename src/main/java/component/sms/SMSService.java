@@ -5,4 +5,5 @@ public interface SMSService {
 
     int sendSMSForFindEmail(String phoneNumber);
 
+    void sendSMSToAdmin(String phoneNumber);
 }

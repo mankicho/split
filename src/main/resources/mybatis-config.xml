@@ -13,6 +13,7 @@
         <typeAlias alias="NonOfficialPlanDTO" type="component.plan.nonoff.NonOfficialPlanDTO"/>
         <typeAlias alias="NonOfficialPlanVO" type="component.plan.nonoff.NonOfficialPlanVO"/>
         <typeAlias alias="TodoDTO" type="component.plan.nonoff.todolist.TodoDTO"/>
+        <typeAlias type="component.plan.nonoff.todolist.TodoVO" alias="TodoVO"/>
         <typeAlias type="component.alarm.AlarmMessageDTO" alias="AlarmMessageDTO"/>
         <typeAlias type="component.zone.ZoneDTO" alias="ZoneDTO"/>
         <typeAlias type="component.zone.ZoneOperDTO" alias="ZoneOperDTO"/>

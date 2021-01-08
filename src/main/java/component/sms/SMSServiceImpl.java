@@ -68,4 +68,10 @@ public class SMSServiceImpl implements SMSService {
             return 500;
         }
     }
+
+    @Override
+    public void sendSMSToAdmin(String phoneNumber) {
+        String msg = "서버가 종료되었습니다";
+        sendSMS(phoneNumber, msg, 0);
+    }
 }
