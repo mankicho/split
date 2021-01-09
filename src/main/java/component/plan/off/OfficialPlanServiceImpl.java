@@ -50,7 +50,7 @@ public class OfficialPlanServiceImpl implements OfficialPlanService {
      * @return
      */
     @Override
-    public List<OfficialPlanLogVO> selectsAllPlans(String email,String sDate) {
-        return officialPlanDAO.selectsAllPlans(email,sDate);
+    public List<OfficialPlanLogVO> selectsAllPlans(String email) {
+        return officialPlanDAO.selectsAllPlans(email);
     }
 }

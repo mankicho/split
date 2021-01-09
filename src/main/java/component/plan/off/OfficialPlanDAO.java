@@ -31,7 +31,7 @@ public class OfficialPlanDAO {
         return mapper.selectByIdAndEmail(hashMap);
     }
 
-    public List<OfficialPlanLogVO> selectsAllPlans(String email, String sDate) {
-        return mapper.selectsAllPlans(email, sDate);
+    public List<OfficialPlanLogVO> selectsAllPlans(String email) {
+        return mapper.selectsAllPlans(email);
     }
 }

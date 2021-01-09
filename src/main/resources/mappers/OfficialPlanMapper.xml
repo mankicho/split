@@ -37,6 +37,6 @@
     <select id="selectsAllPlans" parameterType="string" resultMap="officialPlanLogVO">
         SELECT l.official_plan_log_id,l.member_email,l.plan_id,l.startdate,l.enddate,l.authtime,l.regtime,p.plan_name,p.need_auth_num
         from official_plan_log as l natural join official_plan as p
-        where l.member_email = #{email} and date_format(#{sDate},'%Y-%m-%d') between l.startdate and l.enddate
+        where l.member_email = #{email}
     </select>
 </mapper>

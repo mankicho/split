@@ -65,6 +65,7 @@ public class MemberController {
 
     @PostMapping(value = "/register.do")
     public int insertMember(@RequestBody MemberDTO memberDTO) {
+        System.out.println(memberDTO);
         String pw = memberDTO.getPw();
         String sex = memberDTO.getSex();
         String bornTime = memberDTO.getBornTime();
@@ -74,8 +75,8 @@ public class MemberController {
         if (bornTime.equals("")) {
             memberDTO.setBornTime("N");
         }
-        // todo 1. pw check(right format?)
 
+        // todo 1. pw check(right format?)
         String encodedPassword = passwordEncoder.encode(pw); // salt 와 평문 문자열을 2번 인코딩
         memberDTO.setPw(encodedPassword);
 
@@ -105,6 +106,7 @@ public class MemberController {
         return hashMap;
     }
 
+    // todo 2.
     // email 이 null 인지
     @PostMapping(value = "/delete.do")
     public HashMap<String, String> deleteMember(HttpServletRequest request) {
@@ -120,7 +122,7 @@ public class MemberController {
         return hashMap;
     }
 
-    @RequestMapping(value = "/check/nick")
+    @PostMapping(value = "/check/nick")
     public String getNickname(HttpServletRequest request) {
         String nickname = request.getParameter("nickname");
         return memberService.isExistNickname(nickname);
