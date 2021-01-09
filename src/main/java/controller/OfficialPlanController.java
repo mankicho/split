@@ -44,8 +44,7 @@ public class OfficialPlanController {
     @PostMapping(value = "/selectsAllPlans.do")
     public List<OfficialPlanLogVO> selectsAllPlans(HttpServletRequest request) {
         String email = request.getParameter("email");
-        String sDate = request.getParameter("sDate");
-        return officialPlanService.selectsAllPlans(email,sDate);
+        return officialPlanService.selectsAllPlans(email);
     }
 }
 
