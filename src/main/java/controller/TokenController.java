@@ -17,12 +17,12 @@ import java.util.Map;
 @RequestMapping(value = "/token")
 public class TokenController {
 
-    @Setter(onMethod_={@Autowired})
+    @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService; // Bean 으로 관리를 해야하는가??
 
     @GetMapping(value = "/get.do")
     public Map<String, Object> genToken(@RequestParam(value = "subject") String subject) {
-        String token = tokenGeneratorService.createToken(subject, (200 * 1000 * 60));
+        String token = tokenGeneratorService.createToken(subject, (1000 * 60 * 60 * 24 * 7));
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("result", token);
         return map;
@@ -46,8 +46,7 @@ public class TokenController {
 
     @GetMapping("/admin/get.do")
     public Map<String, Object> getTokenForAdmin(@RequestParam(value = "subject") String subject) {
-        String token = tokenGeneratorService.privateToken(subject, 1000 * 60 * 60 * 24 * 7);
-        System.out.println();
+        String token = tokenGeneratorService.privateToken(subject, 1000 * 60 * 60 * 24 * 21);
         Map<String, Object> map = new HashMap<>();
         map.put("result", token);
         return map;
