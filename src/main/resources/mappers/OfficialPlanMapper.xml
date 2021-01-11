@@ -10,7 +10,7 @@
     </resultMap>
 
     <resultMap id="officialPlanLogVO" type="component.plan.off.OfficialPlanLogVO">
-        <result property="planLogId" column="plan_log_id"/>
+        <result property="planLogId" column="planLogId"/>
         <result property="memberEmail" column="member_email"/>
         <result property="planId" column="plan_id"/>
         <result property="startDate" column="startdate"/>
@@ -35,7 +35,7 @@
     </delete>
 
     <select id="selectsAllPlans" parameterType="string" resultMap="officialPlanLogVO">
-        SELECT l.official_plan_log_id as planLogId,l.member_email as memberEmail,l.plan_id,l.startdate,l.enddate,l.authtime,l.regtime,p.plan_name,p.need_auth_num
+        SELECT l.official_plan_log_id,l.member_email,l.plan_id,l.startdate,l.enddate,l.authtime,l.regtime,p.plan_name,p.need_auth_num
         from official_plan_log as l natural join official_plan as p
         where l.member_email = #{email}
     </select>
