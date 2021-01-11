@@ -31,7 +31,7 @@
     </insert>
 
     <delete id="deleteOfficialPlan" parameterType="hashmap">
-        DELETE FROM official_plan_log where member_email=#{email} and startdate = #{sDate} and authtime = #{authtime}
+        DELETE FROM official_plan_log where member_email=#{email} and #{sDate} between startdate AND enddate and authtime = #{authtime}
     </delete>
 
     <select id="selectsAllPlans" parameterType="string" resultMap="officialPlanLogVO">
