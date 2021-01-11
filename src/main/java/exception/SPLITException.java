@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ControllerAdvice
@@ -20,7 +21,7 @@ public class SPLITException {
 
     @ExceptionHandler(Exception.class)
     public void defaultExceptionHandler(Exception e, HttpServletResponse response) throws IOException {
-        String message = LocalDateTime.now() + " " + e.getMessage();
+        String message = LocalDateTime.now() + " " + e.getClass().getName() + " : " + e.getMessage();
         ErrorCollector.collect(message);
         System.out.println("message = " + message);
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
