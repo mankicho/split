@@ -47,6 +47,7 @@ public class MemberController {
 
     @ExceptionHandler(NullPointerException.class)
     public HashMap<String, String> handlerNullPointerException(Exception e) {
+        e.printStackTrace();
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("error", e.getMessage());
         hashMap.put("code", "500");

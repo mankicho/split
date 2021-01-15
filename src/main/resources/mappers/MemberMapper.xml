@@ -85,4 +85,7 @@
         select * from members_timer where email = #{email} order by focus_date desc limit 7
     </select>
 
+    <insert id="addPoint" parameterType="hashmap">
+        insert into members_point values (#{email},#{point}) on duplicate key update member_point = member_point + #{point};
+    </insert>
 </mapper>

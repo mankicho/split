@@ -152,6 +152,11 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.addFriend(toEmail, fromEmail);
     }
 
+    @Override
+    public int addPoint(String email, int point) {
+        return memberDAO.addPoint(email, point);
+    }
+
     private String generateSalt() {
         Random random = new Random();
 

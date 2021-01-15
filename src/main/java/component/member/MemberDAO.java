@@ -91,8 +91,15 @@ public class MemberDAO {
         return (containSpecial(toEmail) || containSpecial(fromEmail)) ? -1 : mapper.addFriend(toEmail, fromEmail);
     }
 
+    public int addPoint(@Param("email") String email, @Param("point") int point) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("email", email);
+        hashMap.put("point", point);
+        return containSpecial(email) ? -1 : mapper.addPoint(hashMap);
+    }
+
     private boolean containSpecial(String str) {
-        String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$";
+        String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);
     }
 

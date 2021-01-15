@@ -38,4 +38,6 @@ public interface MemberService {
 
     int addFriend(String toEmail, String fromEmail);
 
+    int addPoint(@Param("email") String email, @Param("point") int point);
+
 }
