@@ -1,8 +1,12 @@
 package component.plan;
 
+import jdk.nashorn.internal.scripts.JO;
 import lombok.Setter;
 import org.apache.ibatis.annotations.Param;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -32,4 +36,14 @@ public class PlanDAO {
     public int deleteRangePlan(HashMap<String, String> requestBody) {
         return planMapper.deleteRangePlan(requestBody);
     }
+
+    public int insertRangePlan(List<PlanDTO> planDTOS) {
+        int insertedRow = 0;
+        for (PlanDTO dto : planDTOS) {
+            System.out.println(dto);
+            insertedRow += planMapper.insertPlan(dto);
+        }
+        return insertedRow;
+    }
+
 }

@@ -36,4 +36,9 @@ public class PlanServiceImpl implements PlanService {
     public int deleteRangePlan(HashMap<String, String> requestBody) {
         return planDAO.deleteRangePlan(requestBody);
     }
+
+    @Override
+    public int insertRangePlan(List<PlanDTO> planDTOS) {
+        return planDAO.insertRangePlan(planDTOS);
+    }
 }

@@ -8,9 +8,11 @@ import java.util.List;
 public interface PlanService {
     int insertPlan(PlanDTO planDTO);
 
+    int insertRangePlan(List<PlanDTO> planDTOS);
+
     int deletePlan(int planLogId);
 
-    int deleteRangePlan(HashMap<String,String> requestBody);
+    int deleteRangePlan(HashMap<String, String> requestBody);
 
     PlanVO selectByIdAndEmail(HashMap<String, Object> hashMap);
 

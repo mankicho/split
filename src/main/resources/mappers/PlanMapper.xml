@@ -17,13 +17,13 @@
     </resultMap>
 
     <insert id="insertPlan" parameterType="PlanDTO">
-        INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,comp_condition,pub,place_setting,guild_name,tag)
+        INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,checkout_time,comp_condition,pub,place_setting,guild_name,tag)
         SELECT #{memberEmail},#{planName},date_format(#{startDate},'%Y-%m-%d'),date_format(#{endDate},'%Y-%m-%d')
-        ,date_format(#{authTime},'%H:%i:%s'),date_format(#{checkoutTime},'%H:%i:%s'),
+        ,time_format(#{authTime},'%H:%i:%s'),#{checkoutTime},
         #{compCondition},#{pub},#{placeSetting},#{guildName},#{tag} FROM dual
         WHERE
-        (select count(*) from plan where date_format('2021-01-09','%Y-%m-%d') <![CDATA[<=]]> enddate
-        AND date_format('2021-01-14','%Y-%m-%d') <![CDATA[>=]]> startdate) <![CDATA[<]]> 1
+        (select count(*) from plan where member_email = #{memberEmail} AND (date_format('2021-01-09','%Y-%m-%d') <![CDATA[<=]]> enddate
+        AND date_format('2021-01-14','%Y-%m-%d') <![CDATA[>=]]> startdate)) <![CDATA[<]]> 1
     </insert>
 
     <delete id="deletePlan" parameterType="int">

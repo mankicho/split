@@ -23,6 +23,11 @@ public class PlanController {
         return planService.insertPlan(planDTO);
     }
 
+    @PostMapping(value = "/multi/insert.do")
+    public int insertMultiPlan(@RequestBody List<PlanDTO> planDTOS) {
+        return planService.insertRangePlan(planDTOS);
+    }
+
     @PostMapping(value = "/delete.do")
     public int deletePlan(HttpServletRequest request) {
         String email = request.getParameter("email");
@@ -50,4 +55,5 @@ public class PlanController {
     public List<PlanVO> selectPlans(@RequestParam("email") String email) {
         return planService.selectsAllPlans(email);
     }
+
 }
