@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -42,6 +44,14 @@ public class MemberController {
      */
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
+
+    @ExceptionHandler(NullPointerException.class)
+    public HashMap<String, String> handlerNullPointerException(Exception e) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("error", e.getMessage());
+        hashMap.put("code", "500");
+        return hashMap;
+    }
 
     /**
      * @param request member login(normal or tmp password)
@@ -182,6 +192,17 @@ public class MemberController {
     @PostMapping(value = "/pNum/get.do")
     public String isExistPhoneNumber(@RequestParam("pNum") String pNum) {
         return memberService.isExistPhoneNumber(pNum);
+    }
+
+    @PostMapping(value = "/friend/add.do")
+    public HashMap<String, String> addFriend(@RequestParam("req_nick") String requestNickname, @RequestParam("res_nick") String responseNickname) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        String reqEmail = memberService.getEmailByNickname(requestNickname);
+        String resEmail = memberService.getEmailByNickname(responseNickname);
+
+        int insertedRow = memberService.addFriend(reqEmail, resEmail);
+
+        return hashMap;
     }
 
 }

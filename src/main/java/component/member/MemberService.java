@@ -3,6 +3,7 @@ package component.member;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface MemberService {
     MemberVO selects(String email);
@@ -28,5 +29,13 @@ public interface MemberService {
     int generateTmpPassword(HashMap<String, String> hashMap);
 
     int updatePassword(String email, String pw);
+
+    int insertPolicy(HashMap<String, Object> hashMap);
+
+    List<MemberTimer> selectTimer(String email);
+
+    String getEmailByNickname(@Param("nickname") String nickname);
+
+    int addFriend(String toEmail, String fromEmail);
 
 }

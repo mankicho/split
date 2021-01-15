@@ -3,6 +3,7 @@ package component.member;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface MemberMapper {
     MemberVO selects(String email); // 회원조회 (삭제예정)
@@ -17,6 +18,8 @@ public interface MemberMapper {
 
     String isExistNickname(@Param("nickname") String nickname);
 
+    String getEmailByNickname(@Param("nickname") String nickname);
+
     int tmpDeleteMember(@Param("email") String email);
 
     int restoreDeletedMember(@Param("email") String email);
@@ -27,5 +30,13 @@ public interface MemberMapper {
 
     int generateTmpPassword(HashMap<String, String> hashMap);
 
-    int updatePassword(@Param("email") String email,@Param("pw")String pw);
+    int updatePassword(@Param("email") String email, @Param("pw") String pw);
+
+    int insertPolicy(HashMap<String, Object> hashMap);
+
+    List<MemberTimer> selectTimer(@Param("email") String email);
+
+    int addFriend(@Param("to") String toEmail, @Param("from") String fromEmail);
+
+
 }

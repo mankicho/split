@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -131,6 +132,26 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.updatePassword(email, pw);
     }
 
+    @Override
+    public int insertPolicy(HashMap<String, Object> hashMap) {
+        return memberDAO.insertPolicy(hashMap);
+    }
+
+    @Override
+    public List<MemberTimer> selectTimer(String email) {
+        return memberDAO.selectTimer(email);
+    }
+
+    @Override
+    public String getEmailByNickname(String nickname) {
+        return memberDAO.getEmailByNickname(nickname);
+    }
+
+    @Override
+    public int addFriend(String toEmail, String fromEmail) {
+        return memberDAO.addFriend(toEmail, fromEmail);
+    }
+
     private String generateSalt() {
         Random random = new Random();
 
@@ -144,5 +165,6 @@ public class MemberServiceImpl implements MemberService {
         }
         return sb.toString();
     }
+
 }
 

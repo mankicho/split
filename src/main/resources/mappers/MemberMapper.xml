@@ -71,4 +71,18 @@
     <update id="updatePassword" parameterType="string">
         UPDATE members set pw = #{pw} where email = #{email}
     </update>
+
+    <insert id="insertPolicy" parameterType="hashmap">
+        INSERT INTO members_policy values (#{email},#{po1},#{po2},#{po3},#{po4})
+    </insert>
+
+    <resultMap id="members_timer" type="component.member.MemberTimer">
+        <result property="email" column="email"/>
+        <result property="focusTime" column="focus_time"/>
+        <result property="focusDate" column="focus_date"/>
+    </resultMap>
+    <select id="selectTimer" parameterType="string" resultMap="members_timer">
+        select * from members_timer where email = #{email} order by focus_date desc limit 7
+    </select>
+
 </mapper>
