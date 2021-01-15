@@ -9,6 +9,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="text/javascript">
+        var JsHost = (("https:" === document.location.protocol) ? "https://" : "http://");
+        var sTime = new Date().getTime();
+        document.write(unescape("%3Cscript id='log_script' src='" + JsHost + "skxz123.weblog.cafe24.com/weblog.js?uid=skxz123&t="+sTime+"' type='text/javascript'%3E%3C/script%3E"));
+    </script>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
@@ -31,6 +36,10 @@
 </head>
 <body id="page-top">
 <!-- Navigation-->
+<!-- 리포트2.0 로그분석코드 시작 -->
+
+<!-- 리포트2.0  로그분석코드 완료 -->
+
 <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
     <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="#page-top">SPLIT</a>
