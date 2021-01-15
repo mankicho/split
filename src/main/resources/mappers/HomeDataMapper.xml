@@ -19,7 +19,12 @@
         AND date_format(#{totime},'%Y-%m-%d %H:%i:%s')
     </select>
 
-    <insert id="insertPlanAuth" parameterType="int">
-        INSERT INTO plan_auth_log(plan_id,plan_type) values(#{planId},#{planType})
-    </insert>
+
+    <select id="selectUsersTotalCheckTime" parameterType="string" resultType="int"> <!-- 유저의 총 출석체크 회수 -->
+        select sum(cnt) from (select count(*) as cnt from plan_auth_log as l right outer join
+        official_plan_log as p on l.plan_id = p.official_plan_log_id where p.member_email = #{email}
+        union all
+        select count(*) as cnt from plan_auth_log as l right outer join
+        non_official_plan as n on l.plan_id = n.non_official_plan_id where n.member_email = #{email}) as tmp;
+    </select>
 </mapper>

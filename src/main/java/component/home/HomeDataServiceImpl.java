@@ -13,11 +13,6 @@ public class HomeDataServiceImpl implements HomeDataService {
     private HomeDataDAO homeDataDAO;
 
     @Override
-    public int insertPlanAuth(int planId, int planType) {
-        return homeDataDAO.insertPlanAuth(planId, planType);
-    }
-
-    @Override
     public int selectPlanAuthLogsOfToday() {
         return homeDataDAO.selectPlanAuthLogsOfToday();
     }
@@ -30,5 +25,10 @@ public class HomeDataServiceImpl implements HomeDataService {
     @Override
     public int selectPlanAuthLogsFor30MinutesOfSuccessUsers(String fromTime, String toTime) {
         return homeDataDAO.selectPlanAuthLogsFor30MinutesOfSuccessUsers(fromTime, toTime);
+    }
+
+    @Override
+    public int selectUsersTotalCheckTime(String email) {
+        return homeDataDAO.selectUsersTotalCheckTime(email);
     }
 }

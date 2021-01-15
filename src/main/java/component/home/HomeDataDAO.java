@@ -13,10 +13,6 @@ public class HomeDataDAO {
     @Setter(onMethod_ = {@Autowired})
     private HomeDataMapper homeDataMapper;
 
-    public int insertPlanAuth(int planId, int planType) {
-        return homeDataMapper.insertPlanAuth(planId, planType);
-    }
-
     public int selectPlanAuthLogsOfToday() {
         return homeDataMapper.selectPlanAuthLogsOfToday();
     }
@@ -27,5 +23,9 @@ public class HomeDataDAO {
 
     public int selectPlanAuthLogsFor30MinutesOfSuccessUsers(String fromTime, String toTime) {
         return homeDataMapper.selectPlanAuthLogsFor30MinutesOfSuccessUsers(fromTime, toTime);
+    }
+
+    public int selectUsersTotalCheckTime(String email) {
+        return homeDataMapper.selectUsersTotalCheckTime(email);
     }
 }
