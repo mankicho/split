@@ -30,6 +30,11 @@ public class EchoHandler extends TextWebSocketHandler {
     List<WebSocketSession> sessions = new ArrayList<>();
     // 1대1
     Map<String, WebSocketSession> userSessionsMap = new HashMap<>();
+    int a = 0;
+
+    public EchoHandler() {
+        System.out.println("a = " + (a++));
+    }
 
     /**
      * @param session this function called when client' session is connected

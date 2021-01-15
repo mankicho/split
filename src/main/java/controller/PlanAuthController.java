@@ -25,14 +25,14 @@ public class PlanAuthController {
     private PlanAuthService planAuthService;
 
     @GetMapping(value = "/check.do")
-    public int test(HttpServletRequest request) {
+    public int authDo(HttpServletRequest request) {
         HashMap<String, Object> hashMap = new HashMap<>();
         String token = request.getHeader("qr-token");
-        int planType = Integer.parseInt(request.getParameter("pType"));
+        int planId = Integer.parseInt(request.getParameter("planLogId"));
         String email = request.getParameter("email");
         hashMap.put("token", token);
-        hashMap.put("planType", planType);
         hashMap.put("email", email);
+        hashMap.put("planLogId", planId);
         return planAuthService.planAuth(hashMap);
     }
 }

@@ -28,7 +28,6 @@ public class AdminFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         if (isValidAccess(httpServletRequest)) {
-            System.out.println("ASDBWKJB");
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "관리자 권한이 없습니다.");

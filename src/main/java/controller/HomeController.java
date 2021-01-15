@@ -1,6 +1,8 @@
 package controller;
 
 import component.home.HomeDataService;
+import component.member.MemberService;
+import component.member.MemberTimer;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * home data(today users using application, by 30minutes users, by 30minutes successful authenticating users)
@@ -21,15 +22,14 @@ public class HomeController {
     @Setter(onMethod_ = {@Autowired})
     private HomeDataService homeDataService;
 
+    @Setter(onMethod_ = {@Autowired})
+    private MemberService memberService;
+
     @GetMapping(value = "/")
     public String home() {
         return "index";
     }
 
-    /**
-     *
-     * @return
-     */
     @ResponseBody
     @GetMapping(value = "/home/today/allUser/get.do")
     public int selectPlanAuthLogsOfToday() {
@@ -46,4 +46,19 @@ public class HomeController {
     public int selectPlanAUthLogsFor30MinutesOfSuccessUsers() {
         return homeDataService.selectPlanAuthLogsFor30MinutesOfSuccessUsers("", "");
     }
+
+    @PostMapping(value = "/home/data/get.do")
+    @ResponseBody
+    public HashMap<String, Object> selectHomeData(HttpServletRequest request) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        String email = request.getParameter("email");
+        int allUsers = homeDataService.selectPlanAuthLogsOfToday();
+        hashMap.put("users", allUsers);
+        int usersTotalCheck = homeDataService.selectUsersTotalCheckTime(email);
+        hashMap.put("checks", usersTotalCheck);
+        List<MemberTimer> timers = memberService.selectTimer(email);
+        hashMap.put("timers", timers);
+        return hashMap;
+    }
+
 }

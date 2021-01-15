@@ -7,20 +7,8 @@
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
         <property name="mapperInterface" value="component.zone.ZoneMapper"/>
     </bean>
-    <bean id="todoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="component.plan.nonoff.todolist.TodoMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
     <bean id="planAuthMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="component.plan.auth.PlanAuthMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-    <bean id="officialPlanMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="component.plan.off.OfficialPlanMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-    <bean id="nonOfficialPlanMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="component.plan.nonoff.NonOfficialPlanMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
     <bean id="memberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
@@ -33,6 +21,10 @@
     </bean>
     <bean id="alarmMessageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="component.alarm.AlarmMessageMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    <bean id="planMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="component.plan.PlanMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 </beans>
