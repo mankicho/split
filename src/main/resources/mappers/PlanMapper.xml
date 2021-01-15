@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="component.plan.PlanMapper">
+    <resultMap id="planVO" type="component.plan.PlanVO">
+        <result property="planLogId" column="plan_log_id"/>
+        <result property="memberEmail" column="member_email"/>
+        <result property="planName" column="plan_name"/>
+        <result property="startDate" column="startdate"/>
+        <result property="endDate" column="enddate"/>
+        <result property="authTime" column="authtime"/>
+        <result property="compCondition" column="comp_condition"/>
+        <result property="pub" column="pub"/>
+        <result property="placeSetting" column="place_setting"/>
+        <result property="guildName" column="guild_name"/>
+        <result property="tag" column="tag"/>
+    </resultMap>
+
+    <insert id="insertPlan" parameterType="PlanDTO">
+        INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,comp_condition,pub,place_setting,guild_name,tag)
+        SELECT #{memberEmail},#{planName},date_format(#{startDate},'%Y-%m-%d'),date_format(#{endDate},'%Y-%m-%d')
+        ,date_format(#{authTime},'%H:%i:%s'),date_format(#{checkoutTime},'%H:%i:%s'),
+        #{compCondition},#{pub},#{placeSetting},#{guildName},#{tag} FROM dual
+        WHERE
+        (select count(*) from plan where date_format('2021-01-09','%Y-%m-%d') <![CDATA[<=]]> enddate
+        AND date_format('2021-01-14','%Y-%m-%d') <![CDATA[>=]]> startdate) <![CDATA[<]]> 1
+    </insert>
+
+    <delete id="deletePlan" parameterType="int">
+        DELETE FROM plan where plan_log_id = #{planLogId}
+    </delete>
+
+    <delete id="deleteRangePlan" parameterType="string">
+        DELETE FROM plan where member_email = #{email} AND (startDate <![CDATA[<=]]> #{endDate} AND endDate <![CDATA[>=]]> #{startDate})
+    </delete>
+    <select id="selectByIdAndEmail" resultMap="planVO">
+        SELECT * FROM plan where plan_log_id = #{planLogId} AND member_email = #{email}
+    </select>
+
+    <select id="selectsAllPlans" parameterType="string" resultMap="planVO">
+        SELECT * FROM plan where member_email = #{email}
+    </select>
+</mapper>
