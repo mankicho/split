@@ -60,7 +60,6 @@ public class PlanController {
 
     /**
      * @param requestBody 플랜 여러개 삭제하기
-     * @return
      */
     @PostMapping(value = "/range/delete.do")
     public int deleteRangePlan(@RequestBody HashMap<String, String> requestBody) {

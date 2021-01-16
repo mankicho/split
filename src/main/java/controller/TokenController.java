@@ -46,7 +46,7 @@ public class TokenController {
 
     @GetMapping("/admin/get.do")
     public Map<String, Object> getTokenForAdmin(@RequestParam(value = "subject") String subject) {
-        String token = tokenGeneratorService.privateToken(subject, 1000 * 60 * 60 * 24 * 21);
+        String token = tokenGeneratorService.privateToken(subject,5);
         Map<String, Object> map = new HashMap<>();
         map.put("result", token);
         return map;

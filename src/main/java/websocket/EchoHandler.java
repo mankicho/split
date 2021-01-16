@@ -16,21 +16,23 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j
 public class EchoHandler extends TextWebSocketHandler {
 
     @Setter(onMethod_ = {@Autowired})
-    private SqlSession sqlSession;
+    private MemberMapper memberMapper;
+
+    @Setter(onMethod_ = {@Autowired})
+    private AlarmMessageMapper alarmMessageMapper;
+
     //로그인 한 전체
-    List<WebSocketSession> sessions = new ArrayList<>();
+    private List<WebSocketSession> sessions = new ArrayList<>();
+
     // 1대1
-    Map<String, WebSocketSession> userSessionsMap = new HashMap<>();
-    int a = 0;
+    private Map<String, WebSocketSession> userSessionsMap = new HashMap<>();
+    private int a = 0;
 
     public EchoHandler() {
         System.out.println("a = " + (a++));
@@ -82,20 +84,22 @@ public class EchoHandler extends TextWebSocketHandler {
         String msg = message.getPayload(); // 메세지 가져와서
         JSONObject jsonMessage = new JSONObject(msg); // JSON 형성
         String userEmail = jsonMessage.getString("toEmail"); // JSON 에서 email 추출
-        MemberMapper memberMapper = sqlSession.getMapper(MemberMapper.class);
+        String fromEmail = jsonMessage.getString("fromEmail"); // JSON 에서 email 추출
         String searchedUserEmail = memberMapper.isExistEmail(userEmail);
-        if (searchedUserEmail == null) {
+        String searchedFromEmail = memberMapper.isExistEmail(fromEmail);
+        if (searchedUserEmail == null || searchedFromEmail == null) {
             TextMessage errorMessage = new TextMessage("존재하지 않는 이메일입니다.");
             session.sendMessage(errorMessage);
             return;
         }
-        AlarmMessageMapper messageMapper = sqlSession.getMapper(AlarmMessageMapper.class);
-        AlarmMessageDTO alarmMessageDTO = setAlarmMessageDTO(message, messageMapper);
-        messageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
+
+        AlarmMessageDTO alarmMessageDTO = setAlarmMessageDTO(message);
+        alarmMessageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
         WebSocketSession loginClient = userSessionsMap.get(userEmail); // 유저 세션 map 에서 email 기반 세션 추출
         if (loginClient != null) { // 로그인한 유저가 있으면
             loginClient.sendMessage(message); // 메세지를 보낸다
         }
+
     }
 
 
@@ -113,13 +117,13 @@ public class EchoHandler extends TextWebSocketHandler {
         return user == null ? session.getId() : user;
     }
 
-    private AlarmMessageDTO setAlarmMessageDTO(TextMessage message, AlarmMessageMapper messageMapper) {
+    private AlarmMessageDTO setAlarmMessageDTO(TextMessage message) {
         JSONObject jsonMessage = new JSONObject(message.getPayload());
         String userEmail = jsonMessage.getString("toEmail");
 
         int maxSeq;
         try {
-            maxSeq = messageMapper.getMaxSeq(userEmail) + 1;
+            maxSeq = alarmMessageMapper.getMaxSeq(userEmail) + 1;
         } catch (BindingException e) { // 알림이 하나도 없어서 getMaxSeq 가 null 을 리턴하는 경우
             maxSeq = 0;
         }

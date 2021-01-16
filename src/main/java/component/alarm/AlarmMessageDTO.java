@@ -11,6 +11,7 @@ import java.sql.Date;
 @Data
 public class AlarmMessageDTO {
     private int messageId;
+    private int msgType;
     private String toEmail;
     private String fromEmail;
     private String title;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -54,13 +55,15 @@ public class TokenGeneratorServiceImpl implements TokenGeneratorService {
     }
 
     @Override
-    public String privateToken(String subject, long ttlMillis) {
-        System.out.println("zcw16" + zcw16);
+    public String privateToken(String subject, int month) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, month);
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(zcw16);
         Key signedKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setSubject(subject).signWith(signatureAlgorithm, signedKey);
         long nowMillis = System.currentTimeMillis();
-        builder.setExpiration(new Date(nowMillis + ttlMillis));
+        builder.setExpiration(cal.getTime());
         return builder.compact();
     }
 

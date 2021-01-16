@@ -9,7 +9,7 @@ public interface TokenGeneratorService {
 
     Date getExpiration(String token);
 
-    String privateToken(String subject, long ttlMillis);
+    String privateToken(String subject, int month);
 
     String privateGetSubject(String token);
 }

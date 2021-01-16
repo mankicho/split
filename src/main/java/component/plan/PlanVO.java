@@ -19,4 +19,5 @@ public class PlanVO {
     private String placeSetting;
     private String guildName;
     private String tag;
+    private String pCode;
 }

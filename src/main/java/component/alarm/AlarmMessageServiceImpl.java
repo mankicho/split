@@ -49,7 +49,7 @@ public class AlarmMessageServiceImpl implements AlarmMessageService {
      * @return
      */
     @Override
-    public int saveMessage(AlarmMessageDTO messageDTO) throws MysqlDataTruncation {
+    public int saveMessage(AlarmMessageDTO messageDTO) {
         return alarmMessageDAO.saveMessage(messageDTO);
     }
 }
