@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import websocket.msg.AlarmMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class AlarmMessageController {
     private AlarmMessageService messageService;
 
     @PostMapping(value = "/get.do")
-    public List<AlarmMessageDTO> getMessages(HttpServletRequest request) {
+    public List<AlarmMessage> getMessages(HttpServletRequest request) {
         String email = request.getParameter("email");
         String mSeq = request.getParameter("mSeq");
 

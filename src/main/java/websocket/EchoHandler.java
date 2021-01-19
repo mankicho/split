@@ -15,6 +15,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import websocket.msg.AlarmMessage;
 
 import java.util.*;
 
@@ -27,16 +28,13 @@ public class EchoHandler extends TextWebSocketHandler {
     @Setter(onMethod_ = {@Autowired})
     private AlarmMessageMapper alarmMessageMapper;
 
+
+    private AlarmMessageParser alarmMessageParser = new AlarmMessageParser();
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();
 
     // 1대1
     private Map<String, WebSocketSession> userSessionsMap = new HashMap<>();
-    private int a = 0;
-
-    public EchoHandler() {
-        System.out.println("a = " + (a++));
-    }
 
     /**
      * @param session this function called when client' session is connected
@@ -44,7 +42,7 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println(session.getId() + " is connected");
+        System.out.println(session.getId()+" is connect");
         sessions.add(session);
         String senderEmail = getEmail(session);
         userSessionsMap.put(senderEmail, session);
@@ -81,25 +79,12 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String msg = message.getPayload(); // 메세지 가져와서
-        JSONObject jsonMessage = new JSONObject(msg); // JSON 형성
-        String userEmail = jsonMessage.getString("toEmail"); // JSON 에서 email 추출
-        String fromEmail = jsonMessage.getString("fromEmail"); // JSON 에서 email 추출
-        String searchedUserEmail = memberMapper.isExistEmail(userEmail);
-        String searchedFromEmail = memberMapper.isExistEmail(fromEmail);
-        if (searchedUserEmail == null || searchedFromEmail == null) {
-            TextMessage errorMessage = new TextMessage("존재하지 않는 이메일입니다.");
-            session.sendMessage(errorMessage);
-            return;
-        }
-
-        AlarmMessageDTO alarmMessageDTO = setAlarmMessageDTO(message);
-        alarmMessageMapper.saveMessage(alarmMessageDTO); // 메세지 전송 유무에 상관없이 메세지 저장.
-        WebSocketSession loginClient = userSessionsMap.get(userEmail); // 유저 세션 map 에서 email 기반 세션 추출
-        if (loginClient != null) { // 로그인한 유저가 있으면
-            loginClient.sendMessage(message); // 메세지를 보낸다
-        }
-
+        // todo 1. 적절한 요청인가? (email 이 실제로 DB 에 저장되어있는가)
+        // todo 2. 메세지 요청 유형 파악
+        AlarmMessage alarmMessage = alarmMessageParser.parse(message);
+        // todo 3. 유형에 맞는 메소드 수행
+        AlarmMessageServiceExecutor serviceExecutor = new AlarmMessageServiceExecutor(alarmMessage, session, sessions, userSessionsMap);
+        serviceExecutor.execute();
     }
 
 

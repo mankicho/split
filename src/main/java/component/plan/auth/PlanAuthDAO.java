@@ -23,15 +23,17 @@ public class PlanAuthDAO {
     private TokenGeneratorService tokenGeneratorService;
 
     public int planAuth(HashMap<String, Object> hashMap) {
+        String token = (String) hashMap.get("token");
         // todo 1. 플랜이 존재 하는가?
         PlanVO planVO = planMapper.selectByIdAndEmail(hashMap);
         if (planVO == null) {
-            return 500;
+            return 500; // 존재하지 않는 플랜
         }
-
         // todo 2. 요청 데이터가 적절한가? (parameter, timestamp 등등)
-        if (tokenGeneratorService.getExpiration((String) hashMap.get("token")).before(new Date())) {
-            return 400;
+        if (tokenGeneratorService.getExpiration(token).before(new Date())) {
+            System.out.println(tokenGeneratorService.getExpiration(token));
+            System.out.println(new Date());
+            return 400; // 부적절한 데이터
         }
         // todo 3. 인증 내역 Table 에 insert, 결과 리턴
         return planAuthMapper.planAuth(hashMap);

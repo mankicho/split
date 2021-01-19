@@ -36,7 +36,7 @@ public interface MemberMapper {
 
     List<MemberTimer> selectTimer(@Param("email") String email);
 
-    int addFriend(@Param("to") String toEmatil, @Param("from") String fromEmail);
+    int addFriend(@Param("to") String toEmail, @Param("from") String fromEmail);
 
     int addPoint(HashMap<String, Object> hashMap);
 
