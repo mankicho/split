@@ -18,7 +18,7 @@
     </resultMap>
 
     <insert id="insertPlan" parameterType="PlanDTO">
-        INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,checkout_time,comp_condition,set_daypub,place_setting,guild_name,tag)
+        INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,checkout_time,comp_condition,set_day,pub,place_setting,guild_name,tag)
         SELECT #{memberEmail},#{planName},date_format(#{startDate},'%Y-%m-%d'),date_format(#{endDate},'%Y-%m-%d')
         ,time_format(#{authTime},'%H:%i:%s'),#{checkoutTime},
         #{compCondition},#{setDay},#{pub},#{placeSetting},#{guildName},#{tag} FROM dual
