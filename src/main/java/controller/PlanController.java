@@ -24,6 +24,7 @@ public class PlanController {
      */
     @PostMapping(value = "/insert.do")
     public int insertPlan(@RequestBody PlanDTO planDTO) {
+        System.out.println(planDTO);
         return planService.insertPlan(planDTO);
     }
 
@@ -67,8 +68,7 @@ public class PlanController {
     }
 
     /**
-     * @param email
-     * 유저의 모든 플랜 가져오기
+     * @param email 유저의 모든 플랜 가져오기
      * @return
      */
     @PostMapping(value = "/select.do")
