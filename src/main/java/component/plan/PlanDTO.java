@@ -15,6 +15,7 @@ public class PlanDTO {
     private String authTime;
     private String checkoutTime;
     private String compCondition;
+    private int setDay;
     private boolean pub;
     private String placeSetting;
     private String guildName;

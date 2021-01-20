@@ -10,6 +10,7 @@
         <result property="endDate" column="enddate"/>
         <result property="authTime" column="authtime"/>
         <result property="compCondition" column="comp_condition"/>
+        <result property="setDay" column="set_day"/>
         <result property="pub" column="pub"/>
         <result property="placeSetting" column="place_setting"/>
         <result property="guildName" column="guild_name"/>
@@ -17,10 +18,10 @@
     </resultMap>
 
     <insert id="insertPlan" parameterType="PlanDTO">
-        INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,checkout_time,comp_condition,pub,place_setting,guild_name,tag)
+        INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,checkout_time,set_day,comp_condition,pub,place_setting,guild_name,tag)
         SELECT #{memberEmail},#{planName},date_format(#{startDate},'%Y-%m-%d'),date_format(#{endDate},'%Y-%m-%d')
         ,time_format(#{authTime},'%H:%i:%s'),#{checkoutTime},
-        #{compCondition},#{pub},#{placeSetting},#{guildName},#{tag} FROM dual
+        #{compCondition},#{setDay},#{pub},#{placeSetting},#{guildName},#{tag} FROM dual
         WHERE
         (select count(*) from plan where member_email = #{memberEmail} AND (date_format('2021-01-09','%Y-%m-%d') <![CDATA[<=]]> enddate
         AND date_format('2021-01-14','%Y-%m-%d') <![CDATA[>=]]> startdate)) <![CDATA[<]]> 1

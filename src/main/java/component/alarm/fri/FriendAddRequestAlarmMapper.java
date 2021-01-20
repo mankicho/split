@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface FriendAddRequestAlarmMapper {
-    int saveMessage(FriendAddRequestAlarmMessage friendAddRequestAlarmMessage); // 메세지 저장
+    int saveMessage(FriendAddRequestAlarmDTO friendAddRequestAlarmDTO); // 메세지 저장
 
     List<FriendAddRequestAlarmMessage> selectAttAlarmMessages(HashMap<String, Object> hashMap); // 모든 친구추가 메세지 조회
 

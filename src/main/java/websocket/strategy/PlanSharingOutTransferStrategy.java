@@ -32,7 +32,7 @@ public class PlanSharingOutTransferStrategy extends TransferStrategy {
         // todo 1. 메세지를 DB 에서 삭제한 후
         planSharingAlarmService.deleteMessage(alarmMessage.getPlanLogId(), alarmMessage.getEmail());
         // todo 2. 플랜 멤버들이 로그인 상태라면 메세지를 보낸다(개별적으로)
-        TextMessage message = TextMessageGenerator.generateTextMessagePlanSharingOut((PlanSharingAlarmMessage) alarmMessage);
+        TextMessage message = TextMessageGenerator.generateTextMessagePlanSharingOut(alarmMessage);
         WebSocketSession loginUser = userMap.get(alarmMessage.getEmail());
         if (loginUser != null) {
             try {

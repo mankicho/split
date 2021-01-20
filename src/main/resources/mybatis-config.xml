@@ -4,6 +4,7 @@
 
 <configuration>
     <typeAliases>
+        <!-- DTO, VO -->
         <typeAlias type="component.plan.PlanVO" alias="PlanVO"/>
         <typeAlias type="component.plan.PlanDTO" alias="PlanDTO"/>
         <typeAlias type="component.member.MemberVO" alias="MemberVO"/>
@@ -15,6 +16,13 @@
         <typeAlias type="component.zone.ZoneImageDTO" alias="ZoneImageDTO"/>
         <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
         <typeAlias type="component.member.MemberTmpInfoDTO" alias="MemberTmpInfoDTO"/>
+        <typeAlias type="component.alarm.fri.FriendAddRequestAlarmDTO" alias="FriendAddRequestAlarmDTO"/>
+        <typeAlias type="component.alarm.fri.FriendAddRequestAlarmVO" alias="FriendAddRequestAlarmVO"/>
+        <typeAlias type="component.alarm.pls.PlanSharingAlarmDTO" alias="PlanSharingAlarmDTO"/>
+        <typeAlias type="component.alarm.pls.PlanSharingAlarmVO" alias="PlanSharingAlarmVO"/>
+        <typeAlias type="component.alarm.att.AttendanceDTO" alias="AttendanceDTO"/>
+        <typeAlias type="component.alarm.att.AttendanceVO" alias="AttendanceVO"/>
+
 
     </typeAliases>
     <mappers>

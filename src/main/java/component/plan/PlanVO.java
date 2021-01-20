@@ -15,6 +15,7 @@ public class PlanVO {
     private Date authTime;
     private Date checkoutTime;
     private String compCondition;
+    private int setDay;
     private boolean pub;
     private String placeSetting;
     private String guildName;
