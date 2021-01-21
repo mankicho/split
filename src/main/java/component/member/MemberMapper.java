@@ -34,7 +34,7 @@ public interface MemberMapper {
 
     int insertPolicy(HashMap<String, Object> hashMap);
 
-    List<MemberTimer> selectTimer(@Param("email") String email);
+    List<MemberTimerVO> selectTimer(@Param("email") String email);
 
     int addFriend(@Param("to") String toEmail, @Param("from") String fromEmail);
 

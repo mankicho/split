@@ -32,7 +32,7 @@ public interface MemberService {
 
     int insertPolicy(HashMap<String, Object> hashMap);
 
-    List<MemberTimer> selectTimer(String email);
+    List<MemberTimerVO> selectTimer(String email);
 
     String getEmailByNickname(@Param("nickname") String nickname);
 

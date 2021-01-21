@@ -76,13 +76,13 @@
         INSERT INTO members_policy values (#{email},#{po1},#{po2},#{po3},#{po4})
     </insert>
 
-    <resultMap id="members_timer" type="component.member.MemberTimer">
+    <resultMap id="members_timer" type="component.member.MemberTimerVO">
         <result property="email" column="email"/>
         <result property="focusTime" column="focus_time"/>
         <result property="focusDate" column="focus_date"/>
     </resultMap>
     <select id="selectTimer" parameterType="string" resultMap="members_timer">
-        select * from members_timer where email = #{email} order by focus_date desc limit 7
+        select * from members_timer where email = #{email} AND datediff(now(),focus_date) <![CDATA[<]]> 8 order by focus_date desc;
     </select>
 
     <insert id="addPoint" parameterType="hashmap">

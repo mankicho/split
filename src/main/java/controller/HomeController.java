@@ -2,14 +2,13 @@ package controller;
 
 import component.home.HomeDataService;
 import component.member.MemberService;
-import component.member.MemberTimer;
+import component.member.MemberTimerVO;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -56,7 +55,7 @@ public class HomeController {
         hashMap.put("users", allUsers);
         int usersTotalCheck = homeDataService.selectUsersTotalCheckTime(email);
         hashMap.put("checks", usersTotalCheck);
-        List<MemberTimer> timers = memberService.selectTimer(email);
+        List<MemberTimerVO> timers = memberService.selectTimer(email);
         hashMap.put("timers", timers);
         return hashMap;
     }

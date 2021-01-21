@@ -6,8 +6,8 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
-public class MemberTimer {
+public class MemberTimerVO {
     private String email;
-    private Time focusTime;
     private Date focusDate;
+    private int focusTime;
 }

@@ -154,6 +154,12 @@ public class MemberController {
         return hashMap;
     }
 
+    @PostMapping(value = "/timer/get.do")
+    public List<MemberTimerVO> getTimers(@RequestParam("token") String token) {
+        String email = tokenGeneratorService.getSubject(token);
+        return memberService.selectTimer(email);
+    }
+
     @PostMapping(value = "/gen/tmp/pw")
     public HashMap<String, String> generateTmpPassword(@RequestParam("email") String email) {
         HashMap<String, String> hashMap = new HashMap<>();

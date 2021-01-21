@@ -2,7 +2,6 @@ package component.member;
 
 import component.mail.MailService;
 import lombok.Setter;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -138,7 +137,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberTimer> selectTimer(String email) {
+    public List<MemberTimerVO> selectTimer(String email) {
         return memberDAO.selectTimer(email);
     }
 

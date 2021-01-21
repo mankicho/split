@@ -1,14 +1,9 @@
 package component.member;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.apache.ibatis.javassist.scopedpool.SoftValueHashMap;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -76,7 +71,7 @@ public class MemberDAO {
         return mapper.insertPolicy(hashMap);
     }
 
-    public List<MemberTimer> selectTimer(@Param("email") String email) {
+    public List<MemberTimerVO> selectTimer(@Param("email") String email) {
         if (containSpecial(email)) {
             return null;
         }
