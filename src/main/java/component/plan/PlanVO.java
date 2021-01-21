@@ -13,7 +13,6 @@ public class PlanVO {
     private Date startDate;
     private Date endDate;
     private Date authTime;
-    private Date checkoutTime;
     private String compCondition;
     private int setDay;
     private boolean pub;

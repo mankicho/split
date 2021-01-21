@@ -13,7 +13,6 @@ public class PlanDTO {
     private String startDate;
     private String endDate;
     private String authTime;
-    private String checkoutTime;
     private String compCondition;
     private int setDay;
     private boolean pub;
