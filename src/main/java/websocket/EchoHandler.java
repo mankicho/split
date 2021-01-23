@@ -35,7 +35,7 @@ public class EchoHandler extends TextWebSocketHandler {
 
     // 1대1
     private Map<String, WebSocketSession> userSessionsMap = new HashMap<>();
-    private Map<String, WebSocketSession> sessionIdMap = new HashMap<>();
+    private Map<String, WebSocketSession> cafeSessionMap = new HashMap<>();
 
     /**
      * @param session this function called when client' session is connected
@@ -47,7 +47,7 @@ public class EchoHandler extends TextWebSocketHandler {
         sessions.add(session);
         String senderEmail = getEmail(session);
         userSessionsMap.put(senderEmail, session);
-        sessionIdMap.put(session.getId(), session);
+        cafeSessionMap.put(session.getId(), session);
     }
 
     /**
@@ -87,8 +87,14 @@ public class EchoHandler extends TextWebSocketHandler {
 //        // todo 3. 유형에 맞는 메소드 수행
 //        AlarmMessageServiceExecutor serviceExecutor = new AlarmMessageServiceExecutor(alarmMessage, session, sessions, userSessionsMap);
 //        serviceExecutor.execute();
-        TextMessage msg = new TextMessage(session.getId());
-        session.sendMessage(msg);
+        String str = message.getPayload();
+        JSONObject jsonObject = new JSONObject(str);
+
+        if (cafeSessionMap.get(jsonObject.getString("cafe")) != null) {
+            TextMessage msg = new TextMessage(jsonObject.getString("user") + "님이 출석체크했습니다.");
+            cafeSessionMap.get(jsonObject.getString("cafe")).sendMessage(msg);
+            session.sendMessage(new TextMessage("메세지 전송 완료"));
+        }
     }
 
     /**

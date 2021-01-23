@@ -156,6 +156,11 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.addPoint(email, point);
     }
 
+    @Override
+    public int insertTimer(HashMap<String, Object> hashMap) {
+        return memberDAO.insertTimer(hashMap);
+    }
+
     private String generateSalt() {
         Random random = new Random();
 

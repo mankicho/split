@@ -24,7 +24,7 @@
 
     <bean id="echoHandler" class="websocket.EchoHandler"/>
     <websocket:handlers>
-        <websocket:mapping path="/alarm/echo" handler="echoHandler"/>
+        <websocket:mapping path="/echo/alarm" handler="echoHandler"/>
         <websocket:handshake-interceptors>
             <bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
         </websocket:handshake-interceptors>

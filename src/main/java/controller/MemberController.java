@@ -37,13 +37,13 @@ public class MemberController {
      * password encoder
      */
     @Setter(onMethod_ = {@Autowired})
-    private BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder; // todo password encoding function
 
     /**
      * for generating token (to use application service)
      */
     @Setter(onMethod_ = {@Autowired})
-    private TokenGeneratorService tokenGeneratorService;
+    private TokenGeneratorService tokenGeneratorService; // todo return authentication token
 
     @ExceptionHandler(NullPointerException.class)
     public HashMap<String, String> handlerNullPointerException(Exception e) {
@@ -158,6 +158,20 @@ public class MemberController {
     public List<MemberTimerVO> getTimers(@RequestParam("token") String token) {
         String email = tokenGeneratorService.getSubject(token);
         return memberService.selectTimer(email);
+    }
+
+    @PostMapping(value = "/timer/insert.do")
+    public int insertTimer(HttpServletRequest request) {
+        String token = request.getParameter("email");
+        String email = tokenGeneratorService.getSubject(token);
+        String seconds = request.getParameter("sec");
+        int sec = Integer.parseInt(seconds);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("email", email);
+        hashMap.put("sec", sec);
+
+        return memberService.insertTimer(hashMap);
     }
 
     @PostMapping(value = "/gen/tmp/pw")

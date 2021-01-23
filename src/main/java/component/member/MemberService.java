@@ -34,6 +34,8 @@ public interface MemberService {
 
     List<MemberTimerVO> selectTimer(String email);
 
+    int insertTimer(HashMap<String,Object> hashMap);
+
     String getEmailByNickname(@Param("nickname") String nickname);
 
     int addFriend(String toEmail, String fromEmail);

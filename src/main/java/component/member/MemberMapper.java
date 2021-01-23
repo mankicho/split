@@ -36,6 +36,8 @@ public interface MemberMapper {
 
     List<MemberTimerVO> selectTimer(@Param("email") String email);
 
+    int insertTimer(HashMap<String,Object> hashMap);
+
     int addFriend(@Param("to") String toEmail, @Param("from") String fromEmail);
 
     int addPoint(HashMap<String, Object> hashMap);

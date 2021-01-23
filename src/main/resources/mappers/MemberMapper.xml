@@ -81,9 +81,14 @@
         <result property="focusTime" column="focus_time"/>
         <result property="focusDate" column="focus_date"/>
     </resultMap>
+
     <select id="selectTimer" parameterType="string" resultMap="members_timer">
         select * from members_timer where email = #{email} AND datediff(now(),focus_date) <![CDATA[<]]> 8 order by focus_date desc;
     </select>
+
+    <insert id="insertTimer" parameterType="hashmap">
+        INSERT INTO members_timer(email,focus_time) values (#{email},#{sec})
+    </insert>
 
     <insert id="addPoint" parameterType="hashmap">
         insert into members_point values (#{email},#{point}) on duplicate key update member_point = member_point + #{point};

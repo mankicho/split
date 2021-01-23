@@ -93,6 +93,10 @@ public class MemberDAO {
         return containSpecial(email) ? -1 : mapper.addPoint(hashMap);
     }
 
+    public int insertTimer(HashMap<String, Object> hashMap) {
+        return mapper.insertTimer(hashMap);
+    }
+
     private boolean containSpecial(String str) {
         String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);

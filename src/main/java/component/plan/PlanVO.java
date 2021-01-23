@@ -12,7 +12,7 @@ public class PlanVO {
     private String planName;
     private Date startDate;
     private Date endDate;
-    private String authTime;
+    private Date authTime;
     private String compCondition;
     private int setDay;
     private boolean pub;
