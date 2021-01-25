@@ -36,10 +36,11 @@ public class EchoHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         System.out.println(session.getId() + " is connect");
+        System.out.println(session.getHandshakeHeaders().get("cafe"));
         sessions.add(session);
         String senderEmail = getEmail(session);
         userSessionsMap.put(senderEmail, session);
-        cafeSessionMap.put(session.getId(), session);
+        cafeSessionMap.put((String) Objects.requireNonNull(session.getHandshakeHeaders().get("cafe")).get(0), session);
         System.out.println(cafeSessionMap);
     }
 
@@ -125,7 +126,7 @@ public class EchoHandler extends TextWebSocketHandler {
 
     private void sendMessageToCafe(TextMessage tm) throws IOException {
         JSONObject object = new JSONObject(tm.getPayload());
-        System.out.println("object = "+object);
+        System.out.println("object = " + object);
         WebSocketSession cafe = cafeSessionMap.get(object.getString("cafe"));
         if (cafe != null) {
             cafe.sendMessage(new TextMessage(object.getString("user")));
