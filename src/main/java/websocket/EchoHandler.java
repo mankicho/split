@@ -43,10 +43,10 @@ public class EchoHandler extends TextWebSocketHandler {
         if (cafe != null) {
             String cafeCode = cafe.get(0);
             System.out.println("cafe = " + cafeCode);
-            if(cafeSessionMap.get(cafeCode) != null){
+            if (cafeSessionMap.get(cafeCode) != null) {
                 cafeSessionMap.remove(cafeCode);
-                cafeSessionMap.put(cafeCode,session);
             }
+            cafeSessionMap.put(cafeCode, session);
             System.out.println(cafeSessionMap);
         }
     }
@@ -135,7 +135,7 @@ public class EchoHandler extends TextWebSocketHandler {
         JSONObject object = new JSONObject(tm.getPayload());
         System.out.println("object = " + object);
         WebSocketSession cafe = cafeSessionMap.get(object.getString("cafe"));
-        System.out.println("cafe = " + cafe);
+        System.out.println("message(Cafe) = " + cafe);
         if (cafe != null) {
             cafe.sendMessage(new TextMessage(object.getString("user")));
             System.out.println("send");
