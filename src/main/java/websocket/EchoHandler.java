@@ -43,7 +43,10 @@ public class EchoHandler extends TextWebSocketHandler {
         if (cafe != null) {
             String cafeCode = cafe.get(0);
             System.out.println("cafe = " + cafeCode);
-            cafeSessionMap.put(cafeCode,session);
+            if(cafeSessionMap.get(cafeCode) != null){
+                cafeSessionMap.remove(cafeCode);
+                cafeSessionMap.put(cafeCode,session);
+            }
             System.out.println(cafeSessionMap);
         }
     }
