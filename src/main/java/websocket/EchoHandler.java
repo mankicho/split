@@ -37,6 +37,7 @@ public class EchoHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         System.out.println(session.getId() + " is connect");
         List<String> cafe = session.getHandshakeHeaders().get("cafe");
+        System.out.println("cafe header = " + cafe);
         sessions.add(session);
         String senderEmail = getEmail(session);
         userSessionsMap.put(senderEmail, session);
