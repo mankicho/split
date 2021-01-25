@@ -36,13 +36,14 @@ public class EchoHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         System.out.println(session.getId() + " is connect");
-        String cafe = session.getHandshakeHeaders().get("cafe").get(0);
+        List<String> cafe = session.getHandshakeHeaders().get("cafe");
         sessions.add(session);
         String senderEmail = getEmail(session);
         userSessionsMap.put(senderEmail, session);
         if (cafe != null) {
-            System.out.println("cafe = " + (String) session.getHandshakeHeaders().get("cafe").get(0));
-            cafeSessionMap.put((String) Objects.requireNonNull(session.getHandshakeHeaders().get("cafe")).get(0), session);
+            String cafeCode = cafe.get(0);
+            System.out.println("cafe = " + cafeCode);
+            cafeSessionMap.put(cafeCode,session);
             System.out.println(cafeSessionMap);
         }
     }
