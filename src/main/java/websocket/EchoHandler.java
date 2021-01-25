@@ -50,6 +50,7 @@ public class EchoHandler extends TextWebSocketHandler {
             cafeSessionMap.put(cafeCode, session);
             System.out.println(cafeSessionMap);
         }
+        session.sendMessage(new TextMessage("1"));
     }
 
     /**
