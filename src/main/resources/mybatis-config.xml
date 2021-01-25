@@ -10,27 +10,19 @@
         <typeAlias type="component.member.MemberVO" alias="MemberVO"/>
         <typeAlias alias="MemberDTO" type="component.member.MemberDTO"/>
         <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
-        <typeAlias type="component.alarm.AlarmMessageDTO" alias="AlarmMessageDTO"/>
         <typeAlias type="component.zone.ZoneDTO" alias="ZoneDTO"/>
         <typeAlias type="component.zone.ZoneOperDTO" alias="ZoneOperDTO"/>
         <typeAlias type="component.zone.ZoneImageDTO" alias="ZoneImageDTO"/>
         <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
         <typeAlias type="component.member.MemberTmpInfoDTO" alias="MemberTmpInfoDTO"/>
-        <typeAlias type="component.alarm.fri.FriendAddRequestAlarmDTO" alias="FriendAddRequestAlarmDTO"/>
-        <typeAlias type="component.alarm.fri.FriendAddRequestAlarmVO" alias="FriendAddRequestAlarmVO"/>
-        <typeAlias type="component.alarm.pls.PlanSharingAlarmDTO" alias="PlanSharingAlarmDTO"/>
-        <typeAlias type="component.alarm.pls.PlanSharingAlarmVO" alias="PlanSharingAlarmVO"/>
-        <typeAlias type="component.alarm.att.AttendanceDTO" alias="AttendanceDTO"/>
-        <typeAlias type="component.alarm.att.AttendanceVO" alias="AttendanceVO"/>
 
 
     </typeAliases>
     <mappers>
         <mapper class="component.plan.PlanMapper"/>
-        <mapper class="component.member.MemberMapper"/>
-        <mapper class="component.home.HomeDataMapper"/>
-        <mapper class="component.zone.ZoneMapper"/>
-        <mapper class="component.alarm.AlarmMessageMapper"/>
-    </mappers>
+<mapper class="component.member.MemberMapper"/>
+<mapper class="component.home.HomeDataMapper"/>
+<mapper class="component.zone.ZoneMapper"/>
+        </mappers>
 
-</configuration>
+        </configuration>

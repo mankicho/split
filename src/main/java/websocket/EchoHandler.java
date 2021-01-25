@@ -1,22 +1,18 @@
 package websocket;
 
-import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
-import component.alarm.AlarmMessageDTO;
-import component.alarm.AlarmMessageMapper;
 import component.member.MemberMapper;
+import component.plan.auth.PlanAuthService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
-import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import websocket.msg.AlarmMessage;
+import websocket.execute.*;
 
+import java.io.IOException;
 import java.util.*;
 
 @Log4j
@@ -25,11 +21,7 @@ public class EchoHandler extends TextWebSocketHandler {
     @Setter(onMethod_ = {@Autowired})
     private MemberMapper memberMapper;
 
-    @Setter(onMethod_ = {@Autowired})
-    private AlarmMessageMapper alarmMessageMapper;
 
-
-    private AlarmMessageParser alarmMessageParser = new AlarmMessageParser();
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();
 
@@ -48,6 +40,7 @@ public class EchoHandler extends TextWebSocketHandler {
         String senderEmail = getEmail(session);
         userSessionsMap.put(senderEmail, session);
         cafeSessionMap.put(session.getId(), session);
+        System.out.println(cafeSessionMap);
     }
 
     /**
@@ -60,6 +53,7 @@ public class EchoHandler extends TextWebSocketHandler {
         userSessionsMap.remove(session.getId());
         System.out.println(session.getId() + "is disconnected");
         sessions.remove(session);
+        cafeSessionMap.remove(session.getId());
     }
 
     /**
@@ -81,20 +75,16 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        System.out.println("handleTextMessage = " + message.getPayload());
         // todo 1. 적절한 요청인가? (email 이 실제로 DB 에 저장되어있는가)
         // todo 2. 메세지 요청 유형 파악
 //        AlarmMessage alarmMessage = alarmMessageParser.parse(message);
 //        // todo 3. 유형에 맞는 메소드 수행
 //        AlarmMessageServiceExecutor serviceExecutor = new AlarmMessageServiceExecutor(alarmMessage, session, sessions, userSessionsMap);
 //        serviceExecutor.execute();
-        String str = message.getPayload();
-        JSONObject jsonObject = new JSONObject(str);
-
-        if (cafeSessionMap.get(jsonObject.getString("cafe")) != null) {
-            TextMessage msg = new TextMessage(jsonObject.getString("user") + "님이 출석체크했습니다.");
-            cafeSessionMap.get(jsonObject.getString("cafe")).sendMessage(msg);
-            session.sendMessage(new TextMessage("메세지 전송 완료"));
-        }
+        DataProcessStrategy dps = parseTextMessage(message);
+        dataProcess(dps);
+        sendMessageToCafe(message);
     }
 
     /**
@@ -111,22 +101,35 @@ public class EchoHandler extends TextWebSocketHandler {
         return user == null ? session.getId() : user;
     }
 
-    private AlarmMessageDTO setAlarmMessageDTO(TextMessage message) {
-        JSONObject jsonMessage = new JSONObject(message.getPayload());
-        String userEmail = jsonMessage.getString("toEmail");
-
-        int maxSeq;
-        try {
-            maxSeq = alarmMessageMapper.getMaxSeq(userEmail) + 1;
-        } catch (BindingException e) { // 알림이 하나도 없어서 getMaxSeq 가 null 을 리턴하는 경우
-            maxSeq = 0;
+    private DataProcessStrategy parseTextMessage(TextMessage message) {
+        JSONObject object = new JSONObject(message.getPayload());
+        switch (object.getInt("type")) {
+            case 1:
+                return new FriendProcessStrategy();
+            case 2:
+                return new AttendanceProcessStrategy();
+            case 3:
+                return new PlanSharingInProcessStrategy();
+            case 4:
+                return new PlanSharingOutProcessStrategy();
+            default:
+                return null;
         }
-
-        AlarmMessageDTO messageDTO = new AlarmMessageDTO(jsonMessage.getString("toEmail"), jsonMessage.getString("fromEmail")
-                , jsonMessage.getString("title"), jsonMessage.getString("message"));
-
-        messageDTO.setMessageSeq(maxSeq);
-        return messageDTO;
     }
 
+    private void dataProcess(DataProcessStrategy dps) {
+        if (dps != null) {
+            dps.execute();
+        }
+    }
+
+    private void sendMessageToCafe(TextMessage tm) throws IOException {
+        JSONObject object = new JSONObject(tm.getPayload());
+        System.out.println("object = "+object);
+        WebSocketSession cafe = cafeSessionMap.get(object.getString("cafe"));
+        if (cafe != null) {
+            cafe.sendMessage(new TextMessage(object.getString("user")));
+            System.out.println("send");
+        }
+    }
 }

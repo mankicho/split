@@ -25,7 +25,6 @@ public class PlanAuthController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Setter(onMethod_ = {@Autowired})
     private PlanAuthService planAuthService;
-
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 

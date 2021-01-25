@@ -23,7 +23,7 @@ public class SPLITException {
     public void defaultExceptionHandler(Exception e, HttpServletResponse response) throws IOException {
         String message = LocalDateTime.now() + " " + e.getClass().getName() + " : " + e.getMessage();
         ErrorCollector.collect(message);
-        System.out.println("message = " + message);
+        System.out.println("error = " + message);
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
     }
 }

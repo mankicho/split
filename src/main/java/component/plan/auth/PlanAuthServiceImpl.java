@@ -14,6 +14,7 @@ public class PlanAuthServiceImpl implements PlanAuthService {
 
     @Override
     public int planAuth(HashMap<String, Object> hashMap) {
+        System.out.println("planAuth");
         return planAuthDAO.planAuth(hashMap);
     }
 }
