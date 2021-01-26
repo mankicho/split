@@ -83,7 +83,9 @@
     </resultMap>
 
     <select id="selectTimer" parameterType="string" resultMap="members_timer">
-        select * from members_timer where email = #{email} AND datediff(now(),focus_date) <![CDATA[<]]> 8 order by focus_date desc;
+        select * from timer_days as d left outer join members_timer
+        as t on date_format(t.focus_date,'%Y-%m-%d')= date_format(d.num_date,'%Y-%m-%d') And email = #{email}
+        order by num_date;
     </select>
 
     <insert id="insertTimer" parameterType="hashmap">
