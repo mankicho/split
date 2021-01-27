@@ -35,20 +35,18 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println(session.getId() + " is connect");
+        log.info("session connect => " + session.getId());
         List<String> cafe = session.getHandshakeHeaders().get("cafe");
-        System.out.println("cafe header = " + cafe);
         sessions.add(session);
         String senderEmail = getEmail(session);
         userSessionsMap.put(senderEmail, session);
         if (cafe != null) {
             String cafeCode = cafe.get(0);
-            System.out.println("cafe = " + cafeCode);
             if (cafeSessionMap.get(cafeCode) != null) {
                 cafeSessionMap.remove(cafeCode);
             }
             cafeSessionMap.put(cafeCode, session);
-            System.out.println(cafeSessionMap);
+            log.info("cafeSession connect => " + cafeSessionMap);
         }
         session.sendMessage(new TextMessage("1"));
     }
@@ -85,7 +83,7 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        System.out.println("handleTextMessage = " + message.getPayload());
+        log.info("handleText");
         // todo 1. 적절한 요청인가? (email 이 실제로 DB 에 저장되어있는가)
         // todo 2. 메세지 요청 유형 파악
 //        AlarmMessage alarmMessage = alarmMessageParser.parse(message);
@@ -135,12 +133,10 @@ public class EchoHandler extends TextWebSocketHandler {
 
     private void sendMessageToCafe(TextMessage tm) throws IOException {
         JSONObject object = new JSONObject(tm.getPayload());
-        System.out.println("object = " + object);
         WebSocketSession cafe = cafeSessionMap.get(object.getString("cafe"));
-        System.out.println("message(Cafe) = " + cafe);
         if (cafe != null) {
             cafe.sendMessage(new TextMessage(object.getString("user")));
-            System.out.println("send");
+            log.info("send to cafe");
         }
     }
 }

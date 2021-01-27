@@ -21,4 +21,5 @@ public interface PlanMapper {
     int addAttendanceLog(PlanAttendanceDTO planAttendanceDTO); // 출석체크 기록 (누구누구가 출석했습니다.) 넣기
 
     List<PlanAttendanceDTO> getPlanAttendances(@Param("planLogId") int planLogId); // 출석체크기록 가져오기
+
 }

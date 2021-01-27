@@ -24,7 +24,9 @@ public class PlanController {
      */
     @PostMapping(value = "/insert.do")
     public int insertPlan(@RequestBody PlanDTO planDTO) {
-        System.out.println(planDTO);
+        if (planDTO.getPCode() == null) {
+            planDTO.setPCode("");
+        }
         return planService.insertPlan(planDTO);
     }
 
