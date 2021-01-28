@@ -24,8 +24,8 @@
         ,time_format(#{authTime},'%H:%i:%s'),
         #{compCondition},#{setDay},#{pub},#{placeSetting},#{guildName},#{tag},#{pCode} FROM dual
         WHERE
-        (select count(*) from plan where member_email = #{memberEmail} AND (date_format('2021-01-09','%Y-%m-%d') <![CDATA[<=]]> enddate
-        AND date_format('2021-01-14','%Y-%m-%d') <![CDATA[>=]]> startdate)) <![CDATA[<]]> 1
+        (select count(*) from plan where member_email = #{memberEmail} AND (date_format(#{startDate},'%Y-%m-%d') <![CDATA[<=]]> enddate
+        AND date_format(#{endDate},'%Y-%m-%d') <![CDATA[>=]]> startdate)) <![CDATA[<]]> 1
     </insert>
 
     <delete id="deletePlan" parameterType="int">
