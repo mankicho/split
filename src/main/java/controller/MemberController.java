@@ -1,6 +1,8 @@
 package controller;
 
 import component.member.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.exceptions.TooManyResultsException;
@@ -11,13 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * handle member's service (register, login, find password and so on)
@@ -26,6 +25,7 @@ import java.util.Random;
 @RequestMapping(value = "/member")
 @Log4j
 public class MemberController {
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * member service(register, login, find password and so on)
@@ -45,12 +45,22 @@ public class MemberController {
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService; // todo return authentication token
 
-    @ExceptionHandler(NullPointerException.class)
+    @ExceptionHandler(NullPointerException.class) // Null 값 handler
     public HashMap<String, String> handlerNullPointerException(Exception e) {
         e.printStackTrace();
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("error", e.getMessage());
         hashMap.put("code", "500");
+        return hashMap;
+    }
+
+    @ExceptionHandler({
+            JwtException.class
+    })
+    public HashMap<String, Object> handlerTokenException(JwtException e) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("code", 500);
+        hashMap.put("error", "invalid token");
         return hashMap;
     }
 
@@ -205,17 +215,17 @@ public class MemberController {
         return memberService.restoreDeletedMember(email);
     }
 
-    @PostMapping(value = "/email/get.do")
+    @PostMapping(value = "/email/get.do") // 이메일이 존재하는가
     public String isExistEmail(@RequestParam("email") String email) {
         return memberService.isExistEmail(email);
     }
 
-    @PostMapping(value = "/pNum/get.do")
+    @PostMapping(value = "/pNum/get.do") // 핸드폰번호 존재하는가
     public String isExistPhoneNumber(@RequestParam("pNum") String pNum) {
         return memberService.isExistPhoneNumber(pNum);
     }
 
-    @PostMapping(value = "/friend/add.do")
+    @PostMapping(value = "/friend/add.do") // 친구추가
     public HashMap<String, String> addFriend(@RequestParam("req_nick") String requestNickname, @RequestParam("res_nick") String responseNickname) {
         HashMap<String, String> hashMap = new HashMap<>();
         String reqEmail = memberService.getEmailByNickname(requestNickname);
@@ -226,4 +236,19 @@ public class MemberController {
         return hashMap;
     }
 
+    @GetMapping(value = "/phone/auth.do") // 핸드폰 인증번호 유효시간 3분 체크
+    public boolean phoneAuthenticate(HttpServletRequest request) {
+        String now = request.getParameter("now");
+        try {
+            Date d = format.parse(now);
+            d.setTime(d.getTime() + 1000 * 180);
+            log.info(d.toString());
+            if (d.after(new Date())) {
+                return true;
+            }
+            return false;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
 }

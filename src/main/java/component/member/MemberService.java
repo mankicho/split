@@ -34,12 +34,14 @@ public interface MemberService {
 
     List<MemberTimerVO> selectTimer(String email);
 
-    int insertTimer(HashMap<String,Object> hashMap);
+    int insertTimer(HashMap<String, Object> hashMap);
 
-    String getEmailByNickname(@Param("nickname") String nickname);
+    String getEmailByNickname(String nickname);
 
     int addFriend(String toEmail, String fromEmail);
 
-    int addPoint(@Param("email") String email, @Param("point") int point);
+    List<String> getFriendAddRequest(String email); // 친구추가 요청 가져오기
+
+    int addPoint(String email, int point);
 
 }

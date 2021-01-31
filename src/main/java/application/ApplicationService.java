@@ -15,6 +15,6 @@ public class ApplicationService implements ApplicationListener<ContextClosedEven
 
     @Override
     public void onApplicationEvent(ContextClosedEvent contextClosedEvent) {
-//        smsService.sendSMSToAdmin("01028470440");
+        smsService.sendSMSToAdmin("01028470440");
     }
 }

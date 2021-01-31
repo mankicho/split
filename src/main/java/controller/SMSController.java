@@ -22,9 +22,6 @@ public class SMSController {
     @Setter(onMethod_ = {@Autowired})
     private SMSService smsService;
 
-    @Setter(onMethod_ = {@Autowired})
-    private TokenGeneratorService tokenGeneratorService;
-
     /**
      * @param request 회원가입 할 때 핸드폰 번호 인증을 위한 기능
      * @return
@@ -33,7 +30,6 @@ public class SMSController {
     public HashMap<String, String> sendMessageForReg(HttpServletRequest request) {
         HashMap<String, String> hashMap = new HashMap<>();
         String phoneNumber = request.getParameter("pNum");
-        hashMap.put("pNum", phoneNumber);
         int code = smsService.sendSMSForReg(phoneNumber);
         if (code > 999) {
             hashMap.put("status", "202");
@@ -41,7 +37,6 @@ public class SMSController {
             hashMap.put("status", "500");
         }
         hashMap.put("code", code + "");
-        hashMap.put("token",tokenGeneratorService.createToken(code+"",1000*180));
         return hashMap;
     }
 

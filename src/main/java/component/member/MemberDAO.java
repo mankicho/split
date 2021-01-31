@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -86,6 +87,12 @@ public class MemberDAO {
         return (containSpecial(toEmail) || containSpecial(fromEmail)) ? -1 : mapper.addFriend(toEmail, fromEmail);
     }
 
+    public List<String> getFriendAddRequest(String email) {
+        return containSpecial(email) ? null : mapper.getFriendAddRequest(email);
+    }
+
+    ; // 친구추가 요청 가져오기
+
     public int addPoint(@Param("email") String email, @Param("point") int point) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("email", email);
@@ -101,5 +108,6 @@ public class MemberDAO {
         String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);
     }
+
 
 }

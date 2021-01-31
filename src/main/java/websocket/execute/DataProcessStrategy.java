@@ -1,6 +1,7 @@
 package websocket.execute;
 
-public interface DataProcessStrategy {
-    void execute();
+import org.springframework.web.socket.TextMessage;
 
+public interface DataProcessStrategy {
+    void execute(TextMessage tm);
 }

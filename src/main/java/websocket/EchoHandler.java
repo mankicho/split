@@ -91,7 +91,7 @@ public class EchoHandler extends TextWebSocketHandler {
 //        AlarmMessageServiceExecutor serviceExecutor = new AlarmMessageServiceExecutor(alarmMessage, session, sessions, userSessionsMap);
 //        serviceExecutor.execute();
         DataProcessStrategy dps = parseTextMessage(message);
-        dataProcess(dps);
+        dataProcess(dps,message);
         sendMessageToCafe(message);
     }
 
@@ -113,21 +113,23 @@ public class EchoHandler extends TextWebSocketHandler {
         JSONObject object = new JSONObject(message.getPayload());
         switch (object.getInt("type")) {
             case 1:
-                return new FriendProcessStrategy();
+                FriendProcessStrategy dps = new FriendProcessStrategy();
+                dps.setUserMap(userSessionsMap);
+                return dps;
             case 2:
                 return new AttendanceProcessStrategy();
-            case 3:
-                return new PlanSharingInProcessStrategy();
-            case 4:
-                return new PlanSharingOutProcessStrategy();
+//            case 3:
+//                return new PlanSharingInProcessStrategy();
+//            case 4:
+//                return new PlanSharingOutProcessStrategy();
             default:
                 return null;
         }
     }
 
-    private void dataProcess(DataProcessStrategy dps) {
+    private void dataProcess(DataProcessStrategy dps,TextMessage tm) {
         if (dps != null) {
-            dps.execute();
+            dps.execute(tm);
         }
     }
 

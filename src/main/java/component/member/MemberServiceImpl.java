@@ -146,9 +146,23 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.getEmailByNickname(nickname);
     }
 
+    /**
+     * @param toEmail   친구추가 하기
+     * @param fromEmail
+     * @return
+     */
     @Override
     public int addFriend(String toEmail, String fromEmail) {
         return memberDAO.addFriend(toEmail, fromEmail);
+    }
+
+    /**
+     * @param email 친구추가 요청 가져오기
+     * @return
+     */
+    @Override
+    public List<String> getFriendAddRequest(String email) {
+        return memberDAO.getFriendAddRequest(email);
     }
 
     @Override
