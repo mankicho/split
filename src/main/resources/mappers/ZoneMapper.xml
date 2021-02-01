@@ -19,7 +19,7 @@
         <result property="outerImage" column="outer_image_path"/>
     </resultMap>
 
-    <resultMap id="zone" type="component.zone.ZoneDTO">
+    <resultMap id="zone" type="component.zone.ZoneVO">
         <result property="code" column="planet_code"/>
         <result property="name" column="planet_name"/>
         <result property="doroName" column="doro_name"/>

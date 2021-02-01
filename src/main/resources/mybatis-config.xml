@@ -10,7 +10,7 @@
         <typeAlias type="component.member.MemberVO" alias="MemberVO"/>
         <typeAlias alias="MemberDTO" type="component.member.MemberDTO"/>
         <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
-        <typeAlias type="component.zone.ZoneDTO" alias="ZoneDTO"/>
+        <typeAlias type="component.zone.ZoneVO" alias="ZoneVO"/>
         <typeAlias type="component.zone.ZoneOperDTO" alias="ZoneOperDTO"/>
         <typeAlias type="component.zone.ZoneImageDTO" alias="ZoneImageDTO"/>
         <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>

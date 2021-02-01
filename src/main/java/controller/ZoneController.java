@@ -1,6 +1,6 @@
 package controller;
 
-import component.zone.ZoneDTO;
+import component.zone.ZoneVO;
 import component.zone.ZoneService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,8 +41,8 @@ public class ZoneController {
      *
      * @return
      */
-    @GetMapping(value = "/get.do")
-    public List<ZoneDTO> getZones(HttpServletRequest request) {
+    @GetMapping(value = "/get.do") // 지도에 표시할 공간 가져오기
+    public List<ZoneVO> getZones(HttpServletRequest request) {
         String plainLat = request.getParameter("lat");
         String plainLng = request.getParameter("lng");
 

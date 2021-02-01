@@ -75,7 +75,7 @@ public class MemberController {
         MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
         if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
             System.out.println(tmpInfoDTO.getEmail() + "," + tmpInfoDTO.getPw());
-            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
+            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 15); // 유효기간 1달
         }
         MemberVO memberVO = memberService.selects(email);
         if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) {
@@ -86,7 +86,6 @@ public class MemberController {
 
     @PostMapping(value = "/register.do")
     public int insertMember(@RequestBody MemberDTO memberDTO) {
-        System.out.println(memberDTO);
         String pw = memberDTO.getPw();
         String sex = memberDTO.getSex();
         String bornTime = memberDTO.getBornTime();
@@ -98,7 +97,7 @@ public class MemberController {
         }
 
         // todo 1. pw check(right format?)
-        String encodedPassword = passwordEncoder.encode(pw); // salt 와 평문 문자열을 2번 인코딩
+        String encodedPassword = passwordEncoder.encode(pw); // pw 인코딩
         memberDTO.setPw(encodedPassword);
 
         int affectedRowOfRegisterMember = memberService.registerMember(memberDTO);
@@ -164,6 +163,7 @@ public class MemberController {
         return hashMap;
     }
 
+
     @PostMapping(value = "/timer/get.do")
     public List<MemberTimerVO> getTimers(@RequestParam("token") String token) {
         String email = tokenGeneratorService.getSubject(token);
@@ -172,7 +172,7 @@ public class MemberController {
 
     @PostMapping(value = "/timer/insert.do")
     public int insertTimer(HttpServletRequest request) {
-        String token = request.getParameter("email");
+        String token = request.getParameter("token");
         String email = tokenGeneratorService.getSubject(token);
         String seconds = request.getParameter("sec");
         int sec = Integer.parseInt(seconds);

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ZoneDTO {
+public class ZoneVO {
     private String code; // 행성 코드
     private String name; // 행성 이름
     private String doroName; // 도로명 주소

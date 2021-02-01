@@ -1,5 +1,6 @@
 package controller;
 
+import component.member.MemberService;
 import component.sms.SMSService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class SMSController {
     @Setter(onMethod_ = {@Autowired})
     private SMSService smsService;
 
+    @Setter(onMethod_ = {@Autowired})
+    private MemberService memberService;
+
     /**
      * @param request 회원가입 할 때 핸드폰 번호 인증을 위한 기능
      * @return
@@ -30,6 +34,12 @@ public class SMSController {
     public HashMap<String, String> sendMessageForReg(HttpServletRequest request) {
         HashMap<String, String> hashMap = new HashMap<>();
         String phoneNumber = request.getParameter("pNum");
+
+        String pNumInDB = memberService.isExistPhoneNumber(phoneNumber);
+        if (pNumInDB.equals(phoneNumber)) {
+            hashMap.put("status","600"); // 이미 존재하는 핸드폰번호
+            return hashMap;
+        }
         int code = smsService.sendSMSForReg(phoneNumber);
         if (code > 999) {
             hashMap.put("status", "202");
