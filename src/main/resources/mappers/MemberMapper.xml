@@ -96,4 +96,11 @@
         insert into members_point values (#{email},#{point}) on duplicate key update member_point = member_point + #{point};
     </insert>
 
+    <insert id="autoLogin" parameterType="string">
+        INSERT INTO members_login(member_email,login) values(#{email},true) on duplicate key update login = true;
+    </insert>
+
+    <update id="logout" parameterType="string">
+        update members_login set login = false where member_email = #{email}
+    </update>
 </mapper>

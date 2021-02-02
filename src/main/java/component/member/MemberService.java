@@ -44,4 +44,8 @@ public interface MemberService {
 
     int addPoint(String email, int point);
 
+    int autoLogin(String email);
+
+    int logout(String email);
+
 }

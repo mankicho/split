@@ -175,6 +175,16 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.insertTimer(hashMap);
     }
 
+    @Override
+    public int autoLogin(String email) {
+        return memberDAO.autoLogin(email);
+    }
+
+    @Override
+    public int logout(String email) {
+        return memberDAO.logout(email);
+    }
+
     private String generateSalt() {
         Random random = new Random();
 

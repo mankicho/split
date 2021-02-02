@@ -104,6 +104,14 @@ public class MemberDAO {
         return mapper.insertTimer(hashMap);
     }
 
+    public int autoLogin(String email) {
+        return mapper.autoLogin(email);
+    }
+
+    public int logout(String email) {
+        return mapper.logout(email);
+    }
+
     private boolean containSpecial(String str) {
         String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);

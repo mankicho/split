@@ -36,7 +36,7 @@ public interface MemberMapper {
 
     List<MemberTimerVO> selectTimer(@Param("email") String email); // 집중시간
 
-    int insertTimer(HashMap<String,Object> hashMap); // 집중시간 저장하기
+    int insertTimer(HashMap<String, Object> hashMap); // 집중시간 저장하기
 
     int addFriend(@Param("to") String toEmail, @Param("from") String fromEmail); // 친구추가하기
 
@@ -44,5 +44,7 @@ public interface MemberMapper {
 
     int addPoint(HashMap<String, Object> hashMap);
 
+    int autoLogin(@Param("email") String email);
 
+    int logout(@Param("email") String email);
 }
