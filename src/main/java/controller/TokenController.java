@@ -22,7 +22,7 @@ public class TokenController {
 
     @GetMapping(value = "/get.do")
     public Map<String, Object> genToken(@RequestParam(value = "subject") String subject) {
-        String token = tokenGeneratorService.createToken(subject, (1000 * 60 * 60 * 24 * 7));
+        String token = tokenGeneratorService.createToken(subject, 1000 * 60 * 60 * 24 * 31L);
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("result", token);
         return map;

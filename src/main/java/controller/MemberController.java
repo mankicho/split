@@ -69,17 +69,23 @@ public class MemberController {
      * @return
      */
     @RequestMapping(value = "/login.do")
+    @Transactional
     public String memberLogin(HttpServletRequest request) {
         String email = request.getParameter("email");
         String pw = request.getParameter("pw");
-        MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
-        if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
-            System.out.println(tmpInfoDTO.getEmail() + "," + tmpInfoDTO.getPw());
-            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 15); // 유효기간 1달
-        }
         MemberVO memberVO = memberService.selects(email);
         if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) {
-            return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24);
+            int affectedRow = memberService.autoLogin(email);
+            if (affectedRow >= 1) {
+                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 15);
+            }
+        }
+        MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
+        if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
+            int affectedRow = memberService.autoLogin(email);
+            if (affectedRow >= 1) {
+                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 15); // 유효기간 1달
+            }
         }
         return "fail";
     }
@@ -250,5 +256,16 @@ public class MemberController {
         } catch (ParseException e) {
             return false;
         }
+    }
+
+    @PostMapping(value = "/logout.do")
+    public int logout(@RequestParam("email") String email){
+        int affectedRow = memberService.logout(email);
+
+        if(affectedRow >= 1){ // 로그아웃 요청이 처리되면
+            return 202; // 정상처리
+        }
+
+        return 500; // 이미 로그아웃 처리 돼있음.
     }
 }

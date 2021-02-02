@@ -34,7 +34,7 @@ public class TokenGeneratorServiceImpl implements TokenGeneratorService {
         Key signedKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setSubject(subject).signWith(signatureAlgorithm, signedKey);
         long nowMillis = System.currentTimeMillis();
-        builder.setExpiration(new Date(nowMillis + ttlMillis + ttlMillis));
+        builder.setExpiration(new Date(nowMillis + ttlMillis));
         return builder.compact();
     }
 
@@ -62,7 +62,6 @@ public class TokenGeneratorServiceImpl implements TokenGeneratorService {
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(zcw16);
         Key signedKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setSubject(subject).signWith(signatureAlgorithm, signedKey);
-        long nowMillis = System.currentTimeMillis();
         builder.setExpiration(cal.getTime());
         return builder.compact();
     }
