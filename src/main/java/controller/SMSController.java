@@ -36,7 +36,7 @@ public class SMSController {
         String phoneNumber = request.getParameter("pNum");
 
         String pNumInDB = memberService.isExistPhoneNumber(phoneNumber);
-        if (pNumInDB.equals(phoneNumber)) {
+        if (pNumInDB != null && pNumInDB.equals(phoneNumber)) {
             hashMap.put("status","600"); // 이미 존재하는 핸드폰번호
             return hashMap;
         }
