@@ -38,7 +38,9 @@
     <select id="selectByIdAndEmail" resultMap="planVO">
         SELECT * FROM plan where plan_log_id = #{planLogId} AND member_email = #{email}
     </select>
-
+    <select id="selectByEmailAndDate" resultMap="planVO">
+        SELECT * FROM plan where member_email = #{email} AND date_format(#{authenticateTime},'%Y-%m-%d') between startdate and enddate;
+    </select>
     <select id="selectsAllPlans" parameterType="string" resultMap="planVO">
         SELECT * FROM plan where member_email = #{email}
     </select>

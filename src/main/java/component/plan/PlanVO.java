@@ -4,7 +4,6 @@ import lombok.Data;
 
 import java.sql.Date;
 import java.sql.Time;
-
 @Data
 public class PlanVO {
     private int planLogId;
@@ -12,7 +11,7 @@ public class PlanVO {
     private String planName;
     private Date startDate;
     private Date endDate;
-    private Date authTime;
+    private Time authTime;
     private String compCondition;
     private int setDay;
     private boolean pub;

@@ -14,6 +14,8 @@ public interface PlanMapper {
 
     PlanVO selectByIdAndEmail(HashMap<String, Object> hashMap); // ID 랑 이메일로 플랜 조회
 
+    List<PlanVO> selectByEmailAndDate(HashMap<String, Object> hashMap);
+
     List<PlanVO> selectsAllPlans(@Param("email") String email); // 내 플랜 다 가져오기
 
     int changePublic(NonPubPlanDTO nonPubPlanDTO); // 공개/비공개 전환

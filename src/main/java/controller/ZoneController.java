@@ -45,9 +45,15 @@ public class ZoneController {
     public List<ZoneVO> getZones(HttpServletRequest request) {
         String plainLat = request.getParameter("lat");
         String plainLng = request.getParameter("lng");
-
+        String type = request.getParameter("type");
+        type += '%';
         double lat = Double.parseDouble(plainLat);
         double lng = Double.parseDouble(plainLng);
-        return zoneService.selectZones(lat, lng);
+        List<ZoneVO> list = zoneService.selectZones(lat, lng, type);
+
+        for (int i = 0; i < 4; i++) {
+            list.addAll(list);
+        }
+        return list;
     }
 }

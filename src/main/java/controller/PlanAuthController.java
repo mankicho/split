@@ -35,14 +35,13 @@ public class PlanAuthController {
         String emailToken = request.getParameter("mail-token");
         String planet = tokenGeneratorService.getSubject(token);
         String email = tokenGeneratorService.getSubject(emailToken);
-        int planId = Integer.parseInt(request.getParameter("planLogId"));
-        hashMap.put("token", token);
-        hashMap.put("planLogId", planId);
-        hashMap.put("planet", planet);
-        hashMap.put("authenticateTime", format.format(new Date()));
-        hashMap.put("email", email);
+        hashMap.put("token", token); // 토큰 (15 초마다 바뀌는 QR 코드)
+        hashMap.put("planet", planet); // 어느곳에서 인증하는지
+        hashMap.put("authenticateTime", format.format(new Date())); // 현재시간(인증할 때)
+        hashMap.put("email", email); // 이메일
         hashMap.put("authenticateFlag", true);
+        hashMap.put("weekday", new Date().getDay());
 
-        return planAuthService.planAuth(hashMap);
+        return planAuthService.planAuthLog(hashMap);
     }
 }

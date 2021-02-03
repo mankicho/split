@@ -18,8 +18,8 @@ public class ZoneServiceImpl implements ZoneService {
      * @return
      */
     @Override
-    public List<ZoneVO> selectZones(double lat, double lng) {
-        return zoneDAO.selectZones(lat, lng);
+    public List<ZoneVO> selectZones(double lat, double lng,String type) {
+        return zoneDAO.selectZones(lat, lng,type);
     }
 
     /**
