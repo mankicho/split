@@ -47,4 +47,6 @@ public interface MemberMapper {
     int autoLogin(@Param("email") String email);
 
     int logout(@Param("email") String email);
+
+    boolean checkAutoLogin(@Param("email") String email);
 }

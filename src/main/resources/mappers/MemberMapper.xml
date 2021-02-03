@@ -103,4 +103,8 @@
     <update id="logout" parameterType="string">
         update members_login set login = false where member_email = #{email}
     </update>
+
+    <select id="checkAutoLogin" parameterType="string" resultType="boolean">
+        SELECT login from members_login where member_email = #{email}
+    </select>
 </mapper>

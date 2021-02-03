@@ -48,4 +48,6 @@ public interface MemberService {
 
     int logout(String email);
 
+    boolean checkAutoLogin(String email);
+
 }

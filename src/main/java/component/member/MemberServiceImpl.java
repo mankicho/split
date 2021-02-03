@@ -185,6 +185,11 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.logout(email);
     }
 
+    @Override
+    public boolean checkAutoLogin(String email) {
+        return memberDAO.checkAutoLogin(email);
+    }
+
     private String generateSalt() {
         Random random = new Random();
 

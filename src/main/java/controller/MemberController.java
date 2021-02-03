@@ -249,6 +249,7 @@ public class MemberController {
             Date d = format.parse(now);
             d.setTime(d.getTime() + 1000 * 180);
             log.info(d.toString());
+            log.info("now = " + new Date().toString());
             if (d.after(new Date())) {
                 return true;
             }
@@ -259,13 +260,20 @@ public class MemberController {
     }
 
     @PostMapping(value = "/logout.do")
-    public int logout(@RequestParam("email") String email){
+    public int logout(@RequestParam("email") String email) {
         int affectedRow = memberService.logout(email);
 
-        if(affectedRow >= 1){ // 로그아웃 요청이 처리되면
+        if (affectedRow >= 1) { // 로그아웃 요청이 처리되면
             return 202; // 정상처리
         }
 
         return 500; // 이미 로그아웃 처리 돼있음.
+    }
+
+    @PostMapping(value = "/check/auto/login")
+    public boolean checkAutoLogin(@RequestParam("token") String token) {
+        String email = tokenGeneratorService.getSubject(token);
+
+        return memberService.checkAutoLogin(email);
     }
 }

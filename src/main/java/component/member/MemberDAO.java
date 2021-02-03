@@ -112,10 +112,11 @@ public class MemberDAO {
         return mapper.logout(email);
     }
 
+    public boolean checkAutoLogin(String email) {
+        return mapper.checkAutoLogin(email);
+    }
     private boolean containSpecial(String str) {
         String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);
     }
-
-
 }
