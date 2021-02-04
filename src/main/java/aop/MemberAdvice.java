@@ -1,7 +1,9 @@
 package aop;
 
 import lombok.extern.log4j.Log4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -16,14 +18,11 @@ import java.util.Date;
 public class MemberAdvice {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private Date now = new Date();
 
-    @Before("execution(* component.member.MemberService*.*(..))")
-    public void logBefore() {
-        log.info("----------------------------");
-    }
-
-    @Before("execution(* component.member.MemberService*.selects())")
-    public void logBeforeSelects() {
-        log.info(dateFormat.format(new Date()) + ": memberService.selects() called");
+    @Before("execution(* component.member.MemberService.selects(..))")
+    public void logBeforeSelects(JoinPoint joinPoint) {
+        log.info(dateFormat.format(now) + ": memberService.selects() called");
+        
     }
 }

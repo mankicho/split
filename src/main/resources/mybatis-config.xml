@@ -20,9 +20,9 @@
     </typeAliases>
     <mappers>
         <mapper class="component.plan.PlanMapper"/>
-<mapper class="component.member.MemberMapper"/>
-<mapper class="component.home.HomeDataMapper"/>
-<mapper class="component.zone.ZoneMapper"/>
-        </mappers>
+        <mapper class="component.member.MemberMapper"/>
+        <mapper class="component.home.HomeDataMapper"/>
+        <mapper class="component.zone.ZoneMapper"/>
+    </mappers>
 
-        </configuration>
+</configuration>
