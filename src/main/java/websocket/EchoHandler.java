@@ -2,10 +2,12 @@ package websocket;
 
 import component.member.MemberMapper;
 import component.plan.auth.PlanAuthService;
+import component.zone.ZoneMapper;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -21,13 +23,18 @@ public class EchoHandler extends TextWebSocketHandler {
     @Setter(onMethod_ = {@Autowired})
     private MemberMapper memberMapper;
 
+    @Setter(onMethod_ = {@Autowired})
+    private ZoneMapper zoneMapper;
 
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();
+    private List<String> timers = new ArrayList<>();
 
     // 1대1
     private Map<String, WebSocketSession> userSessionsMap = new HashMap<>();
+    private Map<String, String> userSessionIdMap = new HashMap<>();
     private Map<String, WebSocketSession> cafeSessionMap = new HashMap<>();
+    private Map<String, String> cafeSessionIdMap = new HashMap<>();
 
     /**
      * @param session this function called when client' session is connected
@@ -35,20 +42,9 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("session connect => " + session.getId());
-        List<String> cafe = session.getHandshakeHeaders().get("cafe");
+        session.sendMessage(new TextMessage("ack")); // 연결이 수행되면
         sessions.add(session);
-        String senderEmail = getEmail(session);
-        userSessionsMap.put(senderEmail, session);
-        if (cafe != null) {
-            String cafeCode = cafe.get(0);
-            if (cafeSessionMap.get(cafeCode) != null) {
-                cafeSessionMap.remove(cafeCode);
-            }
-            cafeSessionMap.put(cafeCode, session);
-            log.info("cafeSession connect => " + cafeSessionMap);
-        }
-        session.sendMessage(new TextMessage("1"));
+        classifyUser(session);
     }
 
     /**
@@ -58,8 +54,8 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        log.info(session.getId() + " is disconnected");
         userSessionsMap.remove(session.getId());
-        System.out.println(session.getId() + "is disconnected");
         sessions.remove(session);
         cafeSessionMap.remove(session.getId());
     }
@@ -84,29 +80,10 @@ public class EchoHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info("handleText");
-        // todo 1. 적절한 요청인가? (email 이 실제로 DB 에 저장되어있는가)
-        // todo 2. 메세지 요청 유형 파악
-//        AlarmMessage alarmMessage = alarmMessageParser.parse(message);
-//        // todo 3. 유형에 맞는 메소드 수행
-//        AlarmMessageServiceExecutor serviceExecutor = new AlarmMessageServiceExecutor(alarmMessage, session, sessions, userSessionsMap);
-//        serviceExecutor.execute();
+        // todo 1. 클라이언트가 날린 메세지 해석
         DataProcessStrategy dps = parseTextMessage(message);
-        dataProcess(dps,message);
-        sendMessageToCafe(message);
-    }
-
-    /**
-     * @param session client -> server (contains header("user",{user_email})
-     *                server analyzes the headers and extracts user email
-     * @return user email
-     */
-    private String getEmail(WebSocketSession session) {
-        List<String> userList = session.getHandshakeHeaders().get("user");
-        if (userList == null) {
-            return session.getId();
-        }
-        String user = userList.get(0);
-        return user == null ? session.getId() : user;
+        // todo 2. 메세지에 맞는 함수 호출(DB에 데이터 저장 or 적절한 유저에게 메세지 전송 등)
+        dataProcess(dps, message);
     }
 
     private DataProcessStrategy parseTextMessage(TextMessage message) {
@@ -117,28 +94,51 @@ public class EchoHandler extends TextWebSocketHandler {
                 dps.setUserMap(userSessionsMap);
                 return dps;
             case 2:
-                return new AttendanceProcessStrategy();
+                AttendanceProcessStrategy aps = new AttendanceProcessStrategy();
+                aps.setCafeMap(cafeSessionMap);
+                return aps;
 //            case 3:
 //                return new PlanSharingInProcessStrategy();
 //            case 4:
 //                return new PlanSharingOutProcessStrategy();
+            case 5:
+                String user = object.getString("user");
+                if (!timers.contains(user)) {
+                    timers.add(user);
+                }
+                TimerProcessStrategy tps = new TimerProcessStrategy();
+                tps.setTimerSessions(timers);
+                tps.setLoginUsers(sessions);
+                return tps;
             default:
                 return null;
         }
     }
 
-    private void dataProcess(DataProcessStrategy dps,TextMessage tm) {
+    private void dataProcess(DataProcessStrategy dps, TextMessage tm) {
         if (dps != null) {
             dps.execute(tm);
         }
     }
 
-    private void sendMessageToCafe(TextMessage tm) throws IOException {
-        JSONObject object = new JSONObject(tm.getPayload());
-        WebSocketSession cafe = cafeSessionMap.get(object.getString("cafe"));
-        if (cafe != null) {
-            cafe.sendMessage(new TextMessage(object.getString("user")));
-            log.info("send to cafe");
+    private void classifyUser(WebSocketSession socketSession) {
+        HttpHeaders httpHeaders = socketSession.getHandshakeHeaders();
+        List<String> cafeHeaders;
+        List<String> userHeaders;
+        if ((cafeHeaders = httpHeaders.get("cafe")) != null) {
+            log.info(cafeHeaders.get(0) + " is connected, session:" + socketSession.getId());
+            int existedRow = zoneMapper.isExist(cafeHeaders.get(0));
+            if (existedRow == 1) {
+                cafeSessionMap.put(cafeHeaders.get(0), socketSession);
+            } else {
+                log.info("not exists data in DB : \"" + cafeHeaders.get(0) + "\"");
+            }
         }
+
+        if ((userHeaders = httpHeaders.get("user")) != null) {
+            log.info(userHeaders.get(0) + " is connected, session:" + socketSession.getId());
+            userSessionsMap.put(userHeaders.get(0), socketSession);
+        }
+
     }
 }
