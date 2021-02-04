@@ -55,9 +55,12 @@ public class EchoHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info(session.getId() + " is disconnected");
-        userSessionsMap.remove(session.getId());
+        log.info(session.getHandshakeHeaders());
+        userSessionsMap.remove(userSessionIdMap.get(session.getId()));
+        userSessionIdMap.remove(session.getId());
         sessions.remove(session);
-        cafeSessionMap.remove(session.getId());
+        cafeSessionMap.remove(cafeSessionIdMap.get(session.getId()));
+        cafeSessionIdMap.remove(session.getId());
     }
 
     /**
@@ -130,6 +133,7 @@ public class EchoHandler extends TextWebSocketHandler {
             int existedRow = zoneMapper.isExist(cafeHeaders.get(0));
             if (existedRow == 1) {
                 cafeSessionMap.put(cafeHeaders.get(0), socketSession);
+                cafeSessionIdMap.put(socketSession.getId(), cafeHeaders.get(0));
             } else {
                 log.info("not exists data in DB : \"" + cafeHeaders.get(0) + "\"");
             }
@@ -138,6 +142,7 @@ public class EchoHandler extends TextWebSocketHandler {
         if ((userHeaders = httpHeaders.get("user")) != null) {
             log.info(userHeaders.get(0) + " is connected, session:" + socketSession.getId());
             userSessionsMap.put(userHeaders.get(0), socketSession);
+            userSessionIdMap.put(socketSession.getId(), userHeaders.get(0));
         }
 
     }

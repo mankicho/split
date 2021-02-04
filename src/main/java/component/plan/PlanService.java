@@ -2,11 +2,12 @@ package component.plan;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
 public interface PlanService {
-    int insertPlan(PlanDTO planDTO);
+    int insertPlan(PlanDTO planDTO) throws ParseException;
 
     int insertRangePlan(List<PlanDTO> planDTOS);
 

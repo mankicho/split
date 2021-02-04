@@ -249,12 +249,15 @@ public class MemberController {
             Date d = format.parse(now);
             d.setTime(d.getTime() + 1000 * 180);
             log.info(d.toString());
+            System.out.println(d.toString());
             log.info("now = " + new Date().toString());
+            System.out.println("now = " + new Date().toString());
             if (d.after(new Date())) {
                 return true;
             }
             return false;
         } catch (ParseException e) {
+            e.printStackTrace();
             return false;
         }
     }

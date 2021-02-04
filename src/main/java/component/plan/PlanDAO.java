@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,7 +20,15 @@ public class PlanDAO {
     @Setter(onMethod_ = {@Autowired})
     private PlanMapper planMapper;
 
-    public int insertOfficialPlan(PlanDTO planDTO) {
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    public int insertOfficialPlan(PlanDTO planDTO) throws ParseException {
+        List<PlanVO> planVOS = planMapper.selectsAllPlans(planDTO.getMemberEmail());
+        // todo 1. 날짜가 겹치는지 확인.
+        Date startDate = format.parse(planDTO.getStartDate());
+        // todo 2. 요일이 겹치는지 확인
+
+        // todo 3. 요일이 겹치면 겹치는 요일중에 날짜가 겹치는지 확인
         return planMapper.insertPlan(planDTO);
     }
 

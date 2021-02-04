@@ -56,4 +56,9 @@ public class ZoneController {
         }
         return list;
     }
+
+    @GetMapping(value = "check/exist")
+    public int isExist(@RequestParam("code") String code) {
+        return zoneService.isExist(code);
+    }
 }

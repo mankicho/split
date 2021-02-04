@@ -18,8 +18,8 @@ public class ZoneServiceImpl implements ZoneService {
      * @return
      */
     @Override
-    public List<ZoneVO> selectZones(double lat, double lng,String type) {
-        return zoneDAO.selectZones(lat, lng,type);
+    public List<ZoneVO> selectZones(double lat, double lng, String type) {
+        return zoneDAO.selectZones(lat, lng, type);
     }
 
     /**
@@ -30,5 +30,10 @@ public class ZoneServiceImpl implements ZoneService {
     @Override
     public int recordSearching(String email, String words) {
         return 0;
+    }
+
+    @Override
+    public int isExist(String code) {
+        return zoneDAO.isExist(code);
     }
 }

@@ -4,6 +4,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class PlanServiceImpl implements PlanService {
     private PlanDAO planDAO;
 
     @Override
-    public int insertPlan(PlanDTO planDTO) {
+    public int insertPlan(PlanDTO planDTO)  throws ParseException {
         return planDAO.insertOfficialPlan(planDTO);
     }
 

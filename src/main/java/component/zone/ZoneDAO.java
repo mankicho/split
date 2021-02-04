@@ -16,4 +16,7 @@ public class ZoneDAO {
         return zoneMapper.selectZones(lat, lng, type);
     }
 
+    public int isExist(String code) {
+        return zoneMapper.isExist(code);
+    }
 }

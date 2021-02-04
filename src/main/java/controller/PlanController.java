@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,12 +21,20 @@ public class PlanController {
     @Setter(onMethod_ = {@Autowired})
     private PlanService planService;
 
+    @ExceptionHandler(ParseException.class)
+    public HashMap<String, Object> handlerParseException(ParseException e) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", 500);
+        hashMap.put("msg", e.getMessage());
+        return hashMap;
+    }
+
     /**
      * @param planDTO 플랜 예약
      * @return
      */
     @PostMapping(value = "/insert.do")
-    public int insertPlan(@RequestBody PlanDTO planDTO) {
+    public int insertPlan(@RequestBody PlanDTO planDTO) throws ParseException {
         if (planDTO.getPCode() == null) {
             planDTO.setPCode("");
         }

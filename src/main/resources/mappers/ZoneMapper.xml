@@ -37,6 +37,9 @@
         left join planet_oper_time as o on o.planet_code = p.planet_code
         left join planet_image as i on p.planet_code = i.planet_code
         where p.planet_code like #{type}
+    </select>
 
+    <select id="isExist" parameterType="string" resultType="int">
+        select count(*) from planet where planet_code = #{code}
     </select>
 </mapper>
