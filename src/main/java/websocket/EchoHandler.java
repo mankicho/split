@@ -17,6 +17,9 @@ import websocket.execute.*;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * 현재 집중시간 모드 기능을 이용하고 있는 총 회원 파악용도
+ */
 @Log4j
 public class EchoHandler extends TextWebSocketHandler {
 
@@ -45,6 +48,7 @@ public class EchoHandler extends TextWebSocketHandler {
         session.sendMessage(new TextMessage("ack")); // 연결이 수행되면
         sessions.add(session);
         classifyUser(session);
+        session.sendMessage(new TextMessage("hello"));
     }
 
     /**
