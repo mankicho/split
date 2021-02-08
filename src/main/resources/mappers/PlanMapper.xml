@@ -42,4 +42,8 @@
     <select id="selectsAllPlans" parameterType="string" resultMap="planVO">
         SELECT * FROM plan where member_email = #{email}
     </select>
+
+    <select id="selectsAllEmailOfPlans" parameterType="int" resultType="string">
+        select member_email from plan_members where plan_log_id = #{planLogId}
+    </select>
 </mapper>

@@ -22,5 +22,6 @@ public interface PlanMapper {
 
     int addAttendanceLog(PlanAttendanceDTO planAttendanceDTO); // 출석체크 기록 (누구누구가 출석했습니다.) 넣기
 
+    List<String> selectsAllEmailOfPlans(@Param("planLogId") int planLogId); // 플랜을 참여하고있는 유저 이메일목록
 
 }

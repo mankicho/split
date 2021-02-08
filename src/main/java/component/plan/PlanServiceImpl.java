@@ -48,4 +48,8 @@ public class PlanServiceImpl implements PlanService {
         return planDAO.insertRangePlan(planDTOS);
     }
 
+    @Override
+    public List<String> selectsAllEmailOfPlans(int planLogId) {
+        return planDAO.selectsAllEmailOfPlans(planLogId);
+    }
 }

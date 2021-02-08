@@ -21,5 +21,6 @@ public interface PlanService {
 
     List<PlanVO> selectsAllPlans(String email);
 
+    List<String> selectsAllEmailOfPlans( int planLogId);
 
 }

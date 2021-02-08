@@ -82,6 +82,10 @@ public class PlanDAO {
         return insertedRow;
     }
 
+    public List<String> selectsAllEmailOfPlans(int planLogId) {
+        return planMapper.selectsAllEmailOfPlans(planLogId);
+    }
+
     private boolean isSameWeekDayAndDate(PlanVO planVOInDB, PlanDTO planDTO) throws ParseException {
         List<Date> dates = new ArrayList<>();
         for (Date d = planVOInDB.getStartDate(); // DB 에 저장된 시작날짜~끝날짜 사이 하루하루를 다 순회

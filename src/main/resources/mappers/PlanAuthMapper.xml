@@ -2,8 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.plan.auth.PlanAuthMapper">
+
+    <resultMap id="planAttendanceDTO" type="component.plan.PlanAttendanceDTO">
+        <result property="nickname" column="nickname"/>
+        <result property="authenticateTime" column="authenticate_time"/>
+    </resultMap>
     <insert id="planAuthLog" parameterType="hashmap">
         INSERT INTO plan_auth_log(plan_log_id,authenticate_time,planet,authenticate_flag)
         values(#{planLogId},#{authenticateTime},#{planet},#{authenticateFlag})
     </insert>
+
+    <select id="getPlanAttendances" parameterType="int" resultMap="planAttendanceDTO">
+        SELECT nickname,authenticate_time from plan_auth_log;
+    </select>
 </mapper>
