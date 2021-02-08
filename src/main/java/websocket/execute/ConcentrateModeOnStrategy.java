@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Log4j
-public class TimerProcessStrategy implements DataProcessStrategy {
+public class ConcentrateModeOnStrategy implements DataProcessStrategy {
     private List<WebSocketSession> loginUsers;
     private List<String> timers;
 

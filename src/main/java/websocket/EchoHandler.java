@@ -1,7 +1,6 @@
 package websocket;
 
 import component.member.MemberMapper;
-import component.plan.auth.PlanAuthService;
 import component.zone.ZoneMapper;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -14,7 +13,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import websocket.execute.*;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -93,7 +91,6 @@ public class EchoHandler extends TextWebSocketHandler {
     }
 
 
-
     private DataProcessStrategy parseTextMessage(TextMessage message) {
         JSONObject object = new JSONObject(message.getPayload());
         switch (object.getInt("type")) {
@@ -111,10 +108,13 @@ public class EchoHandler extends TextWebSocketHandler {
 //                return new PlanSharingOutProcessStrategy();
             case 5: // 집중시간
                 String user = object.getString("user");
-                if (!timers.contains(user)) {
+                int mode = object.getInt("mode");
+                if (mode == 1 && !timers.contains(user)) { // 집중 모드면
                     timers.add(user);
+                } else {
+                    timers.removeIf(str -> str.equals(user));
                 }
-                TimerProcessStrategy tps = new TimerProcessStrategy();
+                ConcentrateModeOnStrategy tps = new ConcentrateModeOnStrategy();
                 tps.setTimerSessions(timers);
                 tps.setLoginUsers(sessions);
                 return tps;
