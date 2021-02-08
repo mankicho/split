@@ -1,19 +1,30 @@
 package websocket.execute;
 
+import component.plan.PlanService;
+import component.plan.PlanServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Log4j
 public class AttendanceProcessStrategy implements DataProcessStrategy {
     private Map<String, WebSocketSession> cafeMap;
+    private Map<String, WebSocketSession> userMap;
+
+    private PlanService planService = new PlanServiceImpl();
 
     public void setCafeMap(Map<String, WebSocketSession> cafeMap) {
         this.cafeMap = cafeMap;
+    }
+
+    public void setUserMap(Map<String, WebSocketSession> userMap) {
+        this.userMap = userMap;
     }
 
     @Override
@@ -25,11 +36,21 @@ public class AttendanceProcessStrategy implements DataProcessStrategy {
         if (cafeSession != null) {
             try {
                 cafeSession.sendMessage(tm); // 카페에 메세지 전달
-            }catch (IOException e){
-                log.info(getClass().getName() +" IOException occur!! => " + e.getMessage());
+            } catch (IOException e) {
+                log.info(getClass().getName() + " IOException occur!! => " + e.getMessage());
             }
         }
-        // todo 2. 해당 플랜의 알림창에 출석했음을 알림. (웹소켓 말고 일반적인 http 통신 이용)
+        // todo 2. 해당 플랜을 참여하는 유저들에게 알림.
+        int planLogId = object.getInt("planLogId");
+        List<String> emails = planService.selectsAllEmailOfPlans(planLogId);
+        emails.stream().filter(email -> userMap.get(email) != null).forEach(email -> sendMessageToUser(email,tm));
+    }
 
+    private void sendMessageToUser(String email, TextMessage tm) {
+        try {
+            userMap.get(email).sendMessage(tm);
+        } catch (IOException e) {
+            log.info(LocalDateTime.now()+" websocket error occur: att->sendMessage->IOException "+e.getMessage());
+        }
     }
 }
