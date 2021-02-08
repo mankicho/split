@@ -1,6 +1,7 @@
 package controller;
 
 import component.member.*;
+import component.member.friend.FriendAddRequestVO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.Setter;
@@ -231,7 +232,7 @@ public class MemberController {
         return memberService.isExistPhoneNumber(pNum);
     }
 
-    @PostMapping(value = "/friend/add.do") // 친구추가
+    @PostMapping(value = "/add/friend") // 친구추가
     public HashMap<String, String> addFriend(@RequestParam("req_nick") String requestNickname, @RequestParam("res_nick") String responseNickname) {
         HashMap<String, String> hashMap = new HashMap<>();
         String reqEmail = memberService.getEmailByNickname(requestNickname);
@@ -240,6 +241,31 @@ public class MemberController {
         int insertedRow = memberService.addFriend(reqEmail, resEmail);
 
         return hashMap;
+    }
+
+    @PostMapping(value = "/insert/friend/add/request") // 친구추가요청 저장하기
+    public HashMap<String,Object> insertFriendAddRequest(@RequestParam("from") String from, @RequestParam("to") String to) {
+        HashMap<String,Object> hashMap = new HashMap<>();
+        String fromEmail = memberService.isExistEmail(from);
+        String toEmail = memberService.isExistEmail(to);
+
+        log.info(fromEmail+","+toEmail);
+        if(fromEmail == null || toEmail == null){
+            hashMap.put("status",400); // 존재하지않는 이메일에대한 친구추가요청 - 회원이 탈퇴 후 친구추가요청을 보낼 수 있음
+            return hashMap;
+        }
+        int insertedRow =  memberService.insertFriendAddRequest(from, to);
+        if(insertedRow == 0){
+            hashMap.put("status",500); // DB query 오류 (
+        }else{
+            hashMap.put("status",202); // 정상 처리
+        }
+        return hashMap;
+    }
+
+    @PostMapping(value = "/friend/add/request/get.do")
+    public List<FriendAddRequestVO> getFriendAddRequest(@RequestParam("to") String to) {
+        return memberService.getFriendAddRequest(to);
     }
 
     @GetMapping(value = "/phone/auth.do") // 핸드폰 인증번호 유효시간 3분 체크

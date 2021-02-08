@@ -14,8 +14,13 @@ public class PlanServiceImpl implements PlanService {
     private PlanDAO planDAO;
 
     @Override
-    public int insertPlan(PlanDTO planDTO)  throws ParseException {
-        return planDAO.insertOfficialPlan(planDTO);
+    public int insertPlan(PlanDTO planDTO) throws ParseException {
+        return planDAO.insertPlan(planDTO);
+    }
+
+    @Override
+    public int testInsertPlan(PlanDTO planDTO) throws ParseException {
+        return planDAO.testInsertPlan(planDTO);
     }
 
     @Override
@@ -42,4 +47,5 @@ public class PlanServiceImpl implements PlanService {
     public int insertRangePlan(List<PlanDTO> planDTOS) {
         return planDAO.insertRangePlan(planDTOS);
     }
+
 }

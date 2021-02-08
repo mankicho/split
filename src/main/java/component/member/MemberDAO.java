@@ -1,5 +1,6 @@
 package component.member;
 
+import component.member.friend.FriendAddRequestVO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.annotations.Param;
@@ -87,7 +88,7 @@ public class MemberDAO {
         return (containSpecial(toEmail) || containSpecial(fromEmail)) ? -1 : mapper.addFriend(toEmail, fromEmail);
     }
 
-    public List<String> getFriendAddRequest(String email) {
+    public List<FriendAddRequestVO> getFriendAddRequest(String email) {
         return containSpecial(email) ? null : mapper.getFriendAddRequest(email);
     }
 
@@ -115,6 +116,11 @@ public class MemberDAO {
     public boolean checkAutoLogin(String email) {
         return mapper.checkAutoLogin(email);
     }
+
+    public int insertFriendAddRequest(String from, String to) {
+        return mapper.insertFriendAddRequest(from, to);
+    }
+
     private boolean containSpecial(String str) {
         String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);

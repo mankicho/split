@@ -1,6 +1,7 @@
 package component.member;
 
 import component.mail.MailService;
+import component.member.friend.FriendAddRequestVO;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -161,8 +162,13 @@ public class MemberServiceImpl implements MemberService {
      * @return
      */
     @Override
-    public List<String> getFriendAddRequest(String email) {
+    public List<FriendAddRequestVO> getFriendAddRequest(String email) {
         return memberDAO.getFriendAddRequest(email);
+    }
+
+    @Override
+    public int insertFriendAddRequest(String from, String to) {
+        return memberDAO.insertFriendAddRequest(from,to);
     }
 
     @Override
@@ -189,6 +195,8 @@ public class MemberServiceImpl implements MemberService {
     public boolean checkAutoLogin(String email) {
         return memberDAO.checkAutoLogin(email);
     }
+
+
 
     private String generateSalt() {
         Random random = new Random();

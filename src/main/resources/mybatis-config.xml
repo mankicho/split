@@ -15,6 +15,7 @@
         <typeAlias type="component.zone.ZoneImageDTO" alias="ZoneImageDTO"/>
         <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
         <typeAlias type="component.member.MemberTmpInfoDTO" alias="MemberTmpInfoDTO"/>
+        <typeAlias type="component.member.friend.FriendAddRequestVO" alias="FriendAddRequestVO"/>
 
 
     </typeAliases>
@@ -23,6 +24,7 @@
         <mapper class="component.member.MemberMapper"/>
         <mapper class="component.home.HomeDataMapper"/>
         <mapper class="component.zone.ZoneMapper"/>
+        <mapper class="component.plan.auth.PlanAuthMapper"/>
     </mappers>
 
 </configuration>

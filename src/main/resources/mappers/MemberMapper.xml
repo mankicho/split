@@ -93,15 +93,23 @@
     </insert>
 
     <insert id="addPoint" parameterType="hashmap">
-        insert into members_point values (#{email},#{point}) on duplicate key update member_point = member_point + #{point};
+        insert into members_point(member_email,member_point) values (#{email},#{point})
     </insert>
 
+    <insert id="insertFriendAddRequest" parameterType="string">
+        INSERT INTO friend_add_request (from_email,to_email) values(#{from},#{to})
+    </insert>
+
+    <select id="getFriendAddRequest" parameterType="string" resultType="FriendAddRequestVO">
+        select rid,from_email as fromEmail, to_email as toEmail,check_flag, trans_datetime as transDatetime
+         from friend_add_request where  to_email = #{to} and check_flag = false
+    </select>
     <insert id="autoLogin" parameterType="string">
         INSERT INTO members_login(member_email,login) values(#{email},true) on duplicate key update login = true;
     </insert>
 
     <update id="logout" parameterType="string">
-        update members_login set login = false where member_email = #{email}
+        update members_login set login = false , logoutdate = now() where member_email = #{email}
     </update>
 
     <select id="checkAutoLogin" parameterType="string" resultType="boolean">

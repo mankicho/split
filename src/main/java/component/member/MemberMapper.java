@@ -1,12 +1,13 @@
 package component.member;
 
+import component.member.friend.FriendAddRequestVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
 
 public interface MemberMapper {
-    MemberVO selects(String email); // 회원조회 (삭제예정)
+    MemberVO selects(String email); // 회원조회 (삭제예정), aop
 
     int registerMember(MemberDTO memberDTO); // 회원가입
 
@@ -14,7 +15,7 @@ public interface MemberMapper {
 
     String isExistPhoneNumber(@Param("pNum") String pNum); // 핸드폰번호가 존재하는가
 
-    int deleteMember(@Param("email") String email); // 회원 탈퇴
+    int deleteMember(@Param("email") String email); // 회원 탈퇴, aop
 
     String isExistNickname(@Param("nickname") String nickname); // 닉네임이 존재하는가
 
@@ -40,9 +41,11 @@ public interface MemberMapper {
 
     int addFriend(@Param("to") String toEmail, @Param("from") String fromEmail); // 친구추가하기
 
-    List<String> getFriendAddRequest(@Param("to") String email); // 친구추가 요청 가져오기
+    int insertFriendAddRequest(@Param("from") String from, @Param("to") String to); // 친구추가요청
 
-    int addPoint(HashMap<String, Object> hashMap);
+    List<FriendAddRequestVO> getFriendAddRequest(@Param("to") String email); // 친구추가 요청 가져오기
+
+    int addPoint(HashMap<String, Object> hashMap); // 포인트 더하기
 
     int autoLogin(@Param("email") String email);
 

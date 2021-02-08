@@ -1,5 +1,6 @@
 package component.member;
 
+import component.member.friend.FriendAddRequestVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public interface MemberService {
 
     int addFriend(String toEmail, String fromEmail);
 
-    List<String> getFriendAddRequest(String email); // 친구추가 요청 가져오기
+    List<FriendAddRequestVO> getFriendAddRequest(String email); // 친구추가 요청 가져오기
 
     int addPoint(String email, int point);
 
@@ -49,5 +50,7 @@ public interface MemberService {
     int logout(String email);
 
     boolean checkAutoLogin(String email);
+
+    int insertFriendAddRequest(String from, String to);
 
 }

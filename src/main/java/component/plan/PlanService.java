@@ -9,6 +9,8 @@ import java.util.List;
 public interface PlanService {
     int insertPlan(PlanDTO planDTO) throws ParseException;
 
+    int testInsertPlan(PlanDTO planDTO) throws ParseException;
+
     int insertRangePlan(List<PlanDTO> planDTOS);
 
     int deletePlan(int planLogId);
@@ -18,4 +20,6 @@ public interface PlanService {
     PlanVO selectByIdAndEmail(HashMap<String, Object> hashMap);
 
     List<PlanVO> selectsAllPlans(String email);
+
+
 }

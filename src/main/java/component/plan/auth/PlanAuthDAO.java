@@ -1,8 +1,10 @@
 package component.plan.auth;
 
+import component.plan.PlanAttendanceDTO;
 import component.plan.PlanMapper;
 import component.plan.PlanVO;
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -67,6 +69,10 @@ public class PlanAuthDAO {
         hashMap.put("planLogId", planLogId);
         // todo 4. 인증 내역 Table 에 insert, 결과 리턴
         return planAuthMapper.planAuthLog(hashMap);
+    }
+
+    public List<PlanAttendanceDTO> getPlanAttendances(int planLogId) {
+        return planAuthMapper.getPlanAttendances(planLogId);
     }
 
     private int squareOfTwo(int weekday) {

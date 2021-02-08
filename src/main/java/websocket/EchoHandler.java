@@ -30,14 +30,14 @@ public class EchoHandler extends TextWebSocketHandler {
     private ZoneMapper zoneMapper;
 
     //로그인 한 전체
-    private List<WebSocketSession> sessions = new ArrayList<>();
-    private List<String> timers = new ArrayList<>();
+    private List<WebSocketSession> sessions = new ArrayList<>();  // 실시간 어플을 이용하고 있는 유저
+    private List<String> timers = new ArrayList<>(); // 실시간 집중시간 이용 유저
 
     // 1대1
-    private Map<String, WebSocketSession> userSessionsMap = new HashMap<>();
-    private Map<String, String> userSessionIdMap = new HashMap<>();
-    private Map<String, WebSocketSession> cafeSessionMap = new HashMap<>();
-    private Map<String, String> cafeSessionIdMap = new HashMap<>();
+    private Map<String, WebSocketSession> userSessionsMap = new HashMap<>(); // 유저 : 세션
+    private Map<String, String> userSessionIdMap = new HashMap<>(); // 유저 이메일 : 유저 세션 ID
+    private Map<String, WebSocketSession> cafeSessionMap = new HashMap<>(); // 카페 : 세션
+    private Map<String, String> cafeSessionIdMap = new HashMap<>(); // 카페명 : 세션 ID
 
     /**
      * @param session this function called when client' session is connected
@@ -45,10 +45,10 @@ public class EchoHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        log.info(session.getId() + " is connected");
         session.sendMessage(new TextMessage("ack")); // 연결이 수행되면
-        sessions.add(session);
-        classifyUser(session);
-        session.sendMessage(new TextMessage("hello"));
+        sessions.add(session); // 이용유저 추가
+        classifyUser(session); // 유저 분류
     }
 
     /**
@@ -59,12 +59,11 @@ public class EchoHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info(session.getId() + " is disconnected");
-        log.info(session.getHandshakeHeaders());
-        userSessionsMap.remove(userSessionIdMap.get(session.getId()));
-        userSessionIdMap.remove(session.getId());
+        userSessionsMap.remove(userSessionIdMap.get(session.getId())); // 유저 제거
+        userSessionIdMap.remove(session.getId()); // 유저 제거
         sessions.remove(session);
-        cafeSessionMap.remove(cafeSessionIdMap.get(session.getId()));
-        cafeSessionIdMap.remove(session.getId());
+        cafeSessionMap.remove(cafeSessionIdMap.get(session.getId())); // 카페 제거
+        cafeSessionIdMap.remove(session.getId()); // 카페 제거
     }
 
     /**
@@ -93,22 +92,24 @@ public class EchoHandler extends TextWebSocketHandler {
         dataProcess(dps, message);
     }
 
+
+
     private DataProcessStrategy parseTextMessage(TextMessage message) {
         JSONObject object = new JSONObject(message.getPayload());
         switch (object.getInt("type")) {
-            case 1:
+            case 1: // 친구요청
                 FriendProcessStrategy dps = new FriendProcessStrategy();
                 dps.setUserMap(userSessionsMap);
                 return dps;
-            case 2:
+            case 2: // 출석체크
                 AttendanceProcessStrategy aps = new AttendanceProcessStrategy();
                 aps.setCafeMap(cafeSessionMap);
                 return aps;
-//            case 3:
+//            case 3: // 플랜 참여
 //                return new PlanSharingInProcessStrategy();
-//            case 4:
+//            case 4: // 플랜 참여 철회
 //                return new PlanSharingOutProcessStrategy();
-            case 5:
+            case 5: // 집중시간
                 String user = object.getString("user");
                 if (!timers.contains(user)) {
                     timers.add(user);
@@ -117,6 +118,11 @@ public class EchoHandler extends TextWebSocketHandler {
                 tps.setTimerSessions(timers);
                 tps.setLoginUsers(sessions);
                 return tps;
+            case 6:
+                // 팔로우 요청
+                FollowProcessStrategy fps = new FollowProcessStrategy();
+                fps.setUserMap(userSessionsMap);
+                return fps;
             default:
                 return null;
         }

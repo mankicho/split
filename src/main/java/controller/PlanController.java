@@ -1,9 +1,11 @@
 package controller;
 
+import component.plan.PlanAttendanceDTO;
 import component.plan.PlanDTO;
 import component.plan.PlanService;
 import component.plan.PlanVO;
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +36,22 @@ public class PlanController {
      * @return
      */
     @PostMapping(value = "/insert.do")
-    public int insertPlan(@RequestBody PlanDTO planDTO) throws ParseException {
+    public HashMap<String, Object> insertPlan(@RequestBody PlanDTO planDTO) throws ParseException {
+        HashMap<String, Object> hashMap = new HashMap<>();
         if (planDTO.getPCode() == null) {
             planDTO.setPCode("");
         }
-        return planService.insertPlan(planDTO);
+        int status = planService.insertPlan(planDTO);
+        hashMap.put("status", status);
+        return hashMap;
+    }
+
+    @PostMapping(value = "test/insert.do")
+    public int testInsertPlan(@RequestBody PlanDTO planDTO) throws ParseException {
+        if (planDTO.getPCode() == null) {
+            planDTO.setPCode("");
+        }
+        return planService.testInsertPlan(planDTO);
     }
 
     /**

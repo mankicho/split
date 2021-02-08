@@ -1,10 +1,12 @@
 package controller;
 
+import component.plan.PlanAttendanceDTO;
 import component.plan.auth.PlanAuthService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import security.token.TokenGeneratorService;
@@ -14,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * for user's authentication of plan
@@ -43,5 +46,16 @@ public class PlanAuthController {
         hashMap.put("weekday", new Date().getDay());
 
         return planAuthService.planAuthLog(hashMap);
+    }
+
+    /**
+     * 플랜 출석기록 가져오기
+     * @param planLogId
+     * @return
+     */
+
+    @PostMapping(value = "/att/get.do")
+    public List<PlanAttendanceDTO> getPlanAttendances(int planLogId) {
+        return planAuthService.getPlanAttendances(planLogId);
     }
 }
