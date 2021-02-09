@@ -26,7 +26,6 @@
         <result property="phoneNumber" column="phone_number"/>
         <result property="lat" column="lat"/>
         <result property="lng" column="lng"/>
-        <result property="accVisitor" column="acc_visitor"/>
         <result property="todayVisitor" column="today_visitor"/>
         <collection property="zoneOperDTO" resultMap="zoneOperMap"/>
         <collection property="zoneImageDTOList" resultMap="imageMap"/>
@@ -42,4 +41,7 @@
     <select id="isExist" parameterType="string" resultType="int">
         select count(*) from planet where planet_code = #{code}
     </select>
+
+
+
 </mapper>

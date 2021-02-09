@@ -1,5 +1,7 @@
 package controller;
 
+import component.plan.PlanService;
+import component.plan.PlanVO;
 import component.zone.ZoneVO;
 import component.zone.ZoneService;
 import lombok.Setter;
@@ -36,6 +38,9 @@ public class ZoneController {
     @Setter(onMethod_ = {@Autowired})
     private ZoneService zoneService;
 
+    @Setter(onMethod_ = {@Autowired})
+    private PlanService planService;
+
     /**
      * get zones by 500M around certain point(distance can changed)
      *
@@ -49,16 +54,17 @@ public class ZoneController {
         type += '%';
         double lat = Double.parseDouble(plainLat);
         double lng = Double.parseDouble(plainLng);
-        List<ZoneVO> list = zoneService.selectZones(lat, lng, type);
+        return zoneService.selectZones(lat, lng, type);
 
-        for (int i = 0; i < 4; i++) {
-            list.addAll(list);
-        }
-        return list;
     }
 
-    @GetMapping(value = "check/exist")
+    @GetMapping(value = "/check/exist")
     public int isExist(@RequestParam("code") String code) {
         return zoneService.isExist(code);
+    }
+
+    @GetMapping(value = "/all/plan/at/certain/zone")
+    public List<PlanVO> selectsAllPlansAtCertainZone(@RequestParam("placeSetting") String placeSetting) {
+        return planService.selectsAllPlansAtCertainZone(placeSetting);
     }
 }

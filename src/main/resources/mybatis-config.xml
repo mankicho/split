@@ -16,6 +16,7 @@
         <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
         <typeAlias type="component.member.MemberTmpInfoDTO" alias="MemberTmpInfoDTO"/>
         <typeAlias type="component.member.friend.FriendAddRequestVO" alias="FriendAddRequestVO"/>
+        <typeAlias type="component.plan.auth.TodayPlanAuthVO" alias="TodayPlanAuthVO"/>
 
 
     </typeAliases>

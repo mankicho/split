@@ -16,6 +16,7 @@
 
     <util:properties id="admin_config" location="classpath:/config/admin.properties"/>
     <tx:annotation-driven/>
+    <context:component-scan base-package="websocket"/>
     <context:component-scan base-package="security"/>
     <context:component-scan base-package="aop"/>
     <context:component-scan base-package="component"/>

@@ -107,4 +107,9 @@ public class PlanController {
         return planService.selectsAllEmailOfPlans(planLogId);
     }
 
+    @GetMapping(value = "/get/plans/by/search")
+    public List<PlanVO> getPlansBySearching(@RequestParam("key") String key) {
+        return planService.getPlansBySearching(key);
+    }
+
 }

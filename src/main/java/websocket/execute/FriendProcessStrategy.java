@@ -5,6 +5,7 @@ import component.alarm.AlarmService;
 import component.alarm.AlarmServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 

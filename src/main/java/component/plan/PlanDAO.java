@@ -86,6 +86,18 @@ public class PlanDAO {
         return planMapper.selectsAllEmailOfPlans(planLogId);
     }
 
+    public PlanVO selectTodayPlan(HashMap<String, Object> hashMap) {
+        return planMapper.selectTodayPlan(hashMap);
+    }
+
+    public List<PlanVO> selectsAllPlansAtCertainZone(String placeSetting) {
+        return planMapper.selectsAllPlansAtCertainZone(placeSetting);
+    }
+
+    public List<PlanVO> getPlansBySearching(String key) {
+        return planMapper.getPlansBySearching(key);
+    }
+
     private boolean isSameWeekDayAndDate(PlanVO planVOInDB, PlanDTO planDTO) throws ParseException {
         List<Date> dates = new ArrayList<>();
         for (Date d = planVOInDB.getStartDate(); // DB 에 저장된 시작날짜~끝날짜 사이 하루하루를 다 순회

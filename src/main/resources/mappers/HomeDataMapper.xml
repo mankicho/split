@@ -2,14 +2,6 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.home.HomeDataMapper">
-    <select id="selectPlanAuthLogsFor30Minutes" parameterType="hashmap" resultType="int">
-        select sum(cnt) from ( select count(*) as cnt from official_plan_log
-        where authtime between time_format(#{fromtime},'%H:%i:%s') and  time_format(#{totime},'%H:%i:%s')
-        UNION
-        select count(*) as cnt from non_official_plan
-        where authtime between time_format(#{fromtime},'%H:%i:%s') and  time_format(#{totime},'%H:%i:%s')) as tmp;
-    </select>
-
     <select id="selectPlanAuthLogsOfToday" resultType="int">
         SELECT COUNT(*) from plan_auth_log where date_format(authenticate_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
     </select>
@@ -21,10 +13,7 @@
 
 
     <select id="selectUsersTotalCheckTime" parameterType="string" resultType="int"> <!-- 유저의 총 출석체크 회수 -->
-        select sum(cnt) from (select count(*) as cnt from plan_auth_log as l right outer join
-        official_plan_log as p on l.plan_id = p.official_plan_log_id where p.member_email = #{email}
-        union all
-        select count(*) as cnt from plan_auth_log as l right outer join
-        non_official_plan as n on l.plan_id = n.non_official_plan_id where n.member_email = #{email}) as tmp;
+        select count(*) from plan_auth_log where date_format(authenticate_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d');
     </select>
+
 </mapper>

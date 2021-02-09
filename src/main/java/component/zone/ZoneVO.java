@@ -12,7 +12,6 @@ public class ZoneVO {
     private String phoneNumber; // 행성 전화번호
     private double lat; // 위도
     private double lng; // 경도
-    private int accVisitor; // 누적 방문자 수
     private int todayVisitor; // 오늘 방문자 수
     private ZoneOperDTO zoneOperDTO; // 운영시간
     private List<ZoneImageDTO> zoneImageDTOList;

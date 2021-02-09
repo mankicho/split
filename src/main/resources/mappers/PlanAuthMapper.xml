@@ -7,6 +7,11 @@
         <result property="nickname" column="nickname"/>
         <result property="authenticateTime" column="authenticate_time"/>
     </resultMap>
+    <resultMap id="TodayPlanAuthVO" type="component.plan.auth.TodayPlanAuthVO">
+        <result property="allUser" column="allUser"/>
+        <result property="doUser" column="doUser"/>
+    </resultMap>
+
     <insert id="planAuthLog" parameterType="hashmap">
         INSERT INTO plan_auth_log(plan_log_id,authenticate_time,planet,authenticate_flag)
         values(#{planLogId},#{authenticateTime},#{planet},#{authenticateFlag})
@@ -14,5 +19,11 @@
 
     <select id="getPlanAttendances" parameterType="int" resultMap="planAttendanceDTO">
         SELECT nickname,authenticate_time from plan_auth_log;
+    </select>
+
+    <select id="getAuthNumberOfMyPlan" parameterType="int" resultType="TodayPlanAuthVO">
+         select (select count(*) from plan_members where plan_log_id = #{planLogId}) as allUser,
+         (select count(*) from plan_auth_log where plan_log_id = #{planLogId}
+        and date_format(authenticate_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) as doUser from dual;
     </select>
 </mapper>

@@ -24,5 +24,10 @@ public class PlanAuthServiceImpl implements PlanAuthService {
     public List<PlanAttendanceDTO> getPlanAttendances(int planLogId) {
         return planAuthDAO.getPlanAttendances(planLogId);
     }
+
+    @Override
+    public TodayPlanAuthVO getAuthNumberOfMyPlan(int planLogId) {
+        return planAuthDAO.getAuthNumberOfMyPlan(planLogId);
+    }
 }
 

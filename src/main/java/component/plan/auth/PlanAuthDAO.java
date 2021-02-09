@@ -75,6 +75,10 @@ public class PlanAuthDAO {
         return planAuthMapper.getPlanAttendances(planLogId);
     }
 
+    public TodayPlanAuthVO getAuthNumberOfMyPlan(int planLogId) {
+        return planAuthMapper.getAuthNumberOfMyPlan(planLogId);
+    }
+
     private int squareOfTwo(int weekday) {
         return (int) Math.pow(2, weekday - 1);
     }

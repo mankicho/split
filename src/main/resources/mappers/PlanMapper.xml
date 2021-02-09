@@ -36,6 +36,10 @@
     <select id="selectByIdAndEmail" resultMap="planVO">
         SELECT * FROM plan where plan_log_id = #{planLogId} AND member_email = #{email}
     </select>
+    <select id="selectTodayPlan" resultMap="planVO" parameterType="hashmap">
+        SELECT * FROM plan where member_email = #{email} and (now() between startdate and enddate)
+        and (#{setDay} <![CDATA[&]]> set_day) != 0
+    </select>
     <select id="selectByEmailAndDate" resultMap="planVO">
         SELECT * FROM plan where member_email = #{email} AND date_format(#{authenticateTime},'%Y-%m-%d') between startdate and enddate;
     </select>
@@ -45,5 +49,9 @@
 
     <select id="selectsAllEmailOfPlans" parameterType="int" resultType="string">
         select member_email from plan_members where plan_log_id = #{planLogId}
+    </select>
+
+    <select id="selectsAllPlansAtCertainZone" parameterType="string" resultType="planVO">
+         select * from plan where place_setting = #{placeSetting};
     </select>
 </mapper>

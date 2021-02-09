@@ -52,4 +52,19 @@ public class PlanServiceImpl implements PlanService {
     public List<String> selectsAllEmailOfPlans(int planLogId) {
         return planDAO.selectsAllEmailOfPlans(planLogId);
     }
+
+    @Override
+    public PlanVO selectTodayPlan(HashMap<String, Object> hashMap) {
+        return planDAO.selectTodayPlan(hashMap);
+    }
+
+    @Override
+    public List<PlanVO> selectsAllPlansAtCertainZone(String placeSetting) {
+        return planDAO.selectsAllPlansAtCertainZone(placeSetting);
+    }
+
+    @Override
+    public List<PlanVO> getPlansBySearching(String key) {
+        return planDAO.getPlansBySearching(key);
+    }
 }

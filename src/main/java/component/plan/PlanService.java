@@ -21,6 +21,12 @@ public interface PlanService {
 
     List<PlanVO> selectsAllPlans(String email);
 
-    List<String> selectsAllEmailOfPlans( int planLogId);
+    List<String> selectsAllEmailOfPlans(int planLogId);
+
+    PlanVO selectTodayPlan(HashMap<String, Object> hashMap);
+
+    List<PlanVO> selectsAllPlansAtCertainZone( String placeSetting);
+
+    List<PlanVO> getPlansBySearching(String key);
 
 }

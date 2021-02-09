@@ -1,12 +1,15 @@
 package websocket;
 
 import component.member.MemberMapper;
+import component.plan.PlanMapper;
+import component.plan.PlanService;
 import component.zone.ZoneMapper;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -27,15 +30,21 @@ public class EchoHandler extends TextWebSocketHandler {
     @Setter(onMethod_ = {@Autowired})
     private ZoneMapper zoneMapper;
 
+    @Setter(onMethod_ = {@Autowired})
+    private PlanService planService;
+    @Setter(onMethod_ = {@Autowired})
+    private PlanMapper mapper;
+
+
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();  // 실시간 어플을 이용하고 있는 유저
     private List<String> timers = new ArrayList<>(); // 실시간 집중시간 이용 유저
 
     // 1대1
-    private Map<String, WebSocketSession> userSessionsMap = new HashMap<>(); // 유저 : 세션
-    private Map<String, String> userSessionIdMap = new HashMap<>(); // 유저 이메일 : 유저 세션 ID
-    private Map<String, WebSocketSession> cafeSessionMap = new HashMap<>(); // 카페 : 세션
-    private Map<String, String> cafeSessionIdMap = new HashMap<>(); // 카페명 : 세션 ID
+    private Map<String, WebSocketSession> userEmailSocketSessionMap = new HashMap<>(); // 유저 이메일 : 세션
+    private Map<String, String> userSessionNicknameMap = new HashMap<>(); // 유저 세션 ID : 유저 이메일
+    private Map<String, WebSocketSession> cafeCodeSocketSessionMap = new HashMap<>(); // 카페 : 세션
+    private Map<String, String> cafeCodeSessionIdMap = new HashMap<>(); // 카페명 : 세션 ID
 
     /**
      * @param session this function called when client' session is connected
@@ -57,11 +66,12 @@ public class EchoHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info(session.getId() + " is disconnected");
-        userSessionsMap.remove(userSessionIdMap.get(session.getId())); // 유저 제거
-        userSessionIdMap.remove(session.getId()); // 유저 제거
-        sessions.remove(session);
-        cafeSessionMap.remove(cafeSessionIdMap.get(session.getId())); // 카페 제거
-        cafeSessionIdMap.remove(session.getId()); // 카페 제거
+        userEmailSocketSessionMap.remove(userSessionNicknameMap.get(session.getId())); // 유저 제거
+        userSessionNicknameMap.remove(session.getId()); // 유저 제거
+        sessions.remove(session); // 유저 제거
+        cafeCodeSocketSessionMap.remove(cafeCodeSessionIdMap.get(session.getId())); // 카페 제거
+        cafeCodeSessionIdMap.remove(session.getId()); // 카페 제거
+        timers.removeIf(str -> str.equals(session.getId()));
     }
 
     /**
@@ -85,34 +95,38 @@ public class EchoHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info("handleText");
         // todo 1. 클라이언트가 날린 메세지 해석
-        DataProcessStrategy dps = parseTextMessage(message);
+        DataProcessStrategy dps = parseTextMessage(session, message);
         // todo 2. 메세지에 맞는 함수 호출(DB에 데이터 저장 or 적절한 유저에게 메세지 전송 등)
         dataProcess(dps, message);
     }
 
 
-    private DataProcessStrategy parseTextMessage(TextMessage message) {
+    private DataProcessStrategy parseTextMessage(WebSocketSession webSocketSession, TextMessage message) {
         JSONObject object = new JSONObject(message.getPayload());
         switch (object.getInt("type")) {
             case 1: // 친구요청
                 FriendProcessStrategy dps = new FriendProcessStrategy();
-                dps.setUserMap(userSessionsMap);
+                dps.setUserMap(userEmailSocketSessionMap);
                 return dps;
             case 2: // 출석체크
                 AttendanceProcessStrategy aps = new AttendanceProcessStrategy();
-                aps.setCafeMap(cafeSessionMap);
+                aps.setCafeMap(cafeCodeSocketSessionMap);
+                aps.setUserMap(userEmailSocketSessionMap);
                 return aps;
-//            case 3: // 플랜 참여
-//                return new PlanSharingInProcessStrategy();
+            case 3: // 플랜 참여
+                PlanSharingInProcessStrategy planSharingInProcessStrategy = new PlanSharingInProcessStrategy();
+                planSharingInProcessStrategy.setUserMap(userEmailSocketSessionMap);
+                planSharingInProcessStrategy.setPlanService(planService);
+                return planSharingInProcessStrategy;
 //            case 4: // 플랜 참여 철회
 //                return new PlanSharingOutProcessStrategy();
             case 5: // 집중시간
                 String user = object.getString("user");
                 int mode = object.getInt("mode");
                 if (mode == 1 && !timers.contains(user)) { // 집중 모드면
-                    timers.add(user);
+                    timers.add(webSocketSession.getId());
                 } else {
-                    timers.removeIf(str -> str.equals(user));
+                    timers.removeIf(str -> str.equals(webSocketSession.getId()));
                 }
                 ConcentrateModeOnStrategy tps = new ConcentrateModeOnStrategy();
                 tps.setTimerSessions(timers);
@@ -121,7 +135,7 @@ public class EchoHandler extends TextWebSocketHandler {
             case 6:
                 // 팔로우 요청
                 FollowProcessStrategy fps = new FollowProcessStrategy();
-                fps.setUserMap(userSessionsMap);
+                fps.setUserMap(userEmailSocketSessionMap);
                 return fps;
             default:
                 return null;
@@ -138,21 +152,21 @@ public class EchoHandler extends TextWebSocketHandler {
         HttpHeaders httpHeaders = socketSession.getHandshakeHeaders();
         List<String> cafeHeaders;
         List<String> userHeaders;
-        if ((cafeHeaders = httpHeaders.get("cafe")) != null) {
+        if ((cafeHeaders = httpHeaders.get("cafe")) != null) { // 카페 코드 
             log.info(cafeHeaders.get(0) + " is connected, session:" + socketSession.getId());
             int existedRow = zoneMapper.isExist(cafeHeaders.get(0));
             if (existedRow == 1) {
-                cafeSessionMap.put(cafeHeaders.get(0), socketSession);
-                cafeSessionIdMap.put(socketSession.getId(), cafeHeaders.get(0));
+                cafeCodeSocketSessionMap.put(cafeHeaders.get(0), socketSession);
+                cafeCodeSessionIdMap.put(socketSession.getId(), cafeHeaders.get(0));
             } else {
                 log.info("not exists data in DB : \"" + cafeHeaders.get(0) + "\"");
             }
         }
 
-        if ((userHeaders = httpHeaders.get("user")) != null) {
+        if ((userHeaders = httpHeaders.get("user")) != null) { // 이메일
             log.info(userHeaders.get(0) + " is connected, session:" + socketSession.getId());
-            userSessionsMap.put(userHeaders.get(0), socketSession);
-            userSessionIdMap.put(socketSession.getId(), userHeaders.get(0));
+            userEmailSocketSessionMap.put(userHeaders.get(0), socketSession); // 이메일 : 소켓세션
+            userSessionNicknameMap.put(socketSession.getId(), userHeaders.get(0)); // 세션 ID : 이메일
         }
 
     }
