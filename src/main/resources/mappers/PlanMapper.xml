@@ -54,4 +54,14 @@
     <select id="selectsAllPlansAtCertainZone" parameterType="string" resultType="planVO">
          select * from plan where place_setting = #{placeSetting};
     </select>
+
+    <select id="getPlansBySearching" parameterType="string" resultType="planVO">
+        select plan_log_id as planLogId,member_email as memberEmail,plan_name as planName,
+         startdate as startDate, enddate as endDate, authtime as authTime, comp_condition as compCondition,
+         set_day as setDay, pub,place_setting as placeSetting, guild_name as guildName, tag, pCode
+          from plan where plan_name like concat('%',#{key},'%') or
+         exists (select plan_log_id from plan_hashtags where hashtag like concat('%',#{key},'%'));
+    </select>
 </mapper>
+
+
