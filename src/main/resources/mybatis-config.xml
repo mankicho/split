@@ -26,6 +26,7 @@
         <mapper class="component.home.HomeDataMapper"/>
         <mapper class="component.zone.ZoneMapper"/>
         <mapper class="component.plan.auth.PlanAuthMapper"/>
+        <mapper class="component.peed.db.PeedMapper"/>
     </mappers>
 
 </configuration>
