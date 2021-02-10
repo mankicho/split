@@ -47,14 +47,8 @@ public class ZoneController {
      * @return
      */
     @GetMapping(value = "/get.do") // 지도에 표시할 공간 가져오기
-    public List<ZoneVO> getZones(HttpServletRequest request) {
-        String plainLat = request.getParameter("lat");
-        String plainLng = request.getParameter("lng");
-        String type = request.getParameter("type");
-        type += '%';
-        double lat = Double.parseDouble(plainLat);
-        double lng = Double.parseDouble(plainLng);
-        return zoneService.selectZones(lat, lng, type);
+    public List<ZoneVO> getZones() {
+        return zoneService.selectZones();
 
     }
 

@@ -12,8 +12,8 @@ public class ZoneDAO {
     @Setter(onMethod_ = {@Autowired})
     private ZoneMapper zoneMapper;
 
-    public List<ZoneVO> selectZones(double lat, double lng, String type) {
-        return zoneMapper.selectZones(lat, lng, type);
+    public List<ZoneVO> selectZones() {
+        return zoneMapper.selectZones();
     }
 
     public int isExist(String code) {

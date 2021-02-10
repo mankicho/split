@@ -13,13 +13,11 @@ public class ZoneServiceImpl implements ZoneService {
     private ZoneDAO zoneDAO;
 
     /**
-     * @param lat
-     * @param lng bring zones by OOO meters around certain point
      * @return
      */
     @Override
-    public List<ZoneVO> selectZones(double lat, double lng, String type) {
-        return zoneDAO.selectZones(lat, lng, type);
+    public List<ZoneVO> selectZones() {
+        return zoneDAO.selectZones();
     }
 
     /**
