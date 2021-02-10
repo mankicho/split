@@ -47,10 +47,4 @@
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
-    <bean id="admin" class="security.admin.Admin">
-        <property name="dd06pl742" value="an28ccnAXW8c@k"/>
-        <property name="de07zx11783" value="95eorkfl!!@asd123"/>
-        <property name="zcw16ggf2k4v88hb3" value="zl59aav244hhqghm688gdfb44gwAA2c$N@@ceve5MMz9*jd2bSA"/>
-    </bean>
 </beans>
