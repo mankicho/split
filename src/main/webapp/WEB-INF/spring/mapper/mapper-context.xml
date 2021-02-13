@@ -27,8 +27,4 @@
         <property name="mapperInterface" value="component.alarm.AlarmMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
-    <bean id="peedMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="component.peed.db.PeedMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
 </beans>
