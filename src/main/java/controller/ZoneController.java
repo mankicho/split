@@ -47,8 +47,8 @@ public class ZoneController {
      * @return
      */
     @GetMapping(value = "/get.do") // 지도에 표시할 공간 가져오기
-    public List<ZoneVO> getZones() {
-        return zoneService.selectZones();
+    public List<ZoneVO> getZones(@RequestParam("type") String type) {
+        return zoneService.selectZones(type);
 
     }
 
