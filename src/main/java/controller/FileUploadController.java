@@ -22,7 +22,7 @@ public class FileUploadController {
 
     @PostMapping(value = "/file/main/upload")
     public void fileUploadMain(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
-        String path = getServletContextRealPath(req)+"/profile/main/"; // 파일 경로
+        String path = getServletContextRealPath(req) + "/profile/main/"; // 파일 경로
         File targetFile = new File(path + getUUID());
         try {
             InputStream fileStream = multipartFile.getInputStream();
@@ -38,9 +38,12 @@ public class FileUploadController {
 
     @PostMapping(value = "/file/back/upload")
     public void fileUploadBackground(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
-        String path = getServletContextRealPath(req)+"/profile/back/";
-
-        File targetFile = new File(path + getUUID());
+        String path = getServletContextRealPath(req) + "/profile/back/";
+        String ext = getExtension(multipartFile);
+        if (ext == null) {
+            return;
+        }
+        File targetFile = new File(path + getUUID() + ext);
         try {
             InputStream fileStream = multipartFile.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, targetFile);
@@ -53,11 +56,19 @@ public class FileUploadController {
         log.info("----------------");
     }
 
-    private String getServletContextRealPath(HttpServletRequest req){
+    private String getServletContextRealPath(HttpServletRequest req) {
         return req.getSession().getServletContext().getRealPath("/resources");
     }
 
-    private String getUUID(){
-        return UUID.randomUUID().toString().replace("-","");
+    private String getUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    private String getExtension(MultipartFile multipartFile) {
+        String fileName = multipartFile.getOriginalFilename();
+        if (fileName != null) {
+            return fileName.substring(fileName.lastIndexOf("."));
+        }
+        return null;
     }
 }
