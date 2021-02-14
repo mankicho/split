@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 @Log4j
 public class FileUploadController {
 
-    @PostMapping(value = "/file/upload")
-    public void fileUpload(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
-        String path = req.getSession().getServletContext().getRealPath("/resources")+"/profile/"; // 파일 경로
+    @PostMapping(value = "/file/main/upload")
+    public void fileUploadMain(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
+        String path = getServletContextRealPath(req)+"/profile/main/"; // 파일 경로
         File targetFile = new File(path + multipartFile.getOriginalFilename());
         try {
             InputStream fileStream = multipartFile.getInputStream();
@@ -33,5 +33,26 @@ public class FileUploadController {
         }
         log.info("file upload finish");
         log.info("----------------");
+    }
+
+    @PostMapping(value = "/file/back/upload")
+    public void fileUploadBackground(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
+        String path = getServletContextRealPath(req)+"/profile/back/";
+
+        File targetFile = new File(path + multipartFile.getOriginalFilename());
+        try {
+            InputStream fileStream = multipartFile.getInputStream();
+            FileUtils.copyInputStreamToFile(fileStream, targetFile);
+            log.info("upload success");
+        } catch (IOException e) {
+            FileUtils.deleteQuietly(targetFile);
+            e.printStackTrace();
+        }
+        log.info("file upload finish");
+        log.info("----------------");
+    }
+
+    private String getServletContextRealPath(HttpServletRequest req){
+        return req.getSession().getServletContext().getRealPath("/resources");
     }
 }
