@@ -23,7 +23,8 @@ public class FileUploadController {
     @PostMapping(value = "/file/main/upload")
     public void fileUploadMain(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
         String path = getServletContextRealPath(req) + "/profile/main/"; // 파일 경로
-        File targetFile = new File(path + getUUID());
+        String ext = getExtension(multipartFile);
+        File targetFile = new File(path + getUUID() + ext);
         try {
             InputStream fileStream = multipartFile.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, targetFile);
