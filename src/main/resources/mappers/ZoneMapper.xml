@@ -18,6 +18,21 @@
         <result property="innerImage" column="inner_image_path"/>
         <result property="outerImage" column="outer_image_path"/>
     </resultMap>
+    <resultMap id="planVO" type="component.plan.PlanVO">
+        <result property="planLogId" column="plan_log_id"/>
+        <result property="memberEmail" column="member_email"/>
+        <result property="planName" column="plan_name"/>
+        <result property="startDate" column="startdate"/>
+        <result property="endDate" column="enddate"/>
+        <result property="authTime" column="authtime"/>
+        <result property="compCondition" column="comp_condition"/>
+        <result property="setDay" column="set_day"/>
+        <result property="pub" column="pub"/>
+        <result property="placeSetting" column="place_setting"/>
+        <result property="guildName" column="guild_name"/>
+        <result property="tag" column="tag"/>
+        <result property="pCode" column="pCode"/>
+    </resultMap>
 
     <resultMap id="zone" type="component.zone.ZoneVO">
         <result property="code" column="planet_code"/>
@@ -29,19 +44,21 @@
         <result property="todayVisitor" column="today_visitor"/>
         <collection property="zoneOperDTO" resultMap="zoneOperMap"/>
         <collection property="zoneImageDTOList" resultMap="imageMap"/>
+        <collection property="planList" resultMap="planVO"/>
     </resultMap>
+
 
     <select id="selectZones" resultMap="zone" parameterType="string">
         select * from planet as p
         left join planet_oper_time as o on o.planet_code = p.planet_code
         left join planet_image as i on p.planet_code = i.planet_code
+        left join plan as l on p.planet_code = l.place_setting
         where p.planet_code like concat('%',#{type},'%')
     </select>
 
     <select id="isExist" parameterType="string" resultType="int">
         select count(*) from planet where planet_code = #{code}
     </select>
-
 
 
 </mapper>

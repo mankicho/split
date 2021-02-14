@@ -1,5 +1,6 @@
 package component.zone;
 
+import component.plan.PlanVO;
 import lombok.Data;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class ZoneVO {
     private int todayVisitor; // 오늘 방문자 수
     private ZoneOperDTO zoneOperDTO; // 운영시간
     private List<ZoneImageDTO> zoneImageDTOList;
+    private List<PlanVO> planList;
 }
 
 
