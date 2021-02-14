@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/peed")
@@ -22,7 +23,7 @@ public class FileUploadController {
     @PostMapping(value = "/file/main/upload")
     public void fileUploadMain(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
         String path = getServletContextRealPath(req)+"/profile/main/"; // 파일 경로
-        File targetFile = new File(path + multipartFile.getOriginalFilename());
+        File targetFile = new File(path + getUUID());
         try {
             InputStream fileStream = multipartFile.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, targetFile);
@@ -39,7 +40,7 @@ public class FileUploadController {
     public void fileUploadBackground(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
         String path = getServletContextRealPath(req)+"/profile/back/";
 
-        File targetFile = new File(path + multipartFile.getOriginalFilename());
+        File targetFile = new File(path + getUUID());
         try {
             InputStream fileStream = multipartFile.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, targetFile);
@@ -54,5 +55,9 @@ public class FileUploadController {
 
     private String getServletContextRealPath(HttpServletRequest req){
         return req.getSession().getServletContext().getRealPath("/resources");
+    }
+
+    private String getUUID(){
+        return UUID.randomUUID().toString().replace("-","");
     }
 }
