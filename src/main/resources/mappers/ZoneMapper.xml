@@ -59,5 +59,7 @@
         select count(*) from planet where planet_code = #{code}
     </select>
 
-
+    <select id="autoComplete" parameterType="string" resultType="string">
+        select area_name * disnct where area_name like concat('%',#{word},'%');
+    </select>
 </mapper>

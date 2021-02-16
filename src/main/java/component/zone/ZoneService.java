@@ -12,4 +12,7 @@ public interface ZoneService {
 
     int isExist(String code);
 
+    List<String> autoComplete(String word);
+
+
 }

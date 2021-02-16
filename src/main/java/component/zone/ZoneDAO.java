@@ -1,6 +1,7 @@
 package component.zone;
 
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +19,9 @@ public class ZoneDAO {
 
     public int isExist(String code) {
         return zoneMapper.isExist(code);
+    }
+
+    public List<String> autoComplete(@Param("word") String word) {
+        return zoneMapper.autoComplete(word);
     }
 }

@@ -6,6 +6,7 @@ import component.zone.ZoneVO;
 import component.zone.ZoneService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,5 +61,10 @@ public class ZoneController {
     @GetMapping(value = "/all/plan/at/certain/zone")
     public List<PlanVO> selectsAllPlansAtCertainZone(@RequestParam("placeSetting") String placeSetting) {
         return planService.selectsAllPlansAtCertainZone(placeSetting);
+    }
+
+    @GetMapping(value = "/auto/complete")
+    public List<String> autoComplete(@Param("word") String word) {
+        return zoneService.autoComplete(word);
     }
 }

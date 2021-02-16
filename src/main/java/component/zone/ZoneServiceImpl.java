@@ -34,4 +34,9 @@ public class ZoneServiceImpl implements ZoneService {
     public int isExist(String code) {
         return zoneDAO.isExist(code);
     }
+
+    @Override
+    public List<String> autoComplete(String word) {
+        return zoneDAO.autoComplete(word);
+    }
 }

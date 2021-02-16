@@ -11,4 +11,6 @@ public interface ZoneMapper {
     int recordSearching(@Param("email") String email, @Param("words") String words);
 
     int isExist(@Param("code") String code);
+
+    List<String> autoComplete(@Param("word") String word);
 }
