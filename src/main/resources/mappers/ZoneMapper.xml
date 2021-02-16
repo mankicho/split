@@ -53,7 +53,6 @@
         left join planet_oper_time as o on o.planet_code = p.planet_code
         left join planet_image as i on p.planet_code = i.planet_code
         left join plan as l on p.planet_code = l.place_setting
-        where p.planet_code like concat('%',#{type},'%')
     </select>
 
     <select id="isExist" parameterType="string" resultType="int">

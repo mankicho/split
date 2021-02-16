@@ -57,15 +57,15 @@ public class FileUploadController {
         log.info("----------------");
     }
 
-    private String getServletContextRealPath(HttpServletRequest req) {
+    private String getServletContextRealPath(HttpServletRequest req) { // resources path 가져오기
         return req.getSession().getServletContext().getRealPath("/resources");
     }
 
-    private String getUUID() {
+    private String getUUID() { // 고유 식별자 만들기
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    private String getExtension(MultipartFile multipartFile) {
+    private String getExtension(MultipartFile multipartFile) { // 확장자 가져오기
         String fileName = multipartFile.getOriginalFilename();
         if (fileName != null) {
             return fileName.substring(fileName.lastIndexOf("."));

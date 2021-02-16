@@ -72,13 +72,14 @@ public class MemberController {
     @RequestMapping(value = "/login.do")
     @Transactional
     public String memberLogin(HttpServletRequest request) {
-        String email = request.getParameter("email");
-        String pw = request.getParameter("pw");
-        MemberVO memberVO = memberService.selects(email);
-        if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) {
-            int affectedRow = memberService.autoLogin(email);
+        String email = request.getParameter("email"); // 이메일
+        String pw = request.getParameter("pw"); // 비밀번호
+        MemberVO memberVO = memberService.selects(email); // db 에서 회원정보 조회
+        if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) { // db 에 저장된 정보와 사용자 입력 비밀번호를 인코딩한 정보가 일치하면
+            int affectedRow = memberService.autoLogin(email); // 자동로그인
             if (affectedRow >= 1) {
                 return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 15);
+                // 어플내의 기능을 이용하기위한 토큰 발급
             }
         }
         MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
