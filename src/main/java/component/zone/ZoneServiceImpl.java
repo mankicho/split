@@ -16,8 +16,8 @@ public class ZoneServiceImpl implements ZoneService {
      * @return
      */
     @Override
-    public List<ZoneVO> selectZones(String type) {
-        return zoneDAO.selectZones(type);
+    public List<ZoneVO> selectZones() {
+        return zoneDAO.selectZones();
     }
 
     /**
