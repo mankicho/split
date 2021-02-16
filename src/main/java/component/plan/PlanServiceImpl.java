@@ -67,4 +67,9 @@ public class PlanServiceImpl implements PlanService {
     public List<PlanVO> getPlansBySearching(String key) {
         return planDAO.getPlansBySearching(key);
     }
+
+    @Override
+    public List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap) {
+        return planDAO.getPlansByOrdering(hashMap);
+    }
 }

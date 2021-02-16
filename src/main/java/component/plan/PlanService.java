@@ -28,5 +28,6 @@ public interface PlanService {
     List<PlanVO> selectsAllPlansAtCertainZone( String placeSetting);
 
     List<PlanVO> getPlansBySearching(String key);
+    List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap);
 
 }

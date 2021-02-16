@@ -107,9 +107,27 @@ public class PlanController {
         return planService.selectsAllEmailOfPlans(planLogId);
     }
 
+    /**
+     * @param key 플랜 검색하기
+     * @return
+     */
     @GetMapping(value = "/get/plans/by/search")
     public List<PlanVO> getPlansBySearching(@RequestParam("key") String key) {
         return planService.getPlansBySearching(key);
+    }
+
+    /**
+     * @param type 플랜 정렬하기
+     * @param col
+     * @return
+     */
+    @PostMapping("/get/plans/by/order")
+    public List<PlanVO> getPlansByOrdering(@RequestParam("type") int type, @RequestParam("col") int col) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("type", type);
+        hashMap.put("col", col);
+        System.out.println(hashMap);
+        return planService.getPlansByOrdering(hashMap);
     }
 
 }

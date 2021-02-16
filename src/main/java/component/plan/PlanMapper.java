@@ -24,9 +24,11 @@ public interface PlanMapper {
 
     List<String> selectsAllEmailOfPlans(@Param("planLogId") int planLogId); // 플랜을 참여하고있는 유저 이메일목록
 
-    PlanVO selectTodayPlan(HashMap<String,Object> hashMap);
+    PlanVO selectTodayPlan(HashMap<String, Object> hashMap);
 
     List<PlanVO> selectsAllPlansAtCertainZone(@Param("placeSetting") String placeSetting);
 
     List<PlanVO> getPlansBySearching(@Param("key") String key);
+
+    List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap);
 }

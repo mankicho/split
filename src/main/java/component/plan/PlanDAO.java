@@ -65,7 +65,7 @@ public class PlanDAO {
         return planMapper.selectByIdAndEmail(hashMap);
     }
 
-    public List<PlanVO> selectsAllPlans(@Param("email") String email) {
+    public List<PlanVO> selectsAllPlans( String email) {
         return planMapper.selectsAllPlans(email);
     }
 
@@ -96,6 +96,10 @@ public class PlanDAO {
 
     public List<PlanVO> getPlansBySearching(String key) {
         return planMapper.getPlansBySearching(key);
+    }
+
+    public List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap) {
+        return planMapper.getPlansByOrdering(hashMap);
     }
 
     private boolean isSameWeekDayAndDate(PlanVO planVOInDB, PlanDTO planDTO) throws ParseException {
