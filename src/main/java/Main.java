@@ -8,6 +8,10 @@ public class Main {
         System.out.println("start");
         System.out.println(UUID.randomUUID().toString());
         System.out.println(LocalDateTime.now());
+
+        System.out.println("--------------------------");
+
+        System.out.println();
     }
 
 }

@@ -14,6 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -80,6 +84,20 @@ public class HomeController {
             hashMap.put("do", todayPlanAuthVO.getDoUser()); // 내플랜에서 인증한 유저의 총 수
         }
         return hashMap;
+    }
+
+    @GetMapping("/test/test/test")
+    public void test(HttpServletRequest request) throws IOException {
+        System.out.println(System.getProperty("catalina.home"));
+
+        String path = System.getProperty("catalina.home");
+        FileInputStream fis = new FileInputStream(new File(path + "/test.txt"));
+
+        int c;
+
+        while ((c = fis.read()) != -1) {
+            System.out.print((char) c);
+        }
     }
 
     private int getSquareOfTwo(String val) {
