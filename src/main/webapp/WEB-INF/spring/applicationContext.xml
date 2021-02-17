@@ -26,11 +26,13 @@
     <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
     <util:properties id="db" location="file:/home/hosting_users/icnogari/tomcat/db.properties"/>
+<!--        <util:properties id="db"-->
+<!--                         location="file:C:\Users\82102\Desktop\apache-tomcat-8.5.57-windows-x64\apache-tomcat-8.5.57/db.properties"/>-->
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url"
-                  value="jdbc:mysql://localhost:3306/icnogari?serverTimezone=Asia/Seoul&amp;autoReconnect=true"/>
+                  value="#{db['url']}"/>
         <property name="username" value="#{db['id']}"/>
         <property name="password" value="#{db['pw']}"/>
     </bean>
