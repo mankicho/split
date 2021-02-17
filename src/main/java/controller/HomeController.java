@@ -87,6 +87,7 @@ public class HomeController {
     }
 
     @GetMapping("/test/test/test")
+<<<<<<< HEAD
     public void test(HttpServletRequest request) throws IOException {
         System.out.println(System.getProperty("catalina.home"));
 
@@ -98,6 +99,10 @@ public class HomeController {
         while ((c = fis.read()) != -1) {
             System.out.print((char) c);
         }
+=======
+    public void test(HttpServletRequest request){
+        System.out.println(System.getProperty("catalina.home"));
+>>>>>>> 7aba950f73e540ca5ba3d6142a805bc6e8fce12f
     }
 
     private int getSquareOfTwo(String val) {
