@@ -52,4 +52,6 @@ public interface MemberMapper {
     int logout(@Param("email") String email);
 
     boolean checkAutoLogin(@Param("email") String email);
+
+    int registerDeviceToken(@Param("email") String email, @Param("type") String type, @Param("token") String deviceToken);
 }

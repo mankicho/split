@@ -93,23 +93,17 @@ public class MemberController {
     }
 
     @PostMapping(value = "/register.do")
-    public int insertMember(@RequestBody MemberDTO memberDTO) {
+    public int insertMember(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
         String pw = memberDTO.getPw();
-        String sex = memberDTO.getSex();
-        String bornTime = memberDTO.getBornTime();
-        if (sex.equals("")) {
-            memberDTO.setSex("N");
-        }
-        if (bornTime.equals("")) {
-            memberDTO.setBornTime("N");
-        }
-
+        String deviceToken = request.getHeader("device-Token");
+        String type = request.getHeader("device-type");
         // todo 1. pw check(right format?)
         String encodedPassword = passwordEncoder.encode(pw); // pw 인코딩
         memberDTO.setPw(encodedPassword);
 
-        int affectedRowOfRegisterMember = memberService.registerMember(memberDTO);
-        if (affectedRowOfRegisterMember == 1) {
+        int affectedRowOfRegisterMember = memberService.registerMember(memberDTO); // 회원정보 등록
+        int affectedRowOfDeviceToken = memberService.registerDeviceToken(memberDTO.getEmail(), type, deviceToken);
+        if (affectedRowOfRegisterMember == 1 && affectedRowOfDeviceToken != 0) {
             return 100;
         }
         return 101;
@@ -245,21 +239,21 @@ public class MemberController {
     }
 
     @PostMapping(value = "/insert/friend/add/request") // 친구추가요청 저장하기
-    public HashMap<String,Object> insertFriendAddRequest(@RequestParam("from") String from, @RequestParam("to") String to) {
-        HashMap<String,Object> hashMap = new HashMap<>();
+    public HashMap<String, Object> insertFriendAddRequest(@RequestParam("from") String from, @RequestParam("to") String to) {
+        HashMap<String, Object> hashMap = new HashMap<>();
         String fromEmail = memberService.isExistEmail(from);
         String toEmail = memberService.isExistEmail(to);
 
-        log.info(fromEmail+","+toEmail);
-        if(fromEmail == null || toEmail == null){
-            hashMap.put("status",400); // 존재하지않는 이메일에대한 친구추가요청 - 회원이 탈퇴 후 친구추가요청을 보낼 수 있음
+        log.info(fromEmail + "," + toEmail);
+        if (fromEmail == null || toEmail == null) {
+            hashMap.put("status", 400); // 존재하지않는 이메일에대한 친구추가요청 - 회원이 탈퇴 후 친구추가요청을 보낼 수 있음
             return hashMap;
         }
-        int insertedRow =  memberService.insertFriendAddRequest(from, to);
-        if(insertedRow == 0){
-            hashMap.put("status",500); // DB query 오류 (
-        }else{
-            hashMap.put("status",202); // 정상 처리
+        int insertedRow = memberService.insertFriendAddRequest(from, to);
+        if (insertedRow == 0) {
+            hashMap.put("status", 500); // DB query 오류 (
+        } else {
+            hashMap.put("status", 202); // 정상 처리
         }
         return hashMap;
     }

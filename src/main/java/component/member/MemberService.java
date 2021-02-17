@@ -53,4 +53,6 @@ public interface MemberService {
 
     int insertFriendAddRequest(String from, String to);
 
+    int registerDeviceToken(String email, String type, String deviceToken);
+
 }

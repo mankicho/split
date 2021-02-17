@@ -121,6 +121,10 @@ public class MemberDAO {
         return mapper.insertFriendAddRequest(from, to);
     }
 
+    public int registerDeviceToken(String email, String type, String deviceToken) {
+        return mapper.registerDeviceToken(email, type, deviceToken);
+    }
+
     private boolean containSpecial(String str) {
         String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);

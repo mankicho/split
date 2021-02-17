@@ -168,7 +168,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public int insertFriendAddRequest(String from, String to) {
-        return memberDAO.insertFriendAddRequest(from,to);
+        return memberDAO.insertFriendAddRequest(from, to);
     }
 
     @Override
@@ -196,7 +196,10 @@ public class MemberServiceImpl implements MemberService {
         return memberDAO.checkAutoLogin(email);
     }
 
-
+    @Override
+    public int registerDeviceToken(String email, String type, String deviceToken) {
+        return memberDAO.registerDeviceToken(email, type, deviceToken);
+    }
 
     private String generateSalt() {
         Random random = new Random();

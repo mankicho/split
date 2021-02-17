@@ -115,4 +115,8 @@
     <select id="checkAutoLogin" parameterType="string" resultType="boolean">
         SELECT login from members_login where member_email = #{email}
     </select>
+
+    <insert id="registerDeviceToken" parameterType="string">
+        INSERT INTO member_device (member_email,device_type,device_token) values (#{email},#{type},#{token})
+    </insert>
 </mapper>
