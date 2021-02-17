@@ -82,6 +82,11 @@ public class HomeController {
         return hashMap;
     }
 
+    @GetMapping("/test/test/test")
+    public void test(HttpServletRequest request){
+        System.out.println(System.getProperty("catalina.home"));
+    }
+
     private int getSquareOfTwo(String val) {
         int v = Integer.parseInt(val);
         return (int) Math.pow(2, v - 1);

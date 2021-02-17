@@ -124,9 +124,8 @@ public class PlanController {
     @PostMapping("/get/plans/by/order")
     public List<PlanVO> getPlansByOrdering(@RequestParam("type") int type, @RequestParam("col") int col) {
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("type", type);
-        hashMap.put("col", col);
-        System.out.println(hashMap);
+        hashMap.put("type", type); // type : 0 (모집중) / type : 1 (진행중)
+        hashMap.put("col", col); // col : 1 (인기순) / 등등
         return planService.getPlansByOrdering(hashMap);
     }
 
