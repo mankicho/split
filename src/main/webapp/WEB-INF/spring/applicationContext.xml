@@ -3,6 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -10,11 +11,17 @@
        https://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/aop
        https://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
     <util:properties id="admin_config" location="classpath:/config/admin.properties"/>
+    <!--    <util:properties id="db" location="file:/home/hosting_users/icnogari/tomcat/db.properties"/>-->
+    <util:properties id="db"
+                     location="file:C:\Users\82102\Desktop\apache-tomcat-8.5.57-windows-x64\apache-tomcat-8.5.57/db.properties"/>
+    <util:properties id="path" location="classpath:/config/path.properties"/>
+
     <tx:annotation-driven/>
     <context:component-scan base-package="websocket"/>
     <context:component-scan base-package="security"/>
@@ -23,12 +30,10 @@
     <context:component-scan base-package="exception"/>
     <context:component-scan base-package="application"/>
     <context:component-scan base-package="fcm"/>
+    <context:component-scan base-package="system"/>
     <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
-    <util:properties id="db" location="file:/home/hosting_users/icnogari/tomcat/db.properties"/>
-<!--        <util:properties id="db"-->
-<!--                         location="file:C:\Users\82102\Desktop\apache-tomcat-8.5.57-windows-x64\apache-tomcat-8.5.57/db.properties"/>-->
-
+    <task:annotation-driven/>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url"

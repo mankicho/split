@@ -1,5 +1,6 @@
 package controller;
 
+import component.member.MemberDeviceVO;
 import component.plan.PlanAttendanceDTO;
 import component.plan.PlanDTO;
 import component.plan.PlanService;

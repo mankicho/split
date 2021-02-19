@@ -1,5 +1,6 @@
 package component.plan;
 
+import component.member.MemberDeviceVO;
 import jdk.nashorn.internal.scripts.JO;
 import lombok.Setter;
 import org.apache.ibatis.annotations.Param;
@@ -65,7 +66,7 @@ public class PlanDAO {
         return planMapper.selectByIdAndEmail(hashMap);
     }
 
-    public List<PlanVO> selectsAllPlans( String email) {
+    public List<PlanVO> selectsAllPlans(String email) {
         return planMapper.selectsAllPlans(email);
     }
 
@@ -82,8 +83,8 @@ public class PlanDAO {
         return insertedRow;
     }
 
-    public List<String> selectsAllEmailOfPlans(int planLogId) {
-        return planMapper.selectsAllEmailOfPlans(planLogId);
+    public List<String> getAllEmailOfPlans(int planLogId) {
+        return planMapper.getAllEmailOfPlans(planLogId);
     }
 
     public PlanVO selectTodayPlan(HashMap<String, Object> hashMap) {
@@ -100,6 +101,10 @@ public class PlanDAO {
 
     public List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap) {
         return planMapper.getPlansByOrdering(hashMap);
+    }
+
+    public List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(int weekday) {
+        return planMapper.getDevicesForPushNotificationOfAttendance(weekday);
     }
 
     private boolean isSameWeekDayAndDate(PlanVO planVOInDB, PlanDTO planDTO) throws ParseException {

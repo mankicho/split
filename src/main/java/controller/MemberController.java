@@ -70,7 +70,6 @@ public class MemberController {
      * @return
      */
     @RequestMapping(value = "/login.do")
-    @Transactional
     public String memberLogin(HttpServletRequest request) {
         String email = request.getParameter("email"); // 이메일
         String pw = request.getParameter("pw"); // 비밀번호
@@ -93,17 +92,14 @@ public class MemberController {
     }
 
     @PostMapping(value = "/register.do")
-    public int insertMember(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
+    public int insertMember(@RequestBody MemberDTO memberDTO) {
         String pw = memberDTO.getPw();
-        String deviceToken = request.getHeader("device-Token");
-        String type = request.getHeader("device-type");
         // todo 1. pw check(right format?)
         String encodedPassword = passwordEncoder.encode(pw); // pw 인코딩
         memberDTO.setPw(encodedPassword);
 
         int affectedRowOfRegisterMember = memberService.registerMember(memberDTO); // 회원정보 등록
-        int affectedRowOfDeviceToken = memberService.registerDeviceToken(memberDTO.getEmail(), type, deviceToken);
-        if (affectedRowOfRegisterMember == 1 && affectedRowOfDeviceToken != 0) {
+        if (affectedRowOfRegisterMember == 1) {
             return 100;
         }
         return 101;

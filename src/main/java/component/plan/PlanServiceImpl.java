@@ -1,5 +1,6 @@
 package component.plan;
 
+import component.member.MemberDeviceVO;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public List<String> selectsAllEmailOfPlans(int planLogId) {
+    public List<String> getAllEmailOfPlans(int planLogId) {
         return planDAO.selectsAllEmailOfPlans(planLogId);
     }
 
@@ -71,5 +72,10 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap) {
         return planDAO.getPlansByOrdering(hashMap);
+    }
+
+    @Override
+    public List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(int weekday) {
+        return planDAO.getDevicesForPushNotificationOfAttendance(weekday);
     }
 }

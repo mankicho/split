@@ -1,39 +1,48 @@
 package websocket;
 
+import component.member.MemberDeviceVO;
 import component.member.MemberMapper;
 import component.plan.PlanMapper;
 import component.plan.PlanService;
 import component.zone.ZoneMapper;
+import fcm.FcmNotifier;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import websocket.execute.*;
 
+import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
  * 현재 집중시간 모드 기능을 이용하고 있는 총 회원 파악용도
  */
 @Log4j
+@Service
 public class EchoHandler extends TextWebSocketHandler {
 
     @Setter(onMethod_ = {@Autowired})
     private MemberMapper memberMapper;
-
     @Setter(onMethod_ = {@Autowired})
     private ZoneMapper zoneMapper;
+    @Setter(onMethod_ = {@Autowired})
+    private PlanMapper planMapper;
+    @Setter(onMethod_ = {@Autowired})
+    private FcmNotifier fcmNotifier;
 
     @Setter(onMethod_ = {@Autowired})
     private PlanService planService;
-    @Setter(onMethod_ = {@Autowired})
-    private PlanMapper mapper;
 
 
     //로그인 한 전체
@@ -101,6 +110,7 @@ public class EchoHandler extends TextWebSocketHandler {
     }
 
 
+    // 유저가 보낸 메세지 처리
     private DataProcessStrategy parseTextMessage(WebSocketSession webSocketSession, TextMessage message) {
         JSONObject object = new JSONObject(message.getPayload());
         switch (object.getInt("type")) {
@@ -137,6 +147,8 @@ public class EchoHandler extends TextWebSocketHandler {
                 FollowProcessStrategy fps = new FollowProcessStrategy();
                 fps.setUserMap(userEmailSocketSessionMap);
                 return fps;
+            case 7:
+
             default:
                 return null;
         }
@@ -168,6 +180,62 @@ public class EchoHandler extends TextWebSocketHandler {
             userEmailSocketSessionMap.put(userHeaders.get(0), socketSession); // 이메일 : 소켓세션
             userSessionNicknameMap.put(socketSession.getId(), userHeaders.get(0)); // 세션 ID : 이메일
         }
+    }
+
+    // ------------------------------------------------- 시스템 알림 메세지 -------------------------------------------------
+
+    @Scheduled(cron = "0 */10 * * * *") // 출석체크 시스템 알림
+    public void sendSystemMessageForAttendance() {
+        DayOfWeek weekday = LocalDate.now().getDayOfWeek();
+        List<MemberDeviceVO> deviceList = planService.getDevicesForPushNotificationOfAttendance(getSquareOfWeekday(weekday));
+        if (deviceList != null && !deviceList.isEmpty()) {
+            deviceList.forEach(vo -> {
+                fcmNotifier.sendFCM(vo.getDeviceToken(), "시스템 알림", "출석체크 30분 전입니다.");
+                try {
+                    WebSocketSession user = userEmailSocketSessionMap.get(vo.getMemberEmail());
+                    // todo 1. 알림 보낸 내역에 저장.
+                    if (user != null) {
+                        user.sendMessage(new TextMessage("출석체크 30분 전입니다."));
+                    }
+                } catch (IOException ignored) {
+                }
+            });
+        }
+    }
+
+    @Scheduled(cron ="") // 플랜 시스템 알림
+    public void sendSystemMessageForPlan(){
 
     }
+
+    @Scheduled(cron ="") // 팔로잉 시스템 알림
+    public void sendSystemMessageForFollowing(){
+
+    }
+
+    @Scheduled(cron ="") //  시스템 알림
+    public void sendSystemMessageForNote(){
+
+    }
+
+    // ------------------------------------------------- util 함수 -------------------------------------------------
+    private int getSquareOfWeekday(DayOfWeek week) {
+        switch (week) {
+            case MONDAY:
+                return 1;
+            case TUESDAY:
+                return 2;
+            case WEDNESDAY:
+                return 4;
+            case THURSDAY:
+                return 8;
+            case FRIDAY:
+                return 16;
+            case SATURDAY:
+                return 32;
+            default:
+                return 64;
+        }
+    }
+
 }

@@ -1,8 +1,6 @@
 package websocket.execute;
 
 
-import component.alarm.AlarmService;
-import component.alarm.AlarmServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -15,7 +13,6 @@ import java.util.Map;
 @Log4j
 public class FriendProcessStrategy implements DataProcessStrategy {
 
-    private AlarmService alarmService = new AlarmServiceImpl();
     private Map<String, WebSocketSession> userMap;
 
     public void setUserMap(Map<String, WebSocketSession> userMap) {

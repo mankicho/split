@@ -2,6 +2,7 @@ package controller;
 
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,9 +21,15 @@ import java.util.UUID;
 @Log4j
 public class FileUploadController {
 
+    @Value("#{path['local_home']}")
+    private String home;
+
+//    @Value("#{path['server_home']}")
+//    private String home;
+
     @PostMapping(value = "/file/main/upload")
     public void fileUploadMain(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
-        String path = getServletContextRealPath(req) + "/profile/main/"; // 파일 경로
+        String path = home + "/profile/main/"; // 파일 경로
         String ext = getExtension(multipartFile);
         File targetFile = new File(path + getUUID() + ext);
         try {
@@ -39,7 +46,7 @@ public class FileUploadController {
 
     @PostMapping(value = "/file/back/upload")
     public void fileUploadBackground(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
-        String path = getServletContextRealPath(req) + "/profile/back/";
+        String path = home + "/profile/main/"; // 파일 경로
         String ext = getExtension(multipartFile);
         if (ext == null) {
             return;

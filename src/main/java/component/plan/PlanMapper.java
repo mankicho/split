@@ -1,5 +1,6 @@
 package component.plan;
 
+import component.member.MemberDeviceVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public interface PlanMapper {
 
     int addAttendanceLog(PlanAttendanceDTO planAttendanceDTO); // 출석체크 기록 (누구누구가 출석했습니다.) 넣기
 
-    List<String> selectsAllEmailOfPlans(@Param("planLogId") int planLogId); // 플랜을 참여하고있는 유저 이메일목록
+    List<String> getAllEmailOfPlans(@Param("planLogId") int planLogId); // 플랜을 참여하고있는 유저 이메일목록
 
     PlanVO selectTodayPlan(HashMap<String, Object> hashMap);
 
@@ -31,4 +32,6 @@ public interface PlanMapper {
     List<PlanVO> getPlansBySearching(@Param("key") String key);
 
     List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap);
+
+    List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(@Param("weekday") int weekday);
 }

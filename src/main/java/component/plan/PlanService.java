@@ -1,5 +1,6 @@
 package component.plan;
 
+import component.member.MemberDeviceVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.text.ParseException;
@@ -21,13 +22,16 @@ public interface PlanService {
 
     List<PlanVO> selectsAllPlans(String email);
 
-    List<String> selectsAllEmailOfPlans(int planLogId);
+    List<String> getAllEmailOfPlans(int planLogId);
 
     PlanVO selectTodayPlan(HashMap<String, Object> hashMap);
 
-    List<PlanVO> selectsAllPlansAtCertainZone( String placeSetting);
+    List<PlanVO> selectsAllPlansAtCertainZone(String placeSetting);
 
     List<PlanVO> getPlansBySearching(String key);
+
     List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap);
+
+    List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(int weekday);
 
 }
