@@ -3,6 +3,7 @@ package component.zone;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ZoneMapper {
@@ -12,5 +13,5 @@ public interface ZoneMapper {
 
     int isExist(@Param("code") String code);
 
-    List<String> autoComplete(@Param("word") String word);
+    List<String> autoComplete();
 }

@@ -64,7 +64,7 @@ public class ZoneController {
     }
 
     @GetMapping(value = "/auto/complete")
-    public List<String> autoComplete(@Param("word") String word) {
-        return zoneService.autoComplete(word);
+    public List<String> autoComplete() {
+        return zoneService.autoComplete();
     }
 }

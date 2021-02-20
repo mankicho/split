@@ -4,6 +4,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public List<String> autoComplete(String word) {
-        return zoneDAO.autoComplete(word);
+    public List<String> autoComplete() {
+        return zoneDAO.autoComplete();
     }
 }

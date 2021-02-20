@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -21,7 +22,7 @@ public class ZoneDAO {
         return zoneMapper.isExist(code);
     }
 
-    public List<String> autoComplete(@Param("word") String word) {
-        return zoneMapper.autoComplete(word);
+    public List<String> autoComplete() {
+        return zoneMapper.autoComplete();
     }
 }

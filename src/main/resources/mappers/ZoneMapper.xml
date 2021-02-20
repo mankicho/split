@@ -60,10 +60,7 @@
     </select>
 
     <select id="autoComplete" parameterType="string" resultType="string">
-        select area_name from disnct where area_name like concat(#{word},'%')
-        union
-        select area_name from disnct where area_name like concat('%',#{word},'%')
-        order by area_name;
+        select area_name from disnct order by area_name
     </select>
 
 

@@ -2,6 +2,7 @@ package component.zone;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ZoneService {
@@ -12,7 +13,7 @@ public interface ZoneService {
 
     int isExist(String code);
 
-    List<String> autoComplete(String word);
+    List<String> autoComplete();
 
 
 }
