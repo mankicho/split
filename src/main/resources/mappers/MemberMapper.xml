@@ -119,4 +119,10 @@
     <insert id="registerDeviceToken" parameterType="string">
         INSERT INTO member_device (member_email,device_type,device_token) values (#{email},#{type},#{token})
     </insert>
+
+    <select id="getDeviceTokens" resultType="string" parameterType="int">
+        select device_token from member_device where exists (select * From plan_members where plan_log_id = #{planLogId});
+    </select>
 </mapper>
+
+
