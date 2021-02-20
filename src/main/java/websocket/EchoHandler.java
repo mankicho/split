@@ -41,10 +41,6 @@ public class EchoHandler extends TextWebSocketHandler {
     @Setter(onMethod_ = {@Autowired})
     private FcmNotifier fcmNotifier;
 
-    @Setter(onMethod_ = {@Autowired})
-    private PlanService planService;
-
-
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();  // 실시간 어플을 이용하고 있는 유저
     private List<String> timers = new ArrayList<>(); // 실시간 집중시간 이용 유저
@@ -126,7 +122,9 @@ public class EchoHandler extends TextWebSocketHandler {
             case 3: // 플랜 참여
                 PlanSharingInProcessStrategy planSharingInProcessStrategy = new PlanSharingInProcessStrategy();
                 planSharingInProcessStrategy.setUserMap(userEmailSocketSessionMap);
-                planSharingInProcessStrategy.setPlanService(planService);
+                planSharingInProcessStrategy.setPlanMapper(planMapper);
+                planSharingInProcessStrategy.setFcmNotifier(fcmNotifier);
+                planSharingInProcessStrategy.setMemberMapper(memberMapper);
                 return planSharingInProcessStrategy;
 //            case 4: // 플랜 참여 철회
 //                return new PlanSharingOutProcessStrategy();
@@ -138,6 +136,7 @@ public class EchoHandler extends TextWebSocketHandler {
                 } else {
                     timers.removeIf(str -> str.equals(webSocketSession.getId()));
                 }
+
                 ConcentrateModeOnStrategy tps = new ConcentrateModeOnStrategy();
                 tps.setTimerSessions(timers);
                 tps.setLoginUsers(sessions);
@@ -187,7 +186,7 @@ public class EchoHandler extends TextWebSocketHandler {
     @Scheduled(cron = "0 */10 * * * *") // 출석체크 시스템 알림
     public void sendSystemMessageForAttendance() {
         DayOfWeek weekday = LocalDate.now().getDayOfWeek();
-        List<MemberDeviceVO> deviceList = planService.getDevicesForPushNotificationOfAttendance(getSquareOfWeekday(weekday));
+        List<MemberDeviceVO> deviceList = planMapper.getDevicesForPushNotificationOfAttendance(getSquareOfWeekday(weekday));
         if (deviceList != null && !deviceList.isEmpty()) {
             deviceList.forEach(vo -> {
                 fcmNotifier.sendFCM(vo.getDeviceToken(), "시스템 알림", "출석체크 30분 전입니다.");
@@ -203,20 +202,20 @@ public class EchoHandler extends TextWebSocketHandler {
         }
     }
 
-    @Scheduled(cron ="") // 플랜 시스템 알림
-    public void sendSystemMessageForPlan(){
-
-    }
-
-    @Scheduled(cron ="") // 팔로잉 시스템 알림
-    public void sendSystemMessageForFollowing(){
-
-    }
-
-    @Scheduled(cron ="") //  시스템 알림
-    public void sendSystemMessageForNote(){
-
-    }
+//    @Scheduled(cron ="") // 플랜 시스템 알림
+//    public void sendSystemMessageForPlan(){
+//
+//    }
+//
+//    @Scheduled(cron ="") // 팔로잉 시스템 알림
+//    public void sendSystemMessageForFollowing(){
+//
+//    }
+//
+//    @Scheduled(cron ="") //  시스템 알림
+//    public void sendSystemMessageForNote(){
+//
+//    }
 
     // ------------------------------------------------- util 함수 -------------------------------------------------
     private int getSquareOfWeekday(DayOfWeek week) {

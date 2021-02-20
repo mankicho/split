@@ -42,7 +42,7 @@ public class AttendanceProcessStrategy implements DataProcessStrategy {
         }
         // todo 2. 해당 플랜을 참여하는 유저들에게 알림.
         int planLogId = object.getInt("planLogId");
-        List<String> emails = planService.selectsAllEmailOfPlans(planLogId);
+        List<String> emails = planService.getAllEmailOfPlans(planLogId);
         emails.stream().filter(email -> userMap.get(email) != null).forEach(email -> sendMessageToUser(email,tm));
     }
 
