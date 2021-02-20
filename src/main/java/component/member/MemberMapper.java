@@ -54,4 +54,6 @@ public interface MemberMapper {
     boolean checkAutoLogin(@Param("email") String email);
 
     int registerDeviceToken(@Param("email") String email, @Param("type") String type, @Param("token") String deviceToken);
+
+    List<String> getDeviceTokens(@Param("planLogId") int planLogId );
 }
