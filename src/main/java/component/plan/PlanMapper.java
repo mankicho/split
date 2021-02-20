@@ -34,4 +34,6 @@ public interface PlanMapper {
     List<PlanVO> getPlansByOrdering(HashMap<String, Object> hashMap);
 
     List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(@Param("weekday") int weekday);
+
+    PlanVO getPlanVOByPlanLogId(@Param("planLogId") int planLogId);
 }

@@ -97,4 +97,8 @@
         select * from member_device where exists (
         select member_email from plan where (now() between startdate and enddate) and ((set_day <![CDATA[&]]> #{weekday}) != 0));
     </select>
+
+    <select id="getPlanVOByPlanLogId" parameterType="int" resultMap="planVO">
+        select * from plan where plan_log_id = #{planLogId}
+    </select>
 </mapper>

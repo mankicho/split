@@ -105,7 +105,7 @@ public class PlanController {
 
     @PostMapping(value = "/all/emails/of/plans/select.do")
     public List<String> selectsAllEmailOfPlans(@RequestParam("planLogId") int planLogId) {
-        return planService.selectsAllEmailOfPlans(planLogId);
+        return planService.getAllEmailOfPlans(planLogId);
     }
 
     /**

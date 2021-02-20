@@ -51,7 +51,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<String> getAllEmailOfPlans(int planLogId) {
-        return planDAO.selectsAllEmailOfPlans(planLogId);
+        return planDAO.getAllEmailOfPlans(planLogId);
     }
 
     @Override
