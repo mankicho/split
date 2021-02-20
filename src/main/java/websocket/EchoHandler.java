@@ -197,6 +197,7 @@ public class EchoHandler extends TextWebSocketHandler {
                         user.sendMessage(new TextMessage("출석체크 30분 전입니다."));
                     }
                 } catch (IOException ignored) {
+                    log.info("text send error => user disconnected");
                 }
             });
         }

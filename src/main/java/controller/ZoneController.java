@@ -64,7 +64,9 @@ public class ZoneController {
     }
 
     @GetMapping(value = "/auto/complete")
-    public List<String> autoComplete() {
-        return zoneService.autoComplete();
+    public HashMap<String, Object> autoComplete() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("words", zoneService.autoComplete());
+        return hashMap;
     }
 }
