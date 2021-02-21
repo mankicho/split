@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/peed")
+@RequestMapping(value = "/file")
 @Log4j
 public class FileUploadController {
 
@@ -27,41 +27,41 @@ public class FileUploadController {
 //    @Value("#{path['server_home']}")
 //    private String home;
 
-    @PostMapping(value = "/file/main/upload")
-    public void fileUploadMain(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
+    @PostMapping(value = "/main/upload")
+    public FileUploadReturnMessage fileUploadMain(@RequestParam("file") MultipartFile multipartFile) {
         String path = home + "/profile/main/"; // 파일 경로
-        String ext = getExtension(multipartFile);
-        File targetFile = new File(path + getUUID() + ext);
-        try {
-            InputStream fileStream = multipartFile.getInputStream();
-            FileUtils.copyInputStreamToFile(fileStream, targetFile);
-            log.info("upload success");
-        } catch (IOException e) {
-            FileUtils.deleteQuietly(targetFile);
-            e.printStackTrace();
-        }
-        log.info("file upload finish");
-        log.info("----------------");
+        return fileUpload(path, multipartFile);
+
     }
 
-    @PostMapping(value = "/file/back/upload")
-    public void fileUploadBackground(HttpServletRequest req, @RequestParam("file") MultipartFile multipartFile) {
+    @PostMapping(value = "/back/upload")
+    public FileUploadReturnMessage fileUploadBackground(@RequestParam("file") MultipartFile multipartFile) {
         String path = home + "/profile/main/"; // 파일 경로
+        return fileUpload(path, multipartFile);
+    }
+
+    private FileUploadReturnMessage fileUpload(String path, MultipartFile multipartFile) {
         String ext = getExtension(multipartFile);
         if (ext == null) {
-            return;
+            return new FileUploadReturnMessage(400, "적절하지않은 확장자 입니다.");
         }
-        File targetFile = new File(path + getUUID() + ext);
+        File targetFile = new File(path + getUUID() + ext); // file 생성
         try {
-            InputStream fileStream = multipartFile.getInputStream();
+            InputStream fileStream = multipartFile.getInputStream(); // file 업로드
             FileUtils.copyInputStreamToFile(fileStream, targetFile);
             log.info("upload success");
         } catch (IOException e) {
             FileUtils.deleteQuietly(targetFile);
             e.printStackTrace();
+            return new FileUploadReturnMessage(500, "서버 내부 오류");
         }
         log.info("file upload finish");
         log.info("----------------");
+        if(targetFile.exists()){
+            return new FileUploadReturnMessage(202, "파일 업로드 성공");
+        }else{
+            return new FileUploadReturnMessage(500,"알수없는 오류");
+        }
     }
 
     private String getServletContextRealPath(HttpServletRequest req) { // resources path 가져오기
@@ -78,5 +78,16 @@ public class FileUploadController {
             return fileName.substring(fileName.lastIndexOf("."));
         }
         return null;
+    }
+
+
+    private static class FileUploadReturnMessage {
+        int status;
+        String message;
+
+        public FileUploadReturnMessage(int status, String message) {
+            this.status = status;
+            this.message = message;
+        }
     }
 }

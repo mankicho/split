@@ -9,7 +9,9 @@ public interface AlarmMapper {
 
     int saveAlarms(AlarmDTO alarmDTO);
 
-    int updateReadFlag(List<AlarmVO> alarmVOS);
+    int updateReadFlag(int[] idArr);
 
     int updateCheckFlag(AlarmVO alarmVO);
+
+    List<AlarmVO> getAlarmsByAlarmId(int[] idArr);
 }
