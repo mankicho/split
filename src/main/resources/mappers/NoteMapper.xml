@@ -10,7 +10,7 @@
         <result property="content" column="content"/>
         <result property="noteTime" column="note_time"/>
     </resultMap>
-    
+
     <insert id="saveNote" parameterType="NoteDTO">
         insert into noteBox(from_email,to_email,content) values (#{fromEmail},#{toEmail},#{content})
     </insert>
