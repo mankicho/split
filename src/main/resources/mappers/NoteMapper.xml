@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="component.note.NoteMapper">
+
+    <resultMap id="noteVO" type="component.note.NoteVO">
+        <result property="noteId" column="note_id"/>
+        <result property="fromEmail" column="from_email"/>
+        <result property="toEmail" column="to_email"/>
+        <result property="content" column="content"/>
+        <result property="noteTime" column="note_time"/>
+    </resultMap>
+    
+    <insert id="saveNote" parameterType="NoteDTO">
+        insert into noteBox(from_email,to_email,content) values (#{fromEmail},#{toEmail},#{content})
+    </insert>
+
+    <select id="getNotes" parameterType="string" resultMap="noteVO">
+        select * From noteBox where from_email = #{from} and to_email = #{to}
+    </select>
+</mapper>
+
+
+        List<NoteVO>getNotes(@Param("to") String toEmail, @Param("from") String from);
+
+private String fromEmail;
+private String toEmail;
+private String content;
