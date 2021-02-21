@@ -21,11 +21,11 @@ import java.util.UUID;
 @Log4j
 public class FileUploadController {
 
-    @Value("#{path['local_home']}")
-    private String home;
-
-//    @Value("#{path['server_home']}")
+//    @Value("#{path['local_home']}")
 //    private String home;
+//
+    @Value("#{path['server_home']}")
+    private String home;
 
     @PostMapping(value = "/main/upload")
     public FileUploadReturnMessage fileUploadMain(@RequestParam("file") MultipartFile multipartFile) {
