@@ -1,18 +1,17 @@
 package websocket;
 
+import component.alarm.AlarmMapper;
+import component.alarm.AlarmService;
 import component.member.MemberDeviceVO;
 import component.member.MemberMapper;
 import component.plan.PlanMapper;
-import component.plan.PlanService;
 import component.zone.ZoneMapper;
 import fcm.FcmNotifier;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -28,18 +27,15 @@ import java.util.*;
 /**
  * 현재 집중시간 모드 기능을 이용하고 있는 총 회원 파악용도
  */
-@Log4j
+@Log4j2
 @Service
+@RequiredArgsConstructor
 public class EchoHandler extends TextWebSocketHandler {
 
-    @Setter(onMethod_ = {@Autowired})
-    private MemberMapper memberMapper;
-    @Setter(onMethod_ = {@Autowired})
-    private ZoneMapper zoneMapper;
-    @Setter(onMethod_ = {@Autowired})
-    private PlanMapper planMapper;
-    @Setter(onMethod_ = {@Autowired})
-    private FcmNotifier fcmNotifier;
+    private final MemberMapper memberMapper;
+    private final ZoneMapper zoneMapper;
+    private final PlanMapper planMapper;
+    private final FcmNotifier fcmNotifier;
 
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();  // 실시간 어플을 이용하고 있는 유저

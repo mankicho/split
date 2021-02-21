@@ -31,6 +31,7 @@ public class AttendanceProcessStrategy implements DataProcessStrategy {
     public void execute(TextMessage tm) {
         JSONObject object = new JSONObject(tm.getPayload());
         String cafe = object.getString("cafe"); // 메세지에 카페정보(Q01B)
+
         // todo 1. 카페 어플리케이션에 출석했음을 알림.
         WebSocketSession cafeSession = cafeMap.get(cafe); // Q01B로 세션 찾아내서
         if (cafeSession != null) {
