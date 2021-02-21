@@ -27,4 +27,5 @@
         <property name="mapperInterface" value="component.alarm.AlarmMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
+
 </beans>
