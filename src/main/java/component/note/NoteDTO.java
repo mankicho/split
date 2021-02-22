@@ -1,8 +1,12 @@
 package component.note;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 public class NoteDTO {
     private String fromEmail;
     private String toEmail;
