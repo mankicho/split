@@ -29,6 +29,4 @@
 		select * from (select * from noteBox order by note_id desc limit 10000000000) as tmp where from_email = #{toEmail}
         or to_email = #{toEmail} group by note_uuid;
     </select>
-
-    <
 </mapper>
