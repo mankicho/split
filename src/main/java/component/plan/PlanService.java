@@ -1,7 +1,6 @@
 package component.plan;
 
-import component.member.MemberDeviceVO;
-import org.apache.ibatis.annotations.Param;
+import component.member.vo.MemberDeviceVO;
 
 import java.text.ParseException;
 import java.util.HashMap;

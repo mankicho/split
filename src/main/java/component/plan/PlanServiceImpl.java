@@ -1,6 +1,6 @@
 package component.plan;
 
-import component.member.MemberDeviceVO;
+import component.member.vo.MemberDeviceVO;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

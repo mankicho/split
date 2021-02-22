@@ -1,13 +1,8 @@
 package component.plan;
 
-import component.member.MemberDeviceVO;
-import jdk.nashorn.internal.scripts.JO;
+import component.member.vo.MemberDeviceVO;
 import lombok.Setter;
-import org.apache.ibatis.annotations.Param;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
