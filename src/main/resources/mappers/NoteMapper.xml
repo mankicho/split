@@ -5,6 +5,7 @@
 
     <resultMap id="noteVO" type="component.note.NoteVO">
         <result property="noteId" column="note_id"/>
+        <result property="noteUUID" column="note_uuid"/>
         <result property="fromEmail" column="from_email"/>
         <result property="toEmail" column="to_email"/>
         <result property="content" column="content"/>
@@ -12,10 +13,22 @@
     </resultMap>
 
     <insert id="saveNote" parameterType="NoteDTO">
-        insert into noteBox(from_email,to_email,content) values (#{fromEmail},#{toEmail},#{content})
+        insert into noteBox(note_uuid,from_email,to_email,content) values (#{noteUUID},#{fromEmail},#{toEmail},#{content})
     </insert>
 
-    <select id="getNotes" parameterType="string" resultMap="noteVO">
-        select * From noteBox where from_email = #{from} or from_email = #{to} order by note_time
+    <select id="getLastNode" parameterType="string" resultMap="noteVO">
+        select * From noteBox where (to_email = #{toEmail} and from_email = #{fromEmail})
+        or (to_email = #{fromEmail} and from_email = #{toEmail})  limit 1;
     </select>
+
+    <select id="getNotesByUUID" resultMap="noteVO" parameterType="string">
+        select * from noteBox where note_uuid = #{uuid} order by note_id desc
+    </select>
+
+    <select id="getNoteBoxesByToEmail" resultMap="noteVO" parameterType="string">
+		select * from (select * from noteBox order by note_id desc limit 10000000000) as tmp where from_email = #{toEmail}
+        or to_email = #{toEmail} group by note_uuid;
+    </select>
+
+    <
 </mapper>
