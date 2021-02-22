@@ -7,7 +7,7 @@
         <result property="auth" column="auth"/>
     </resultMap>
 
-    <resultMap id="memberMap" type="component.member.MemberVO">
+    <resultMap id="memberMap" type="component.member.vo.MemberVO">
         <result property="email" column="email"/>
         <result property="pw" column="pw"/>
         <result property="phoneNumber" column="phone_num"/>
@@ -76,7 +76,7 @@
         INSERT INTO members_policy values (#{email},#{po1},#{po2},#{po3},#{po4})
     </insert>
 
-    <resultMap id="members_timer" type="component.member.MemberTimerVO">
+    <resultMap id="members_timer" type="component.member.vo.MemberTimerVO">
         <result property="email" column="email"/>
         <result property="focusTime" column="focus_time"/>
         <result property="focusDate" column="focus_date"/>
@@ -123,6 +123,14 @@
     <select id="getDeviceTokens" resultType="string" parameterType="int">
         select device_token from member_device where exists (select * From plan_members where plan_log_id = #{planLogId});
     </select>
+
+    <select id="getFollowers" parameterType="string" resultType="MemberFollowingVO">
+        select * from members_follow where member_email = #{email}
+    </select>
+
+    <insert id="memberFollow" parameterType="MemberFollowingVO">
+        insert into members_follow values(#{memberEmail},#{follower})
+    </insert>
 </mapper>
 
 

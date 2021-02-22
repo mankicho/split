@@ -1,4 +1,4 @@
-package component.member;
+package component.member.vo;
 
 import lombok.Data;
 

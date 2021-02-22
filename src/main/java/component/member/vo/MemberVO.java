@@ -1,5 +1,6 @@
-package component.member;
+package component.member.vo;
 
+import component.member.AuthDTO;
 import lombok.Data;
 
 import java.util.List;

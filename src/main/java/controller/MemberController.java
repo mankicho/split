@@ -1,15 +1,20 @@
 package controller;
 
 import component.member.*;
-import component.member.friend.FriendAddRequestVO;
-import io.jsonwebtoken.ExpiredJwtException;
+import component.member.dto.MemberDTO;
+import component.member.dto.MemberTmpInfoDTO;
+import component.member.vo.FriendAddRequestVO;
+import component.member.vo.MemberFollowingVO;
+import component.member.vo.MemberTimerVO;
+import component.member.vo.MemberVO;
 import io.jsonwebtoken.JwtException;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
-import org.apache.ibatis.exceptions.TooManyResultsException;
+import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import security.token.TokenGeneratorService;
 
@@ -24,7 +29,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping(value = "/member")
-@Log4j
+@Log4j2
 public class MemberController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -295,5 +300,25 @@ public class MemberController {
         String email = tokenGeneratorService.getSubject(token);
 
         return memberService.checkAutoLogin(email);
+    }
+
+    @PostMapping(value = "/follow/get.do")
+    public List<MemberFollowingVO> getFollows(@RequestParam("email") String email) {
+        return memberService.getFollowers(email);
+    }
+
+    @PostMapping(value = "/follow/insert.do")
+    public MemberControllerStatus memberFollow(@RequestBody MemberFollowingVO memberFollowingVO) {
+        log.info(memberFollowingVO);
+        try {
+            int insertedRow = memberService.memberFollow(memberFollowingVO);
+            if (insertedRow == 1) {
+                return new MemberControllerStatus(202);
+            } else {
+                return new MemberControllerStatus(400);
+            }
+        } catch (DataIntegrityViolationException e) {
+            return new MemberControllerStatus(500);
+        }
     }
 }

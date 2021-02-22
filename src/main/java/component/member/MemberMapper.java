@@ -1,6 +1,11 @@
 package component.member;
 
-import component.member.friend.FriendAddRequestVO;
+import component.member.dto.MemberDTO;
+import component.member.dto.MemberTmpInfoDTO;
+import component.member.vo.FriendAddRequestVO;
+import component.member.vo.MemberFollowingVO;
+import component.member.vo.MemberTimerVO;
+import component.member.vo.MemberVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
@@ -56,4 +61,8 @@ public interface MemberMapper {
     int registerDeviceToken(@Param("email") String email, @Param("type") String type, @Param("token") String deviceToken);
 
     List<String> getDeviceTokens(@Param("planLogId") int planLogId );
+
+    List<MemberFollowingVO> getFollowers(@Param("email") String email);
+
+    int memberFollow(MemberFollowingVO memberFollowingVO);
 }

@@ -59,14 +59,14 @@ public class PlanSharingInProcessStrategy implements DataProcessStrategy {
                     try {
                         userMap.get(email).sendMessage(tm);
                         if (userEmails.size() == 100) {
-                            userMap.get(email).sendMessage(new TextMessage(MessageGenerator.planMember100MessageWith(planVO)));
+                            userMap.get(email).sendMessage(new TextMessage(MessageGenerator.PlanMessage.planMember100MessageWith(planVO)));
                         }
                     } catch (IOException ignored) {
                     }
                 });
                 List<String> deviceTokens = memberMapper.getDeviceTokens(planLogId);
                 deviceTokens.forEach(token -> fcmNotifier.sendFCM(token, "test 제목",
-                        MessageGenerator.planMember100MessageWith(planVO)));
+                        MessageGenerator.PlanMessage.planMember100MessageWith(planVO)));
             }
 
             // 평소 메세지

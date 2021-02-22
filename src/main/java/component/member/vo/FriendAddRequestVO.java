@@ -1,4 +1,4 @@
-package component.member.friend;
+package component.member.vo;
 
 import lombok.Data;
 

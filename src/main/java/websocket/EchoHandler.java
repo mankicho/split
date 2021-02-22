@@ -1,9 +1,8 @@
 package websocket;
 
-import component.alarm.AlarmMapper;
-import component.alarm.AlarmService;
-import component.member.MemberDeviceVO;
+import component.member.vo.MemberDeviceVO;
 import component.member.MemberMapper;
+import component.note.NoteMapper;
 import component.plan.PlanMapper;
 import component.zone.ZoneMapper;
 import fcm.FcmNotifier;
@@ -18,6 +17,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import websocket.execute.*;
+import websocket.execute.note.NoteProcessStrategy;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
@@ -36,6 +36,7 @@ public class EchoHandler extends TextWebSocketHandler {
     private final ZoneMapper zoneMapper;
     private final PlanMapper planMapper;
     private final FcmNotifier fcmNotifier;
+    private final NoteMapper noteMapper;
 
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();  // 실시간 어플을 이용하고 있는 유저
@@ -143,7 +144,8 @@ public class EchoHandler extends TextWebSocketHandler {
                 fps.setUserMap(userEmailSocketSessionMap);
                 return fps;
             case 7:
-
+                // 쪽지 보내기
+                return new NoteProcessStrategy(userEmailSocketSessionMap, noteMapper);
             default:
                 return null;
         }
