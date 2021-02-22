@@ -2,10 +2,9 @@ package controller;
 
 import component.home.HomeDataService;
 import component.member.MemberService;
-import component.member.MemberTimerVO;
+import component.member.vo.MemberTimerVO;
 import component.plan.PlanService;
 import component.plan.PlanVO;
-import component.plan.auth.PlanAuthMapper;
 import component.plan.auth.PlanAuthService;
 import component.plan.auth.TodayPlanAuthVO;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
