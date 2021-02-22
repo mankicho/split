@@ -77,7 +77,7 @@ public class EchoHandler extends TextWebSocketHandler {
     }
 
     /**
-     * @param session
+     * @param webSocketSession
      * @param message this function handles user's message
      *                function for sending real-time notification to clients
      *                ex 1. if client A brings plans of client B, then server send real-time message to client B
@@ -94,10 +94,10 @@ public class EchoHandler extends TextWebSocketHandler {
      * @throws Exception
      */
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.info("handleText");
+    protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws Exception {
+
         // todo 1. 클라이언트가 날린 메세지 해석
-        DataProcessStrategy dps = parseTextMessage(session, message);
+        DataProcessStrategy dps = parseTextMessage(webSocketSession, message);
         // todo 2. 메세지에 맞는 함수 호출(DB에 데이터 저장 or 적절한 유저에게 메세지 전송 등)
         dataProcess(dps, message);
     }
