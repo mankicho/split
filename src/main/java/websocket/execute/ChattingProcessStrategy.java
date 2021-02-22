@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class ChattingProcessStrategy implements DataProcessStrategy {
+public class ChattingProcessStrategy extends DataProcessStrategy {
     private Map<String, WebSocketSession> userMap;
     private PlanService planService;
 

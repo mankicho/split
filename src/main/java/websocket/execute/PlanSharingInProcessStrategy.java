@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Log4j
 @Component
-public class PlanSharingInProcessStrategy implements DataProcessStrategy {
+public class PlanSharingInProcessStrategy extends DataProcessStrategy {
     private MemberMapper memberMapper;
     private PlanMapper planMapper;
     private FcmNotifier fcmNotifier;

@@ -1,7 +1,15 @@
 package websocket.execute;
 
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
-public interface DataProcessStrategy {
-    void execute(TextMessage tm);
+public abstract class DataProcessStrategy {
+    public abstract void execute(TextMessage tm);
+
+    protected void sendMessageIfFail(WebSocketSession socketSession) {
+        try {
+            socketSession.sendMessage(new TextMessage("fail"));
+        } catch (Exception ignored) {
+        }
+    }
 }

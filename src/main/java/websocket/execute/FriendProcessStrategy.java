@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Log4j
-public class FriendProcessStrategy implements DataProcessStrategy {
+public class FriendProcessStrategy extends DataProcessStrategy {
 
     private Map<String, WebSocketSession> userMap;
 

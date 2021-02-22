@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 @Log4j2
-public class NoteProcessStrategy implements DataProcessStrategy {
+public class NoteProcessStrategy extends DataProcessStrategy {
 
     private Map<String, WebSocketSession> userMaps;
     private NoteMapper noteMapper;
@@ -29,21 +29,23 @@ public class NoteProcessStrategy implements DataProcessStrategy {
     @Override
     public void execute(TextMessage tm) {
         JSONObject object = new JSONObject(tm.getPayload());
+        log.info(tm.getPayload());
         String toEmail = object.getString("toEmail");
         String fromEmail = object.getString("fromEmail");
+
+        WebSocketSession to = userMaps.get(toEmail);
+        WebSocketSession from = userMaps.get(fromEmail);
         try {
-            WebSocketSession to = userMaps.get(toEmail);
-            WebSocketSession from = userMaps.get(fromEmail);
             int insertedRow = noteMapper.saveNote(textMessageToNoteDTO(object));
 
             if (insertedRow != 0) { // db 에 정상적으로 쪽지를 저장하면
                 sendMessage(to, tm); // 메시지 전송
-                sendMessage(from, tm);
             } else { // db 에 정상적으로 쪽지가 저장이 안되면
-                sendMessage(from, new TextMessage(MessageGenerator.NoteMessage.failSaveNoteMessage())); // 에러메세지 전송
+                sendMessageIfFail(from);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            sendMessageIfFail(from);
             log.info("note process error => " + e.getMessage());
         }
     }
@@ -55,10 +57,11 @@ public class NoteProcessStrategy implements DataProcessStrategy {
     }
 
     private NoteDTO textMessageToNoteDTO(JSONObject jsonObject) {
+        String uuid = jsonObject.getString("uuid");
         String fromEmail = jsonObject.getString("fromEmail");
         String toEmail = jsonObject.getString("toEmail");
         String content = jsonObject.getString("content");
 
-        return new NoteDTO(fromEmail, toEmail, content);
+        return new NoteDTO(uuid, fromEmail, toEmail, content);
     }
 }

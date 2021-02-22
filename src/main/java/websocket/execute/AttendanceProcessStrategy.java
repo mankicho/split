@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
-public class AttendanceProcessStrategy implements DataProcessStrategy {
+public class AttendanceProcessStrategy extends DataProcessStrategy {
     private Map<String, WebSocketSession> cafeMap;
     private Map<String, WebSocketSession> userMap;
 

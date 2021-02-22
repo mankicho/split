@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FollowProcessStrategy implements DataProcessStrategy {
+public class FollowProcessStrategy extends DataProcessStrategy {
     private Map<String, WebSocketSession> userMap;
 
     public void setUserMap(Map<String, WebSocketSession> userMap) {
