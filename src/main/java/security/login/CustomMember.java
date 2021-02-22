@@ -1,6 +1,6 @@
 package security.login;
 
-import component.member.MemberVO;
+import component.member.vo.MemberVO;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

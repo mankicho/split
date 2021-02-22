@@ -18,7 +18,7 @@
         <result property="pCode" column="pCode"/>
     </resultMap>
 
-    <resultMap id="memberDeviceVO" type="component.member.MemberDeviceVO">
+    <resultMap id="memberDeviceVO" type="component.member.vo.MemberDeviceVO">
         <result property="memberEmail" column="member_email"/>
         <result property="deviceType" column="device_type"/>
         <result property="deviceToken" column="device_token"/>

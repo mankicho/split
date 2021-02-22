@@ -7,18 +7,21 @@
         <!-- DTO, VO -->
         <typeAlias type="component.plan.PlanVO" alias="PlanVO"/>
         <typeAlias type="component.plan.PlanDTO" alias="PlanDTO"/>
-        <typeAlias type="component.member.MemberVO" alias="MemberVO"/>
-        <typeAlias alias="MemberDTO" type="component.member.MemberDTO"/>
+        <typeAlias type="component.member.vo.MemberVO" alias="MemberVO"/>
+        <typeAlias alias="MemberDTO" type="component.member.dto.MemberDTO"/>
         <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
         <typeAlias type="component.zone.ZoneVO" alias="ZoneVO"/>
         <typeAlias type="component.zone.ZoneOperDTO" alias="ZoneOperDTO"/>
         <typeAlias type="component.zone.ZoneImageDTO" alias="ZoneImageDTO"/>
         <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
-        <typeAlias type="component.member.MemberTmpInfoDTO" alias="MemberTmpInfoDTO"/>
-        <typeAlias type="component.member.friend.FriendAddRequestVO" alias="FriendAddRequestVO"/>
+        <typeAlias type="component.member.dto.MemberTmpInfoDTO" alias="MemberTmpInfoDTO"/>
+        <typeAlias type="component.member.vo.FriendAddRequestVO" alias="FriendAddRequestVO"/>
         <typeAlias type="component.plan.auth.TodayPlanAuthVO" alias="TodayPlanAuthVO"/>
-        <typeAlias type="component.member.MemberDeviceVO" alias="MemberDeviceVO"/>
+        <typeAlias type="component.member.vo.MemberDeviceVO" alias="MemberDeviceVO"/>
         <typeAlias type="component.alarm.AlarmDTO" alias="AlarmDTO"/>
+        <typeAlias type="component.note.NoteDTO" alias="NoteDTO"/>
+        <typeAlias type="component.note.NoteVO" alias="NoteVO"/>
+        <typeAlias type="component.member.vo.MemberFollowingVO" alias="MemberFollowingVO"/>
 
 
     </typeAliases>
@@ -29,6 +32,7 @@
         <mapper class="component.zone.ZoneMapper"/>
         <mapper class="component.plan.auth.PlanAuthMapper"/>
         <mapper class="component.alarm.AlarmMapper"/>
+        <mapper class="component.note.NoteMapper"/>
     </mappers>
 
 </configuration>

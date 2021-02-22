@@ -16,13 +16,6 @@
     </insert>
 
     <select id="getNotes" parameterType="string" resultMap="noteVO">
-        select * From noteBox where from_email = #{from} and to_email = #{to}
+        select * From noteBox where from_email = #{from} or from_email = #{to} order by note_time
     </select>
 </mapper>
-
-
-        List<NoteVO>getNotes(@Param("to") String toEmail, @Param("from") String from);
-
-private String fromEmail;
-private String toEmail;
-private String content;
