@@ -1,12 +1,14 @@
 package component.note;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 
-@ToString
+import java.util.List;
+
+@Data
 @AllArgsConstructor
-@Getter
 public class NoteUUID {
     private String uuid;
+    private List<NoteVO> notes;
+
 }
