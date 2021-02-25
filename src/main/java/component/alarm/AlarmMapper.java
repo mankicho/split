@@ -11,7 +11,5 @@ public interface AlarmMapper {
 
     int updateReadFlag(int[] idArr);
 
-    int updateCheckFlag(AlarmVO alarmVO);
-
     List<AlarmVO> getAlarmsByAlarmId(int[] idArr);
 }

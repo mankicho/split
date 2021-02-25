@@ -1,14 +1,14 @@
 package component.alarm;
 
 import lombok.Data;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 @Data
 public class AlarmVO {
     private int alarmId;
-    private int alarm_type;
     private String toEmail;
-    private String from;
-    private String content;
+    private Map<String,Object> msg;
     private boolean readFlag;
-    private boolean checkFlag;
 }

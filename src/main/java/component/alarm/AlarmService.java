@@ -41,7 +41,7 @@ public class AlarmService {
         }
     }
 
-    public int updateCheckFlag(AlarmVO alarmVO) {
-        return alarmMapper.updateCheckFlag(alarmVO);
+    public int saveAlarms(AlarmDTO alarmDTO) {
+        return alarmMapper.saveAlarms(alarmDTO);
     }
 }
