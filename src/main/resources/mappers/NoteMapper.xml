@@ -12,21 +12,27 @@
         <result property="noteTime" column="note_time"/>
     </resultMap>
 
-    <insert id="saveNote" parameterType="NoteDTO">
-        insert into noteBox(note_uuid,from_email,to_email,content) values (#{noteUUID},#{fromEmail},#{toEmail},#{content})
+    <select id="getUUID" parameterType="string" resultType="string">
+        select notebox_uuid from members_notebox where (to_email =#{toEmail} and from_email = #{fromEmail})
+        or (to_email = #{fromEmail} and from_email = #{toEmail}) group by notebox_uuid
+    </select>
+
+    <insert id="createNoteBox" parameterType="string">
+        INSERT INTO members_notebox(to_email,from_email,notebox_uuid) values(#{toEmail},#{fromEmail},#{uuid}),(#{fromEmail},#{toEmail},#{uuid})
     </insert>
 
-    <select id="getLastNode" parameterType="string" resultMap="noteVO">
-        select * From noteBox where (to_email = #{toEmail} and from_email = #{fromEmail})
-        or (to_email = #{fromEmail} and from_email = #{toEmail})  limit 1;
+    <select id="getNotes" parameterType="string" resultMap="noteVO">
+        SELECT * from notebox where (to_email = #{toEmail} or from_email = #{toEmail}) group by note_uuid
     </select>
 
-    <select id="getNotesByUUID" resultMap="noteVO" parameterType="string">
-        select * from noteBox where note_uuid = #{uuid} order by note_id desc
+    <select id="getAllNotes" parameterType="string" resultMap="noteVO">
+        SELECT n.*from notebox as n left outer join (select * from members_notebox group by notebox_uuid) as m on n.note_uuid = m.notebox_uuid
+        and m.from_email = #{fromEmail}
+        where n.note_uuid = #{uuid} and n.note_id > ifnull(m.delete_note_id,0);
     </select>
 
-    <select id="getNoteBoxesByToEmail" resultMap="noteVO" parameterType="string">
-		select * from (select * from noteBox order by note_id desc limit 10000000000) as tmp where from_email = #{toEmail}
-        or to_email = #{toEmail} group by note_uuid;
-    </select>
+    <insert id="saveNote" parameterType="NoteDTO">
+        INSERT INTO notebox(note_uuid,from_email,to_email,content) values (#{noteUUID},#{fromEmail},#{toEmail},#{content})
+    </insert>
 </mapper>
+

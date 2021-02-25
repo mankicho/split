@@ -22,11 +22,16 @@
         <typeAlias type="component.note.NoteDTO" alias="NoteDTO"/>
         <typeAlias type="component.note.NoteVO" alias="NoteVO"/>
         <typeAlias type="component.member.vo.MemberFollowingVO" alias="MemberFollowingVO"/>
+        <typeAlias type="component.school.vo.SchoolVO" alias="SchoolVO"/>
+        <typeAlias type="component.school.dto.SchoolDTO" alias="SchoolDTO"/>
+        <typeAlias type="component.school.vo.ClassVO" alias="ClassVO"/>
+        <typeAlias type="component.school.dto.ClassDTO" alias="ClassDTO"/>
 
 
     </typeAliases>
     <mappers>
         <mapper class="component.plan.PlanMapper"/>
+        <mapper class="component.school.SchoolMapper"/>
         <mapper class="component.member.MemberMapper"/>
         <mapper class="component.home.HomeDataMapper"/>
         <mapper class="component.zone.ZoneMapper"/>

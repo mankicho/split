@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="component.school.SchoolMapper">
+    <select id="getSchools" parameterType="int" resultType="SchoolVO">
+    </select>
+
+    <insert id="registerSchool" parameterType="SchoolDTO">
+
+    </insert>
+
+    <select id="getClasses" parameterType="string" resultType="ClassVO">
+
+    </select>
+
+    <insert id="registerClass" parameterType="ClassDTO">
+
+    </insert>
+</mapper>

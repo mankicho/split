@@ -5,20 +5,22 @@
 
     <resultMap id="alarmVO" type="component.alarm.AlarmVO">
         <result property="alarmId" column="alarm_id"/>
-        <result property="alarmId" column="alarm_type"/>
-        <result property="toEmail" column="a_to"/>
-        <result property="from" column="a_from"/>
-        <result property="content" column="content"/>
+        <result property="toEmail" column="to_email"/>
+        <result property="msg" column="msg" typeHandler="component.alarm.AlarmJsonTypeHandler"/>
         <result property="readFlag" column="read_flag"/>
-        <result property="checkFlag" column="check_flag"/>
+    </resultMap>
+
+    <resultMap id="alarmDTO" type="component.alarm.AlarmDTO">
+        <result property="toEmail" column="to_email"/>
+        <result property="msg" column="msg" typeHandler="component.alarm.AlarmJsonTypeHandler"/>
     </resultMap>
 
     <insert id="saveAlarms" parameterType="AlarmDTO">
-        INSERT INTO alarm_message(a_to,a_from,content) values (#{toEmail},#{from},#{content})
+        INSERT INTO alarm_message(to_email,msg) values (#{toEmail},#{msg, typeHandler=component.alarm.AlarmJsonTypeHandler})
     </insert>
 
     <select id="getAlarms" parameterType="string" resultMap="alarmVO">
-        select * from alarm_message where a_to = #{email} and read_flag = false
+        select * from alarm_message where to_email = #{email}
     </select>
 
     <update id="updateReadFlag">
