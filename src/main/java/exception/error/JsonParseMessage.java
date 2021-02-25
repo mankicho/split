@@ -2,6 +2,7 @@ package exception.error;
 
 import lombok.Data;
 
+@Data
 public class JsonParseMessage {
     private String msg;
 

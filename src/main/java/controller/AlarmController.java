@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.JsonParseException;
+import component.alarm.AlarmDTO;
 import component.alarm.AlarmService;
 import component.alarm.AlarmVO;
 import exception.error.JsonParseMessage;
@@ -21,17 +22,18 @@ public class AlarmController {
 
     private final AlarmService alarmService;
 
-    @ExceptionHandler({
-            HttpMessageNotReadableException.class,
-            JsonParseException.class
-    })
-    public JsonParseMessage handlerJsonParseException() {
-        return new JsonParseMessage("적절하지 않은 데이터 입니다.");
-    }
+//    @ExceptionHandler({
+//            HttpMessageNotReadableException.class,
+//            JsonParseException.class
+//    })
+//    public JsonParseMessage handlerJsonParseException() {
+//        return new JsonParseMessage("적절하지 않은 데이터 입니다.");
+//    }
 
     // 개인의 알림 다 가져오기
     @PostMapping(value = "/get.do")
-    public List<AlarmVO> getAlarms(@RequestParam("toEmail") String email) {
+    public List<AlarmVO> getAlarms(HttpServletRequest request) {
+        String email = request.getParameter("email");
         return alarmService.getAlarms(email);
     }
 
@@ -42,9 +44,9 @@ public class AlarmController {
         return alarmService.updateReadFlag(arr);
     }
 
-    // 확인했음을 표시하기
-    @PostMapping(value = "/update/check/flag")
-    public int updateCheckFlag(@RequestBody AlarmVO alarmVO) {
-        return alarmService.updateCheckFlag(alarmVO);
+    @PostMapping(value = "/insert.do")
+    public int saveAlarms(@RequestBody AlarmDTO alarmDTO) {
+        log.info(alarmDTO);
+        return alarmService.saveAlarms(alarmDTO);
     }
 }
