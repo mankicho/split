@@ -2,6 +2,7 @@ package component.school;
 
 import component.school.dto.ClassDTO;
 import component.school.dto.SchoolDTO;
+import component.school.dto.SchoolSearchLogDTO;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class SchoolService {
         return schoolMapper.registerSchool(schoolDTO);
     }
 
-    public List<ClassVO> getClasses(Map<String,Object> map) {
+    public List<ClassVO> getClasses(Map<String, Object> map) {
         return schoolMapper.getClasses(map);
     }
 
@@ -37,8 +38,11 @@ public class SchoolService {
         return schoolMapper.registerClass(classDTO);
     }
 
-    public int saveHashTag(HashMap<String,Object> hashMap) {
+    public int saveHashTag(HashMap<String, Object> hashMap) {
         return schoolMapper.saveHashTag(hashMap);
     }
 
+    public int saveSearchKeyword(Map<String, Object> map) {
+        return schoolMapper.saveSearchKeyword(map);
+    }
 }

@@ -26,6 +26,7 @@
         <typeAlias type="component.school.dto.SchoolDTO" alias="SchoolDTO"/>
         <typeAlias type="component.school.vo.ClassVO" alias="ClassVO"/>
         <typeAlias type="component.school.dto.ClassDTO" alias="ClassDTO"/>
+        <typeAlias type="component.school.dto.SchoolSearchLogDTO" alias="SchoolSearchLogDTO"/>
 
 
     </typeAliases>

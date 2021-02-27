@@ -8,7 +8,7 @@
         <repository>
             <id>in-project-jenkins</id>
             <name>kkma-jar-jenkins</name>
-            <url>file:///jobs</url>
+            <url>file://C:/Users/82102/.jenkins/jobs/SPLIT-BACKEND(admin)/workspace/lib</url>
         </repository>
     </repositories>
     <groupId>org.example</groupId>

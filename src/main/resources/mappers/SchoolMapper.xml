@@ -70,4 +70,11 @@
             (#{schoolId},#{item})
         </foreach>
     </insert>
+
+    <insert id="saveSearchKeyword" parameterType="java.util.Map">
+        INSERT INTO school_search_log (search_keyword,num) values
+        <foreach collection="list" item="item" separator=",">
+        (#{item.searchKeyword},#{item.num})
+        </foreach>
+    </insert>
 </mapper>

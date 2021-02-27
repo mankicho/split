@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.alarm.pls.PlanSharingAlarmMapper">
     <insert id="insertPlanAuth" parameterType="hashmap">
-        INSERT INTO plan_auth_log(plan_log_id,authenticate_time,authenticate_flag) values(#{planLogId},#{authenticateTime},#{authenticateFlag})
+        INSERT INTO plan_auth_log(plan_log_id,authenticate_time,authenticate_flag)
+         values(#{planLogId},#{authenticateTime},#{authenticateFlag})
     </insert>
 </mapper>
