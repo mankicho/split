@@ -8,8 +8,8 @@ import component.school.vo.SchoolVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
-import rank.KeywordCollector;
-import rank.UserKeywordExtractor;
+//import rank.KeywordCollector;
+//import rank.UserKeywordExtractor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class SchoolController {
 
     private final SchoolService schoolService;
-    private final UserKeywordExtractor extractor;
+//    private final UserKeywordExtractor extractor;
 
     @PostMapping(value = "/create.do")
     public SchoolDTO createSchool(@RequestBody @Valid SchoolDTO schoolDTO) {
