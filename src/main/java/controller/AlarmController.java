@@ -41,12 +41,20 @@ public class AlarmController {
     @PostMapping(value = "/update/read/flag")
     public int updateReadFlag(@RequestBody List<Integer> idArr) {
         int[] arr = idArr.stream().mapToInt(i -> i).toArray();
-        return alarmService.updateReadFlag(arr);
+        log.info(Arrays.toString(arr));
+        int updatedRow = alarmService.updateReadFlag(arr);
+        log.info(updatedRow);
+        return updatedRow;
     }
 
     @PostMapping(value = "/insert.do")
     public int saveAlarms(@RequestBody AlarmDTO alarmDTO) {
         log.info(alarmDTO);
         return alarmService.saveAlarms(alarmDTO);
+    }
+
+    @GetMapping(value = "/delete.do")
+    public int deleteAlarm(@RequestParam("alarmId") int alarmId) {
+        return alarmService.deleteAlarm(alarmId);
     }
 }

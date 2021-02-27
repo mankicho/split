@@ -2,6 +2,7 @@ package component.alarm;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,5 +44,9 @@ public class AlarmService {
 
     public int saveAlarms(AlarmDTO alarmDTO) {
         return alarmMapper.saveAlarms(alarmDTO);
+    }
+
+    public int deleteAlarm(@Param("alarmId") int alarmId) {
+        return alarmMapper.deleteAlarm(alarmId);
     }
 }

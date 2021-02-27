@@ -14,7 +14,7 @@
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
-    <mvc:resources mapping="/resources/**" location="/resources/"/>
+    <mvc:resources mapping="/resources/**" location="/resources/" />
 
     <context:component-scan base-package="controller"/>
     <context:component-scan base-package="websocket"/>

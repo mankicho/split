@@ -12,4 +12,6 @@ public interface AlarmMapper {
     int updateReadFlag(int[] idArr);
 
     List<AlarmVO> getAlarmsByAlarmId(int[] idArr);
+
+    int deleteAlarm(@Param("alarmId") int alarmId);
 }
