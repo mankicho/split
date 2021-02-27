@@ -59,19 +59,19 @@ public class SchoolController {
         return schoolService.getClasses(map);
     }
 
-    @GetMapping(value = "/by/search/get.do")
-    public List<SchoolVO> getSchoolsBySearch(@RequestParam("keyword") String keyword) {
-        KeywordCollector.collect(keyword);
-
-        if (KeywordCollector.keywords.size() >= 10) {
-            List<SchoolSearchLogDTO> list = extractor.extract(KeywordCollector.keywords);
-            Map<String, Object> map = new HashMap<>();
-            map.put("list", list);
-            log.info(map);
-            int insertedRow = schoolService.saveSearchKeyword(map);
-            log.info(insertedRow);
-        }
-
-        return null;
-    }
+//    @GetMapping(value = "/by/search/get.do")
+//    public List<SchoolVO> getSchoolsBySearch(@RequestParam("keyword") String keyword) {
+//        KeywordCollector.collect(keyword);
+//
+//        if (KeywordCollector.keywords.size() >= 10) {
+//            List<SchoolSearchLogDTO> list = extractor.extract(KeywordCollector.keywords);
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("list", list);
+//            log.info(map);
+//            int insertedRow = schoolService.saveSearchKeyword(map);
+//            log.info(insertedRow);
+//        }
+//
+//        return null;
+//    }
 }
