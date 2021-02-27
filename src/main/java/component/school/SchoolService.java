@@ -4,15 +4,22 @@ import component.school.dto.ClassDTO;
 import component.school.dto.SchoolDTO;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Service
+@RequiredArgsConstructor
 public class SchoolService {
 
-    @Setter(onMethod_ = {@Autowired})
-    private SchoolMapper schoolMapper;
+    private final SchoolMapper schoolMapper;
+
 
     public List<SchoolVO> getSchools(int categoryId) {
         return schoolMapper.getSchools(categoryId);
@@ -22,12 +29,16 @@ public class SchoolService {
         return schoolMapper.registerSchool(schoolDTO);
     }
 
-    public List<ClassVO> getClasses(String today) {
-        return schoolMapper.getClasses(today);
+    public List<ClassVO> getClasses(Map<String,Object> map) {
+        return schoolMapper.getClasses(map);
     }
 
     public int registerClass(ClassDTO classDTO) {
         return schoolMapper.registerClass(classDTO);
+    }
+
+    public int saveHashTag(HashMap<String,Object> hashMap) {
+        return schoolMapper.saveHashTag(hashMap);
     }
 
 }

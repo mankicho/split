@@ -2,18 +2,72 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.school.SchoolMapper">
-    <select id="getSchools" parameterType="int" resultType="SchoolVO">
+
+    <resultMap id="classVO" type="component.school.vo.ClassVO">
+        <result property="classId" column="class_id"/>
+        <result property="schoolId" column="school_id"/>
+        <result property="weekdayType" column="weekday_type"/>
+        <result property="authTime" column="auth_time"/>
+        <result property="allMembers" column="all_members"/>
+        <result property="authMembers" column="auth_members"/>
+    </resultMap>
+
+    <resultMap id="hashTags" type="component.school.vo.SchoolHashTags">
+        <result property="hashtagsId" column="hashtags_id"/>
+        <result property="schoolId" column="school_id"/>
+
+        <result property="hashTag" column="hashtags"/>
+    </resultMap>
+
+    <resultMap id="schoolVO" type="component.school.vo.SchoolVO">
+        <result property="schoolId" column="school_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="memberEmail" column="member_email"/>
+        <result property="schoolName" column="school_name"/>
+        <result property="setLocation" column="set_location"/>
+        <result property="oneLineMessage" column="one_line_message"/>
+        <result property="allMembers" column="all_members"/>
+        <result property="imagePath" column="image_path"/>
+
+        <collection property="hashTags" resultMap="hashTags"/>
+    </resultMap>
+    <select id="getSchools" parameterType="int" resultMap="schoolVO">
+      select s.school_id,s.category_id,s.member_email,s.school_name,s.set_location,s.one_line_message
+       ,s.image_path, h.hashtags_id,h.school_id,h.hashtags, tmp.all_members from school as s left outer join school_hashtags as h
+      on s.school_id = h.school_id left outer join
+     (select c.school_id,sum(all_members) as all_members from class as c left outer join
+     school as s on s.school_id = c.school_id group by c.school_id) as tmp on
+     s.school_id = tmp.school_id where category_id = #{categoryId};
     </select>
 
     <insert id="registerSchool" parameterType="SchoolDTO">
+        INSERT INTO school(category_id,member_email,school_name,set_location,one_line_message) values
+        (#{categoryId},#{memberEmail},#{schoolName},#{setLocation},#{oneLineMessage})
+
+        <selectKey keyProperty="schoolId" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
 
     </insert>
 
-    <select id="getClasses" parameterType="string" resultType="ClassVO">
-
+    <select id="getClasses" parameterType="hashmap" resultMap="classVO">
+          select c.*,ifnull(tmp.all_members,0) as all_members,ifnull(tmp2.today_members,0) as auth_members from class as c left outer join
+         (select class_id, count(*) as all_members from class_members where date_format(#{date},'%Y-%m-%d')
+         between start_date and end_date group by class_id) as tmp
+         on c.class_id = tmp.class_id left outer join
+         (select class_id,count(*) as today_members from class_auth_log where date_format(auth_date,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d') group by class_id)
+         as tmp2 on c.class_id = tmp2.class_id
+         where weekday_type <![CDATA[&]]> #{weekday} != 0 and school_id = #{schoolId};
     </select>
 
     <insert id="registerClass" parameterType="ClassDTO">
 
+    </insert>
+
+    <insert id="saveHashTag" parameterType="hashmap">
+        INSERT INTO school_hashtags(school_id,hashtags) values
+        <foreach collection="list" item="item" separator="," index="idx">
+            (#{schoolId},#{item})
+        </foreach>
     </insert>
 </mapper>

@@ -36,4 +36,8 @@
             #{arr}
         </foreach>
     </select>
+
+    <delete id="deleteAlarm" parameterType="int">
+        DELETE FROM alarm_message where alarm_id = #{alarmId}
+    </delete>
 </mapper>

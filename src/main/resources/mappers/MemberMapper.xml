@@ -15,6 +15,7 @@
         <result property="bornTime" column="born_time"/>
         <result property="nickname" column="nickname"/>
         <collection property="authList" resultMap="authMap"/>
+        <collection property="hashtags" javaType="string"/>
     </resultMap>
 
     <select id="selects" resultMap="memberMap" parameterType="string">
