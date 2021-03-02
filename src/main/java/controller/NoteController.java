@@ -29,6 +29,7 @@ public class NoteController { // 유저가 요청을 하면
         String toEmail = request.getParameter("toEmail");
         String fromEmail = request.getParameter("fromEmail");
 
+        log.info(toEmail,fromEmail);
         String uuid = noteService.getUUID(toEmail, fromEmail); // 쪽지방이 존재하는가
 
         if (uuid == null || uuid.equals("")) { // 존재하지 않으면
@@ -49,11 +50,14 @@ public class NoteController { // 유저가 요청을 하면
 
     @PostMapping(value = "/all/noteBoxes/get.do")
     public List<NoteVO> getNoteBoxes(@RequestParam("toEmail") String toEmail) {
+
         return noteService.getNotes(toEmail);
     }
 
     @PostMapping(value = "/all/notes/get.do")
-    public List<NoteVO> getAllNotes(@RequestParam("uuid") String uuid, @RequestParam("fromEmail") String fromEmail) {
-        return noteService.getAllNotes(uuid,fromEmail);
+    public List<NoteVO> getAllNotes(@RequestParam("fromEmail") String fromEmail, @RequestParam("uuid") String uuid) {
+        int affectedRow = noteService.updateLastCheckTime(fromEmail, uuid); // 쪽지 방에 들어가면 last_check_time 을 바꿔준다.
+        log.info(affectedRow);
+        return noteService.getAllNotes(uuid, fromEmail);
     }
 }

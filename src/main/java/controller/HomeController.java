@@ -8,6 +8,7 @@ import component.plan.PlanVO;
 import component.plan.auth.PlanAuthService;
 import component.plan.auth.TodayPlanAuthVO;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping(value = "/")
+@Log4j2
 public class HomeController {
 
     @Setter(onMethod_ = {@Autowired})
@@ -37,6 +39,7 @@ public class HomeController {
 
     @Setter(onMethod_ = {@Autowired})
     private PlanAuthService planAuthService;
+
 
     @ExceptionHandler({ParseException.class})
     @GetMapping(value = "/")

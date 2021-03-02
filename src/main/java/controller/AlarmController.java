@@ -11,6 +11,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.sql.SQLSyntaxErrorException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +24,10 @@ public class AlarmController {
 
     private final AlarmService alarmService;
 
+    @ExceptionHandler(SQLSyntaxErrorException.class)
+    public int exceptionHandler() {
+        return 0;
+    }
 //    @ExceptionHandler({
 //            HttpMessageNotReadableException.class,
 //            JsonParseException.class
