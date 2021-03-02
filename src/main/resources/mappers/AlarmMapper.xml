@@ -8,6 +8,7 @@
         <result property="toEmail" column="to_email"/>
         <result property="msg" column="msg" typeHandler="component.alarm.AlarmJsonTypeHandler"/>
         <result property="readFlag" column="read_flag"/>
+
     </resultMap>
 
     <resultMap id="alarmDTO" type="component.alarm.AlarmDTO">

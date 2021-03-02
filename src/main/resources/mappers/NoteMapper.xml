@@ -12,27 +12,48 @@
         <result property="noteTime" column="note_time"/>
     </resultMap>
 
+    <resultMap id="noteBoxVO" type="component.note.NoteBoxVO">
+        <result property="noteBoxId" column="notebox_id"/>
+        <result property="fromEmail" column="from_email"/>
+        <result property="nickname" column="nickname"/>
+        <result property="noteBoxUUID" column="notebox_uuid"/>
+        <result property="deleteNoteId" column="delete_note_id"/>
+        <result property="content" column="content"/>
+        <result property="nickname" column="nickname"/>
+        <result property="noteTime" column="note_time"/>
+        <result property="notRead" column="not_read"/>
+    </resultMap>
+
     <select id="getUUID" parameterType="string" resultType="string">
-        select notebox_uuid from members_notebox where (to_email =#{toEmail} and from_email = #{fromEmail})
-        or (to_email = #{fromEmail} and from_email = #{toEmail}) group by notebox_uuid
+        select notebox_uuid from members_notebox where (to_e =#{toEmail} and from_e = #{fromEmail})
+        or (to_e = #{fromEmail} and from_e = #{toEmail}) group by notebox_uuid
     </select>
 
     <insert id="createNoteBox" parameterType="string">
-        INSERT INTO members_notebox(to_email,from_email,notebox_uuid) values(#{toEmail},#{fromEmail},#{uuid}),(#{fromEmail},#{toEmail},#{uuid})
+        INSERT INTO members_notebox(to_e,from_e,notebox_uuid) values(#{toEmail},#{fromEmail},#{uuid}),(#{fromEmail},#{toEmail},#{uuid})
     </insert>
 
-    <select id="getNotes" parameterType="string" resultMap="noteVO">
-        SELECT * from notebox where (to_email = #{toEmail} or from_email = #{toEmail}) group by note_uuid
+    <select id="getNotes" parameterType="string" resultMap="noteBoxVO">
+         select notebox_id,from_email,to_email,(select nickname from members where email = from_e) as nickname,notebox_uuid,delete_note_id,
+        content,note_time,
+        ifnull((select count(*) from notebox as nbox where nbox.note_uuid = notebox_uuid and nbox.note_time > last_check_time group by nbox.note_uuid),0) as not_read
+        from (select * from (select * From members_notebox where to_e = #{toEmail} ) as box left outer join noteBox as n
+        on n.note_uuid = box.noteBox_uuid order by note_id desc limit 100000000)
+        as t group by note_uuid order by noteBox_id asc;
     </select>
 
     <select id="getAllNotes" parameterType="string" resultMap="noteVO">
-        SELECT n.*from notebox as n left outer join (select * from members_notebox group by notebox_uuid) as m on n.note_uuid = m.notebox_uuid
-        and m.from_email = #{fromEmail}
+        SELECT n.* from noteBox as n left outer join (select * from members_notebox group by noteBox_uuid) as m on n.note_uuid = m.noteBox_uuid
+        and m.from_e = #{fromEmail}
         where n.note_uuid = #{uuid} and n.note_id > ifnull(m.delete_note_id,0);
     </select>
 
     <insert id="saveNote" parameterType="NoteDTO">
-        INSERT INTO notebox(note_uuid,from_email,to_email,content) values (#{noteUUID},#{fromEmail},#{toEmail},#{content})
+        INSERT INTO noteBox(note_uuid,from_email,to_email,content) values (#{noteUUID},#{fromEmail},#{toEmail},#{content})
     </insert>
+
+    <update id="updateLastCheckTime" parameterType="string">
+        UPDATE members_notebox set last_check_time = now() where to_e = #{fromEmail} and notebox_uuid = #{uuid}
+    </update>
 </mapper>
 

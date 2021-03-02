@@ -13,9 +13,7 @@
     </resultMap>
 
     <resultMap id="hashTags" type="component.school.vo.SchoolHashTags">
-        <result property="hashtagsId" column="hashtags_id"/>
         <result property="schoolId" column="school_id"/>
-
         <result property="hashTag" column="hashtags"/>
     </resultMap>
 
@@ -24,20 +22,24 @@
         <result property="categoryId" column="category_id"/>
         <result property="memberEmail" column="member_email"/>
         <result property="schoolName" column="school_name"/>
-        <result property="setLocation" column="set_location"/>
         <result property="oneLineMessage" column="one_line_message"/>
-        <result property="allMembers" column="all_members"/>
         <result property="imagePath" column="image_path"/>
+        <result property="planetName" column="planet_name"/>
+        <result property="allMembersInSchool" column="all_members_in_school"/>
 
         <collection property="hashTags" resultMap="hashTags"/>
     </resultMap>
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
-      select s.school_id,s.category_id,s.member_email,s.school_name,s.set_location,s.one_line_message
-       ,s.image_path, h.hashtags_id,h.school_id,h.hashtags, tmp.all_members from school as s left outer join school_hashtags as h
-      on s.school_id = h.school_id left outer join
-     (select c.school_id,sum(all_members) as all_members from class as c left outer join
-     school as s on s.school_id = c.school_id group by c.school_id) as tmp on
-     s.school_id = tmp.school_id where category_id = #{categoryId};
+     select s.school_id,s.category_id,s.member_email,s.school_name,s.one_line_message,s.image_path,
+     p.planet_name,h.hashtags,amis.all_members_in_school
+     from school as s left outer join planet as p
+     on s.set_location = p.planet_code left outer join school_hashtags as h on s.school_id = h.school_id
+     left outer join
+     (select c.school_id,sum(tmp.all_members) as all_members_in_school from class as c left outer join
+     (select *,ifnull(count(class_id),0) as all_members from class_members where date_format(now(),'%Y-%m-%d')
+     between start_date and end_date group by class_id) as tmp
+	 on  c.class_id = tmp.class_id group by school_id) as amis on amis.school_id = s.school_id
+     where category_id = #{categoryId};
     </select>
 
     <insert id="registerSchool" parameterType="SchoolDTO">
@@ -77,4 +79,17 @@
         (#{item.searchKeyword},#{item.num})
         </foreach>
     </insert>
+
+    <select id="getSchoolsBySearch" parameterType="string" resultMap="schoolVO">
+     select s.school_id,s.category_id,s.member_email,s.school_name,s.one_line_message,s.image_path,
+     p.planet_name,h.hashtags,amis.all_members_in_school
+     from school as s left outer join planet as p
+     on s.set_location = p.planet_code left outer join school_hashtags as h on s.school_id = h.school_id
+     left outer join
+     (select c.school_id,sum(tmp.all_members) as all_members_in_school from class as c left outer join
+     (select *,ifnull(count(class_id),0) as all_members from class_members where date_format(now(),'%Y-%m-%d')
+     between start_date and end_date group by class_id) as tmp
+	 on  c.class_id = tmp.class_id group by school_id) as amis on amis.school_id = s.school_id
+     where category_id = #{categoryId} and s.school_name like concat('%',#{keyword},'%');
+    </select>
 </mapper>
