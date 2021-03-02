@@ -32,13 +32,13 @@ public class NoteProcessStrategy extends DataProcessStrategy {
         log.info(tm.getPayload());
         String toEmail = object.getString("toEmail"); // 받는 사람이메일
         String fromEmail = object.getString("fromEmail"); // 보내는 사람 이메일
-
         WebSocketSession to = userMaps.get(toEmail);
         WebSocketSession from = userMaps.get(fromEmail);
         try {
+            // db 에 정상적으로 쪽지를 저장하면
             int insertedRow = noteMapper.saveNote(textMessageToNoteDTO(object));
 
-            if (insertedRow != 0) { // db 에 정상적으로 쪽지를 저장하면
+            if (insertedRow != 0) {
                 sendMessage(to, tm); // 메시지 전송
             } else { // db 에 정상적으로 쪽지가 저장이 안되면
                 sendMessageIfFail(from);

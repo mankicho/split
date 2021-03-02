@@ -10,10 +10,10 @@ public class SchoolVO {
     private int categoryId;
     private String memberEmail;
     private String schoolName;
-    private String setLocation;
     private String oneLineMessage;
-    private int allMembers;
     private String imagePath;
+    private String planetName;
+    private int allMembersInSchool;
 
     private List<SchoolHashTags> hashTags;
 }

@@ -22,4 +22,6 @@ public interface SchoolMapper {
     int registerClass(ClassDTO classDTO);
 
     int saveSearchKeyword(Map<String, Object> map);
+
+    List<SchoolVO> getSchoolsBySearch(String keyword);
 }

@@ -45,4 +45,9 @@ public class SchoolService {
     public int saveSearchKeyword(Map<String, Object> map) {
         return schoolMapper.saveSearchKeyword(map);
     }
+
+    public List<SchoolVO> getSchoolsBySearch(String keyword) {
+        return schoolMapper.getSchoolsBySearch(keyword);
+    }
+
 }
