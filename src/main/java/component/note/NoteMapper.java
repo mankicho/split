@@ -16,4 +16,6 @@ public interface NoteMapper {
     List<NoteVO> getNotes(@Param("toEmail") String toEmail);
 
     List<NoteVO> getAllNotes(@Param("uuid") String uuid, @Param("fromEmail") String fromEmail);
+
+    int updateLastCheckTime(@Param("fromEmail") String toEmail,@Param("uuid") String uuid);
 }

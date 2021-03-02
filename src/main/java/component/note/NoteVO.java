@@ -12,4 +12,5 @@ public class NoteVO {
     private String toEmail;
     private String content;
     private Date noteTime;
+    private int notReadNotes;
 }

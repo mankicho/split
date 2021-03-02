@@ -23,8 +23,11 @@ public class NoteService {
         return noteMapper.getNotes(toEmail);
     }
 
-    public List<NoteVO> getAllNotes( String uuid, String fromEmail) {
-        return noteMapper.getAllNotes(uuid,fromEmail);
+    public List<NoteVO> getAllNotes(String uuid, String fromEmail) {
+        return noteMapper.getAllNotes(uuid, fromEmail);
     }
 
+    public int updateLastCheckTime(String fromEmail,  String uuid) {
+        return noteMapper.updateLastCheckTime(fromEmail, uuid);
+    }
 }
