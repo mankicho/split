@@ -45,6 +45,9 @@ public class AttendanceProcessStrategy extends DataProcessStrategy {
         int planLogId = object.getInt("planLogId");
         List<String> emails = planService.getAllEmailOfPlans(planLogId);
         emails.stream().filter(email -> userMap.get(email) != null).forEach(email -> sendMessageToUser(email,tm));
+
+        // todo 3. 내 친구들에게 소식 알림
+
     }
 
     private void sendMessageToUser(String email, TextMessage tm) {

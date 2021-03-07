@@ -17,6 +17,11 @@
         <collection property="authList" resultMap="authMap"/>
     </resultMap>
 
+    <resultMap id="memberEmailAndRegDate" type="component.member.vo.MemberEmailAndRegDate">
+        <result property="email" column="email"/>
+        <result property="regDate" column="regtime"/>
+    </resultMap>
+
     <select id="selects" resultMap="memberMap" parameterType="string">
         SELECT m.email,m.pw,m.phone_num,m.sex,m.born_time,m.nickname,a.member_email,a.auth
         from members as m left outer join members_auth as a on m.email = a.member_email
@@ -56,8 +61,8 @@
         SELECT phone_num from members where phone_num = #{pNum}
     </select>
 
-    <select id="findEmail" parameterType="string" resultType="string">
-        SELECT email from members where phone_num = #{pNum}
+    <select id="findEmail" parameterType="string" resultMap="memberEmailAndRegDate">
+    select email,regtime from members where phone_num = #{pNum};
     </select>
 
     <select id="selectsByTmpInfo" parameterType="string" resultType="MemberTmpInfoDTO">

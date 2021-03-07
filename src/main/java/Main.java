@@ -37,18 +37,6 @@
 //        // init KeywordExtractor
 //        KeywordExtractor ke = new KeywordExtractor();
 //        // extract keywords
-//        for (int i = 0; i < strs.length; i++) {
-//            String s = strs[i];
-//            KeywordList kl = ke.extractKeyword(s, true);
-//
-//            for (int j = 0; j < kl.size(); j++) {
-//                Keyword kwrd = kl.get(j);
-//                map.putIfAbsent(kwrd.getString(), 0);
-//
-//                map.put(kwrd.getString(), map.get(kwrd.getString()) + kwrd.getCnt());
-//            }
-//        }
-//
 //
 //        map.forEach((key, value) -> System.out.print(key + "\t" + value + "\n"));
 //        // print result

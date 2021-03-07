@@ -8,7 +8,6 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="${layoutPattern}" />
         </Console>
-        //
         <RollingFile name="file" fileName="/log/${logNm}.log" filePattern="/log/logs/${logNm}_%d{yyyy-MM-dd}_%i.log">
             <PatternLayout pattern="${layoutPattern}" />
             <Policies>

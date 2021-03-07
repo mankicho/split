@@ -2,7 +2,6 @@ package component.school;
 
 import component.school.dto.ClassDTO;
 import component.school.dto.SchoolDTO;
-import component.school.dto.SchoolSearchLogDTO;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
 import lombok.RequiredArgsConstructor;

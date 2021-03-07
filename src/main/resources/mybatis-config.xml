@@ -21,12 +21,11 @@
         <typeAlias type="component.alarm.AlarmDTO" alias="AlarmDTO"/>
         <typeAlias type="component.note.NoteDTO" alias="NoteDTO"/>
         <typeAlias type="component.note.NoteVO" alias="NoteVO"/>
-        <typeAlias type="component.member.vo.MemberFollowingVO" alias="MemberFollowingVO"/>
+        <typeAlias type="component.member.dto.MemberFollowingDTO" alias="MemberFollowingVO"/>
         <typeAlias type="component.school.vo.SchoolVO" alias="SchoolVO"/>
         <typeAlias type="component.school.dto.SchoolDTO" alias="SchoolDTO"/>
         <typeAlias type="component.school.vo.ClassVO" alias="ClassVO"/>
         <typeAlias type="component.school.dto.ClassDTO" alias="ClassDTO"/>
-        <typeAlias type="component.school.dto.SchoolSearchLogDTO" alias="SchoolSearchLogDTO"/>
 
 
     </typeAliases>

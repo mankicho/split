@@ -2,14 +2,10 @@ package component.member;
 
 import component.mail.MailService;
 import component.member.dto.MemberDTO;
+import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
-import component.member.vo.FriendAddRequestVO;
-import component.member.vo.MemberFollowingVO;
-import component.member.vo.MemberTimerVO;
-import component.member.vo.MemberVO;
+import component.member.vo.*;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -96,7 +92,7 @@ public class MemberService {
      * @param pNum find email if users forgot his or her email
      * @return
      */
-    public String findEmail(String pNum) {
+    public MemberEmailAndRegDate findEmail(String pNum) {
         return memberMapper.findEmail(pNum);
     }
 
@@ -183,11 +179,11 @@ public class MemberService {
         return memberMapper.registerDeviceToken(email, type, deviceToken);
     }
 
-    public List<MemberFollowingVO> getFollowers(String email) {
+    public List<MemberFollowingDTO> getFollowers(String email) {
         return memberMapper.getFollowers(email);
     }
 
-    public int memberFollow(MemberFollowingVO memberFollowingVO) {
+    public int memberFollow(MemberFollowingDTO memberFollowingVO) {
         return memberMapper.memberFollow(memberFollowingVO);
     }
 

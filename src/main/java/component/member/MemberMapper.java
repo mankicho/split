@@ -1,11 +1,9 @@
 package component.member;
 
 import component.member.dto.MemberDTO;
+import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
-import component.member.vo.FriendAddRequestVO;
-import component.member.vo.MemberFollowingVO;
-import component.member.vo.MemberTimerVO;
-import component.member.vo.MemberVO;
+import component.member.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
@@ -30,7 +28,7 @@ public interface MemberMapper {
 
     int restoreDeletedMember(@Param("email") String email); // 임시탈퇴 철회
 
-    String findEmail(@Param("pNum") String pNum); // 이메일 찾기
+    MemberEmailAndRegDate findEmail(@Param("pNum") String pNum); // 이메일 찾기
 
     MemberTmpInfoDTO selectsByTmpInfo(@Param("email") String email); // 임시비밀번호 조회
 
@@ -62,7 +60,7 @@ public interface MemberMapper {
 
     List<String> getDeviceTokens(@Param("planLogId") int planLogId );
 
-    List<MemberFollowingVO> getFollowers(@Param("email") String email);
+    List<MemberFollowingDTO> getFollowers(@Param("email") String email);
 
-    int memberFollow(MemberFollowingVO memberFollowingVO);
+    int memberFollow(MemberFollowingDTO memberFollowingVO);
 }

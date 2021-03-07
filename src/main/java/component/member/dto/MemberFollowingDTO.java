@@ -1,9 +1,9 @@
-package component.member.vo;
+package component.member.dto;
 
 import lombok.Data;
 
 @Data
-public class MemberFollowingVO {
+public class MemberFollowingDTO {
     private String memberEmail;
     private String follower;
 }

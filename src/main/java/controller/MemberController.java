@@ -2,16 +2,12 @@ package controller;
 
 import component.member.*;
 import component.member.dto.MemberDTO;
+import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
-import component.member.vo.FriendAddRequestVO;
-import component.member.vo.MemberFollowingVO;
-import component.member.vo.MemberTimerVO;
-import component.member.vo.MemberVO;
+import component.member.vo.*;
 import io.jsonwebtoken.JwtException;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -152,18 +147,8 @@ public class MemberController {
     }
 
     @PostMapping(value = "/find/email")
-    public HashMap<String, String> findEmail(@RequestParam("pNum") String phoneNumber) {
-        HashMap<String, String> hashMap = new HashMap<>();
-
-        String email = memberService.findEmail(phoneNumber);
-        if (email != null && !email.equals("")) {
-            hashMap.put("email", email);
-            hashMap.put("status", "202");
-        } else {
-            hashMap.put("email", "null");
-            hashMap.put("status", "400");
-        }
-        return hashMap;
+    public MemberEmailAndRegDate findEmail(@RequestParam("pNum") String phoneNumber) {
+        return memberService.findEmail(phoneNumber);
     }
 
 
@@ -303,12 +288,12 @@ public class MemberController {
     }
 
     @PostMapping(value = "/follow/get.do")
-    public List<MemberFollowingVO> getFollows(@RequestParam("email") String email) {
+    public List<MemberFollowingDTO> getFollows(@RequestParam("email") String email) {
         return memberService.getFollowers(email);
     }
 
     @PostMapping(value = "/follow/insert.do")
-    public MemberControllerStatus memberFollow(@RequestBody MemberFollowingVO memberFollowingVO) {
+    public MemberControllerStatus memberFollow(@RequestBody MemberFollowingDTO memberFollowingVO) {
         log.info(memberFollowingVO);
         try {
             int insertedRow = memberService.memberFollow(memberFollowingVO);
