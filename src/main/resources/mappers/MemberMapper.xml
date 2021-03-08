@@ -65,6 +65,10 @@
     select email,regtime from members where phone_num = #{pNum};
     </select>
 
+    <select id="getRegDate" parameterType="string" resultType="java.util.Date">
+        select regtime from members where email = #{email}
+    </select>
+
     <select id="selectsByTmpInfo" parameterType="string" resultType="MemberTmpInfoDTO">
         SELECT email,pw FROM member_tmpinfo where email = #{email}
     </select>

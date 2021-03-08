@@ -2,6 +2,7 @@ package component.mail;
 
 import component.member.MemberService;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
 @Service
+@Log4j2
 public class MailServiceImpl implements MailService {
 
     @Setter(onMethod_ = {@Autowired})
@@ -22,6 +24,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public boolean sendToMemberToFindPassword(String subject, String text, String from, String to) {
+        log.info("start");
         // todo 1. email 이 존재하는지
         String recordedEmail = memberService.isExistEmail(to);
         if (!to.equals(recordedEmail)) { // 등록되어있지 않은 이메일이면
@@ -42,6 +45,7 @@ public class MailServiceImpl implements MailService {
             e.printStackTrace();
             return false;
         }
+        log.info("finish");
         return true;
     }
 

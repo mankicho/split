@@ -6,6 +6,7 @@ import component.member.dto.MemberTmpInfoDTO;
 import component.member.vo.*;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,4 +64,6 @@ public interface MemberMapper {
     List<MemberFollowingDTO> getFollowers(@Param("email") String email);
 
     int memberFollow(MemberFollowingDTO memberFollowingVO);
+
+    Date getRegDate(@Param("email") String email);
 }

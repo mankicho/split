@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/split/note")
+@RequestMapping(value = "/note")
 @RequiredArgsConstructor
 @Log4j2
 public class NoteController { // 유저가 요청을 하면

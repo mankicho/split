@@ -6,9 +6,11 @@ import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
 import component.member.vo.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -185,6 +187,10 @@ public class MemberService {
 
     public int memberFollow(MemberFollowingDTO memberFollowingVO) {
         return memberMapper.memberFollow(memberFollowingVO);
+    }
+
+    public Date getRegDate(String email) {
+        return memberMapper.getRegDate(email);
     }
 
     private String generateSalt() {

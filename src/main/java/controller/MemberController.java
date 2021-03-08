@@ -172,25 +172,24 @@ public class MemberController {
         return memberService.insertTimer(hashMap);
     }
 
-    @PostMapping(value = "/gen/tmp/pw")
-    public HashMap<String, String> generateTmpPassword(@RequestParam("email") String email) {
+    @PostMapping(value = "/gen/tmp/pw") // 비밀번호 찾기
+    public MemberEmailAndRegDate generateTmpPassword(@RequestParam("email") String email) {
         HashMap<String, String> hashMap = new HashMap<>();
-
+        log.info("start");
         if (email == null) {
-            hashMap.put("code", "500");
-            return hashMap;
+            return new MemberEmailAndRegDate(null, null);
         }
         hashMap.put("valEmail", email);
         hashMap.put("upEmail", email);
 
         int affectedRow = memberService.generateTmpPassword(hashMap);
-
+        log.info(affectedRow);
         if (affectedRow == 0) {
-            hashMap.put("code", "400");
-        } else {
-            hashMap.put("code", "202");
+            return new MemberEmailAndRegDate(email, null);
         }
-        return hashMap;
+        Date regTime = memberService.getRegDate(email);
+        log.info(regTime);
+        return new MemberEmailAndRegDate(email, regTime);
     }
 
     @PostMapping(value = "/tmp/delete.do")
