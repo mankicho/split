@@ -36,14 +36,14 @@
     <select id="getNotes" parameterType="string" resultMap="noteBoxVO">
          select notebox_id,from_email,to_email,(select nickname from members where email = from_e) as nickname,notebox_uuid,delete_note_id,
         content,note_time,
-        ifnull((select count(*) from notebox as nbox where nbox.note_uuid = notebox_uuid and nbox.note_time > last_check_time group by nbox.note_uuid),0) as not_read
+        ifnull((select count(*) from noteBox as nbox where nbox.note_uuid = notebox_uuid and nbox.note_time > last_check_time group by nbox.note_uuid),0) as not_read
         from (select * from (select * From members_notebox where to_e = #{toEmail} ) as box left outer join noteBox as n
         on n.note_uuid = box.noteBox_uuid order by note_id desc limit 100000000)
         as t group by note_uuid order by noteBox_id asc;
     </select>
 
     <select id="getAllNotes" parameterType="string" resultMap="noteVO">
-        SELECT n.* from noteBox as n left outer join (select * from members_notebox group by noteBox_uuid) as m on n.note_uuid = m.noteBox_uuid
+        SELECT n.* from noteBox as n left outer join (select * from members_notebox group by notebox_uuid) as m on n.note_uuid = m.notebox_uuid
         and m.from_e = #{fromEmail}
         where n.note_uuid = #{uuid} and n.note_id > ifnull(m.delete_note_id,0);
     </select>
