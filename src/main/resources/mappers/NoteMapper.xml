@@ -34,9 +34,11 @@
     </insert>
 
     <select id="getNotes" parameterType="string" resultMap="noteBoxVO">
-         select notebox_id,from_email,to_email,(select nickname from members where email = from_e) as nickname,notebox_uuid,delete_note_id,
+           select notebox_id,'http://studyplanet.kr/resources/test.jpg' as file_path,from_email,to_email,
+           (select nickname from members where email = from_e) as nickname,notebox_uuid,delete_note_id,
         content,note_time,
-        ifnull((select count(*) from noteBox as nbox where nbox.note_uuid = notebox_uuid and nbox.note_time > last_check_time group by nbox.note_uuid),0) as not_read
+        ifnull((select count(*) from noteBox as nbox where nbox.note_uuid = notebox_uuid and nbox.note_time > last_check_time group by nbox.note_uuid),0)
+        as not_read
         from (select * from (select * From members_notebox where to_e = #{toEmail} ) as box left outer join noteBox as n
         on n.note_uuid = box.noteBox_uuid order by note_id desc limit 100000000)
         as t group by note_uuid order by noteBox_id asc;
