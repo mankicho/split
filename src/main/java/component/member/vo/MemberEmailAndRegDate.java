@@ -3,11 +3,11 @@ package component.member.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
 public class MemberEmailAndRegDate {
     private String email;
-    private Date regDate;
+    private Timestamp regDate;
 }

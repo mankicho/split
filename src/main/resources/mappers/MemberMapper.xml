@@ -65,7 +65,7 @@
     select email,regtime from members where phone_num = #{pNum};
     </select>
 
-    <select id="getRegDate" parameterType="string" resultType="java.util.Date">
+    <select id="getRegDate" parameterType="string" resultType="java.sql.Timestamp">
         select regtime from members where email = #{email}
     </select>
 

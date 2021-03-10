@@ -6,7 +6,8 @@ import component.member.dto.MemberTmpInfoDTO;
 import component.member.vo.*;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,5 +66,5 @@ public interface MemberMapper {
 
     int memberFollow(MemberFollowingDTO memberFollowingVO);
 
-    Date getRegDate(@Param("email") String email);
+    Timestamp getRegDate(@Param("email") String email);
 }

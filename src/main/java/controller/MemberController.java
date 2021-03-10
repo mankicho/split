@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -183,12 +184,12 @@ public class MemberController {
         hashMap.put("upEmail", email);
 
         int affectedRow = memberService.generateTmpPassword(hashMap);
-        log.info(affectedRow);
+        log.info("affectedRow = " + affectedRow);
         if (affectedRow == 0) {
             return new MemberEmailAndRegDate(email, null);
         }
-        Date regTime = memberService.getRegDate(email);
-        log.info(regTime);
+        Timestamp regTime = memberService.getRegDate(email);
+        log.info("regTime = " + regTime);
         return new MemberEmailAndRegDate(email, regTime);
     }
 

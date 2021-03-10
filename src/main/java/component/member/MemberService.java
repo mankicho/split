@@ -10,7 +10,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -189,7 +190,7 @@ public class MemberService {
         return memberMapper.memberFollow(memberFollowingVO);
     }
 
-    public Date getRegDate(String email) {
+    public Timestamp getRegDate(String email) {
         return memberMapper.getRegDate(email);
     }
 
