@@ -18,11 +18,11 @@
         <result property="pCode" column="pCode"/>
     </resultMap>
 
-    <resultMap id="memberDeviceVO" type="component.member.vo.MemberDeviceVO">
-        <result property="memberEmail" column="member_email"/>
-        <result property="deviceType" column="device_type"/>
-        <result property="deviceToken" column="device_token"/>
-    </resultMap>
+<!--    <resultMap id="memberDeviceVO" type="component.member.vo.MemberDeviceVO">-->
+<!--        <result property="memberEmail" column="member_email"/>-->
+<!--        <result property="deviceType" column="device_type"/>-->
+<!--        <result property="deviceToken" column="device_token"/>-->
+<!--    </resultMap>-->
 
     <insert id="insertPlan" parameterType="PlanDTO">
         INSERT INTO plan(member_email,plan_name,startdate,enddate,authtime,comp_condition,set_day,pub,place_setting,guild_name,tag,pCode)
@@ -93,10 +93,10 @@
         </choose>
     </select>
 
-    <select id="getDevicesForPushNotificationOfAttendance" parameterType="int" resultMap="memberDeviceVO">
-        select * from member_device where exists (
-        select member_email from plan where (now() between startdate and enddate) and ((set_day <![CDATA[&]]> #{weekday}) != 0));
-    </select>
+<!--    <select id="getDevicesForPushNotificationOfAttendance" parameterType="int" resultMap="memberDeviceVO">-->
+<!--        select * from member_device where exists (-->
+<!--        select member_email from plan where (now() between startdate and enddate) and ((set_day <![CDATA[&]]> #{weekday}) != 0));-->
+<!--    </select>-->
 
     <select id="getPlanVOByPlanLogId" parameterType="int" resultMap="planVO">
         select * from plan where plan_log_id = #{planLogId}

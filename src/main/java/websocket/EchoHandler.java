@@ -4,6 +4,7 @@ import component.member.vo.MemberDeviceVO;
 import component.member.MemberMapper;
 import component.note.NoteMapper;
 import component.plan.PlanMapper;
+import component.school.SchoolMapper;
 import component.zone.ZoneMapper;
 import fcm.FcmNotifier;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import websocket.execute.*;
 import websocket.execute.note.NoteProcessStrategy;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
@@ -35,6 +37,7 @@ public class EchoHandler extends TextWebSocketHandler {
     private final MemberMapper memberMapper;
     private final ZoneMapper zoneMapper;
     private final PlanMapper planMapper;
+    private final SchoolMapper schoolMapper;
     private final FcmNotifier fcmNotifier;
     private final NoteMapper noteMapper;
 
@@ -47,6 +50,9 @@ public class EchoHandler extends TextWebSocketHandler {
     private Map<String, String> userSessionNicknameMap = new HashMap<>(); // 유저 세션 ID : 유저 이메일
     private Map<String, WebSocketSession> cafeCodeSocketSessionMap = new HashMap<>(); // 카페 : 세션
     private Map<String, String> cafeCodeSessionIdMap = new HashMap<>(); // 카페명 : 세션 ID
+
+    // Date Format
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * @param session this function called when client' session is connected
@@ -78,19 +84,19 @@ public class EchoHandler extends TextWebSocketHandler {
 
     /**
      * @param webSocketSession
-     * @param message this function handles user's message
-     *                function for sending real-time notification to clients
-     *                ex 1. if client A brings plans of client B, then server send real-time message to client B
-     *                message form (JSON)
-     *                {
-     *                "toEmail" : {toEmail},
-     *                "fromEmail" : {fromEmail},
-     *                "title" : {message_title},
-     *                "message" : {message},
-     *                "messageSeq" : {message_sequence},
-     *                "checkFlag" : {check_flag},
-     *                "transferTime" : {transfer_time}
-     *                }
+     * @param message          this function handles user's message
+     *                         function for sending real-time notification to clients
+     *                         ex 1. if client A brings plans of client B, then server send real-time message to client B
+     *                         message form (JSON)
+     *                         {
+     *                         "toEmail" : {toEmail},
+     *                         "fromEmail" : {fromEmail},
+     *                         "title" : {message_title},
+     *                         "message" : {message},
+     *                         "messageSeq" : {message_sequence},
+     *                         "checkFlag" : {check_flag},
+     *                         "transferTime" : {transfer_time}
+     *                         }
      * @throws Exception
      */
     @Override
@@ -181,15 +187,18 @@ public class EchoHandler extends TextWebSocketHandler {
 
     // ------------------------------------------------- 시스템 알림 메세지 -------------------------------------------------
 
-    @Scheduled(cron = "0 */10 * * * *") // 출석체크 시스템 알림
+    @Scheduled(cron = "0 30 * * * *") // 출석체크 시스템 알림
     public void sendSystemMessageForAttendance() {
-        DayOfWeek weekday = LocalDate.now().getDayOfWeek();
-        List<MemberDeviceVO> deviceList = planMapper.getDevicesForPushNotificationOfAttendance(getSquareOfWeekday(weekday));
-        if (deviceList != null && !deviceList.isEmpty()) {
-            deviceList.forEach(vo -> {
-                fcmNotifier.sendFCM(vo.getDeviceToken(), "시스템 알림", "출석체크 30분 전입니다.");
+        DayOfWeek weekday = LocalDate.now().getDayOfWeek(); // 요일
+        List<MemberDeviceVO> deviceList = schoolMapper.getDevicesForPushNotificationOfAttendance(getSquareOfWeekday(weekday)); // 출석체크가 임박한 유저의 디바이스 토큰 가져오기
+
+        log.info("deviceList = " + deviceList);
+        if (deviceList != null && !deviceList.isEmpty()) { // 디바이스 토큰 값ㅇ ㅣ존재하면
+            deviceList.forEach(vo -> { // for 문 돌면서 push alarm 전송
+                fcmNotifier.sendFCM(vo.getDeviceToken(), "시스템 알림",
+                        memberDeviceTokenToString(vo));
                 try {
-                    WebSocketSession user = userEmailSocketSessionMap.get(vo.getMemberEmail());
+                    WebSocketSession user = userEmailSocketSessionMap.get(vo.getMemberEmail()); // 웹소켓으로 실시간 알림도 전송
                     // todo 1. 알림 보낸 내역에 저장.
                     if (user != null) {
                         user.sendMessage(new TextMessage("출석체크 30분 전입니다."));
@@ -236,4 +245,7 @@ public class EchoHandler extends TextWebSocketHandler {
         }
     }
 
+    private String memberDeviceTokenToString(MemberDeviceVO memberDeviceVO) {
+        return "회원님의 '" + memberDeviceVO.getSchoolName() + "' 출석 인증까지 30분 남았습니다!";
+    }
 }
