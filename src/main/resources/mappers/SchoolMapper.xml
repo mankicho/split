@@ -3,43 +3,56 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.school.SchoolMapper">
 
+    <!-- get member device token -->
+    <resultMap id="memberDeviceVO" type="component.member.vo.MemberDeviceVO">
+        <result property="memberEmail" column="member_email"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="deviceToken" column="device_token"/>
+        <result property="schoolName" column="school_name"/>
+    </resultMap>
+
+    <!-- class vo -->
     <resultMap id="classVO" type="component.school.vo.ClassVO">
         <result property="classId" column="class_id"/>
-        <result property="schoolId" column="school_id"/>
-        <result property="weekdayType" column="weekday_type"/>
+        <!--        <result property="schoolId" column="school_id"/>-->
+        <!--        <result property="weekdayType" column="weekday_type"/>-->
         <result property="authTime" column="auth_time"/>
         <result property="allMembers" column="all_members"/>
         <result property="authMembers" column="auth_members"/>
     </resultMap>
 
+    <!-- school hashtag -->
     <resultMap id="hashTags" type="component.school.vo.SchoolHashTags">
         <result property="schoolId" column="school_id"/>
+        <result property="hashtagsId" column="hashtags_id"/>
         <result property="hashTag" column="hashtags"/>
     </resultMap>
 
+    <!-- school vo -->
     <resultMap id="schoolVO" type="component.school.vo.SchoolVO">
-        <result property="schoolId" column="school_id"/>
         <result property="categoryId" column="category_id"/>
-        <result property="memberEmail" column="member_email"/>
+        <result property="schoolId" column="school_id"/>
         <result property="schoolName" column="school_name"/>
+        <result property="setLocation" column="set_location"/>
         <result property="oneLineMessage" column="one_line_message"/>
         <result property="imagePath" column="image_path"/>
-        <result property="planetName" column="planet_name"/>
-        <result property="allMembersInSchool" column="all_members_in_school"/>
+        <result property="allMembers" column="all_members"/>
 
         <collection property="hashTags" resultMap="hashTags"/>
     </resultMap>
+
+    <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
-     select s.school_id,s.category_id,s.member_email,s.school_name,s.one_line_message,s.image_path,
-     p.planet_name,h.hashtags,amis.all_members_in_school
-     from school as s left outer join planet as p
-     on s.set_location = p.planet_code left outer join school_hashtags as h on s.school_id = h.school_id
-     left outer join
-     (select c.school_id,sum(tmp.all_members) as all_members_in_school from class as c left outer join
-     (select *,ifnull(count(class_id),0) as all_members from class_members where date_format(now(),'%Y-%m-%d')
-     between start_date and end_date group by class_id) as tmp
-	 on  c.class_id = tmp.class_id group by school_id) as amis on amis.school_id = s.school_id
-     where category_id = #{categoryId};
+       select tmp.category_id,tmp.school_id,tmp.school_name,tmp.set_location,tmp.one_line_message,tmp.image_path
+        ,tmp.all_members,h.hashtags_id,h.hashtags from
+        (select s.category_id,c.school_id,s.school_name,s.set_location,s.one_line_message,
+        s.image_path,count(s.school_id) as all_members From school as s
+        left outer join class_members as c on c.school_id = s.school_id group by s.school_id) as tmp -- 학교, 총 재학인원
+        left outer join school_hashtags as h on h.school_id = tmp.school_id -- 해시태그
+        <if test="value != 0">
+            where category_id = #{categoryId};
+        </if>
+
     </select>
 
     <insert id="registerSchool" parameterType="SchoolDTO">
@@ -53,13 +66,15 @@
     </insert>
 
     <select id="getClasses" parameterType="hashmap" resultMap="classVO">
-          select c.*,ifnull(tmp.all_members,0) as all_members,ifnull(tmp2.today_members,0) as auth_members from class as c left outer join
-         (select class_id, count(*) as all_members from class_members where date_format(#{date},'%Y-%m-%d')
-         between start_date and end_date group by class_id) as tmp
-         on c.class_id = tmp.class_id left outer join
-         (select class_id,count(*) as today_members from class_auth_log where date_format(auth_date,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d') group by class_id)
-         as tmp2 on c.class_id = tmp2.class_id
-         where weekday_type <![CDATA[&]]> #{weekday} != 0 and school_id = #{schoolId};
+        select * from
+        (select * ,count(*) as all_members from
+        (select *  from class_members as c where school_id = #{schoolId} and date_format(#{selectedDate},'%Y-%m-%d')
+        between start_date and end_date and set_day <![CDATA[&]]> #{weekday} != 0) as ttmp -- 선택한 날짜, 유저의 요일에 맞게 가져옴
+        group by class_id) as tmp -- 경찰학교 클릭했을떄, class_id 별로 총 학생 수
+        left outer join ( -- 오늘 출석한 유저의 총 숫자
+        select school_id,class_id,count(*) as auth_members from class_auth_log
+        where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') group by school_id,class_id) as auth_table
+        on auth_table.school_id = tmp.school_id and auth_table.class_id = tmp.class_id;
     </select>
 
     <insert id="saveHashTag" parameterType="hashmap">
@@ -72,7 +87,7 @@
     <insert id="saveSearchKeyword" parameterType="java.util.Map">
         INSERT INTO school_search_log (search_keyword,num) values
         <foreach collection="list" item="item" separator=",">
-        (#{item.searchKeyword},#{item.num})
+            (#{item.searchKeyword},#{item.num})
         </foreach>
     </insert>
 
@@ -93,4 +108,21 @@
         INSERT INTO class (school_id,weekday_type,auth_time) values
          (#{schoolId},#{weekdayType},time_format(#{authTime},'%H:%i:%s'))
     </insert>
+
+    <insert id="joinClass" parameterType="ClassJoinDTO">
+        INSERT INTO class_members
+        values (null,#{schoolId},#{classId},#{setDay},#{memberEmail},#{startDate},#{endDate},#{setPaymentAmount})
+    </insert>
+
+    <select id="getDevicesForPushNotificationOfAttendance" parameterType="int" resultMap="memberDeviceVO">
+        select *,(select school_name from school where member_email = m.member_email) as school_name
+        from member_device as m where exists(
+        select member_email from
+        (select * from class_members where (date_format(now(),'%Y-%m-%d') between start_date and end_date)
+        and set_day <![CDATA[&]]> #{weekday} != 0) as tmp -- 오늘 출석체크 해야하는 유저 조회
+        left outer join class as c on c.class_id = tmp.class_id -- 클래스 고유정보 조회
+        where time_format(now(),'%H:%i:%s') <![CDATA[<=]]> auth_time and -- 출석할 시간인지 ??
+        time_format(date_add(now(), INTERVAL 1 HOUR),'%H:%i:%s') <![CDATA[>=]]> auth_time); -- 1시간 범위
+    </select>
 </mapper>
+

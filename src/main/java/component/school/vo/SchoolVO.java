@@ -6,14 +6,12 @@ import java.util.List;
 
 @Data
 public class SchoolVO {
-    private int schoolId;
     private int categoryId;
-    private String memberEmail;
+    private int schoolId;
     private String schoolName;
+    private String setLocation;
     private String oneLineMessage;
     private String imagePath;
-    private String planetName;
-    private int allMembersInSchool;
-
+    private int allMembers;
     private List<SchoolHashTags> hashTags;
 }
