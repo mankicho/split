@@ -2,7 +2,7 @@ package controller;
 
 import file.FileUploadService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.util.FileCopyUtils;
@@ -15,7 +15,7 @@ import java.io.*;
 
 @RestController
 @RequestMapping(value = "/file")
-@Log4j
+@Log4j2
 @RequiredArgsConstructor
 public class FileController {
     private final FileUploadService fileUploadService;
@@ -27,17 +27,21 @@ public class FileController {
     private String home;
 
     @PostMapping(value = "/main/upload")
-    public void fileUploadMain(@RequestParam("file") MultipartFile multipartFile) {
+    public void fileUploadMain(HttpServletRequest request, MultipartFile multipartFile) {
+        if (multipartFile == null) {
+            log.info("nullnullnullnullnull");
+            return;
+        }
         String path = home + "/profile/main/"; // 파일 경로
         fileUploadService.fileUpload(path, multipartFile);
-        log.info("called");
+        log.info("multipartFile = " + multipartFile);
     }
 
     @PostMapping(value = "/back/upload")
     public void fileUploadBackground(@RequestParam("file") MultipartFile multipartFile) {
-        String path = home + "/profile/main/"; // 파일 경로
+        String path = home + "/profile/back/"; // 파일 경로
         fileUploadService.fileUpload(path, multipartFile);
-        log.info("called");
+        log.info("multipartFile = " + multipartFile);
     }
 
     @GetMapping(value = "/get.do", produces = MediaType.IMAGE_JPEG_VALUE)

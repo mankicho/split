@@ -27,6 +27,5 @@ public class SPLITException {
         ErrorCollector.collect(message);
         log.info("message = " + message);
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-        e.printStackTrace();
     }
 }

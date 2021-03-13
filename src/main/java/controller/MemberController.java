@@ -4,14 +4,19 @@ import component.member.*;
 import component.member.dto.MemberDTO;
 import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
+import component.member.view.UpdatePasswordView;
 import component.member.vo.*;
+import file.FileUploadService;
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,26 +31,16 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/member")
 @Log4j2
+@RequiredArgsConstructor
 public class MemberController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    /**
-     * member service(register, login, find password and so on)
-     */
-    @Setter(onMethod_ = @Autowired)
-    private MemberService memberService;
-
-    /**
-     * password encoder
-     */
-    @Setter(onMethod_ = {@Autowired})
-    private BCryptPasswordEncoder passwordEncoder; // todo password encoding function
-
-    /**
-     * for generating token (to use application service)
-     */
-    @Setter(onMethod_ = {@Autowired})
-    private TokenGeneratorService tokenGeneratorService; // todo return authentication token
+    // member service(register, login, find password and so on)
+    private final MemberService memberService;
+    // password encoder
+    private final BCryptPasswordEncoder passwordEncoder; // password encoding function
+    // for generating token (to use application service)
+    private final TokenGeneratorService tokenGeneratorService; // return authentication token
 
     @ExceptionHandler(NullPointerException.class) // Null 값 handler
     public HashMap<String, String> handlerNullPointerException(Exception e) {
@@ -92,6 +87,7 @@ public class MemberController {
         return "fail";
     }
 
+    // 트랜잭션 구현 필요
     @PostMapping(value = "/register.do")
     public int insertMember(@RequestBody MemberDTO memberDTO) {
         String pw = memberDTO.getPw();
@@ -107,22 +103,22 @@ public class MemberController {
     }
 
     @PostMapping(value = "/update.do")
-    public HashMap<String, String> updatePassword(@RequestParam("email") String email, @RequestParam("pw") String pw) {
-        HashMap<String, String> hashMap = new HashMap<>();
+    public UpdatePasswordView updatePassword(@RequestParam("email") String email, @RequestParam("pw") String pw) {
+        UpdatePasswordView view = new UpdatePasswordView();
         if (email == null || pw == null) {
-            hashMap.put("code", "400");
-            return hashMap;
+            view.setCode("400");
+            return view;
         }
 
         String encodedPw = passwordEncoder.encode(pw);
         int updatedRow = memberService.updatePassword(email, encodedPw);
 
         if (updatedRow == 0) {
-            hashMap.put("code", "500");
+            view.setCode("500");
         } else {
-            hashMap.put("code", "200");
+            view.setCode("200");
         }
-        return hashMap;
+        return view;
     }
 
     // todo 2.

@@ -39,10 +39,11 @@ public class FcmNotifier {
                     .setTtl(3600 * 1000)
                     .setPriority(AndroidConfig.Priority.NORMAL)
                     .setNotification(AndroidNotification.builder()
-                            .setTitle(title)
+                            .setTitle(title).setIcon("http://165.246.197.126:8084/resources/logo.png")
                             .setBody(content)
                             .setColor("#f45342").build())
                     .build())
+                    .putData("icon", "제목입니다").putData("here", "내용입니다")
                     .setToken(tokenId)
                     .build();
 
