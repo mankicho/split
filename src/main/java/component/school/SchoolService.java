@@ -1,11 +1,14 @@
 package component.school;
 
 import component.member.vo.MemberDeviceVO;
+import component.school.dto.ClassAuthDTO;
 import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
+import component.school.view.DefaultSchoolResultView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
+import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.ibatis.session.SqlSession;
@@ -67,4 +70,24 @@ public class SchoolService {
         return schoolMapper.joinClass(classJoinDTO);
     }
 
+    public DefaultSchoolResultView classAuth(ClassAuthDTO classAuthDTO, long timestamp) {
+        DefaultSchoolResultView view = new DefaultSchoolResultView();
+        if (new Date(timestamp).compareTo(new Date()) > 0) { // qr 코드의 timestamp 값이 현재보다 크면
+            SchoolErrorCode errorCode = SchoolErrorCode.FutureThanCurrentTimeError;
+            return new DefaultSchoolResultView(errorCode);
+        }
+
+        int insertedRow = schoolMapper.classAuth(classAuthDTO);
+        view.setInsertedRow(insertedRow);
+
+        if (insertedRow == 0) {
+            view.setStatus(500);
+            view.setMessage("server error");
+        } else {
+            view.setStatus(202);
+            view.setMessage("success");
+        }
+        return view;
+
+    }
 }

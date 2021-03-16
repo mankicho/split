@@ -1,26 +1,21 @@
 package controller;
 
 import component.school.SchoolService;
+import component.school.dto.ClassAuthDTO;
 import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
-import component.school.view.JoinClassResult;
+import component.school.view.DefaultSchoolResultView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
+import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import rank.RankServerStatus;
 import rank.SearchKeywordBroker;
-//import rank.KeywordCollector;
-//import rank.UserKeywordExtractor;
-//import rank.KeywordCollector;
-//import rank.UserKeywordExtractor;
+import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,7 +23,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/school")
@@ -38,6 +32,7 @@ public class SchoolController {
 
     private final SchoolService schoolService;
 
+    private final TokenGeneratorService tokenGeneratorService;
     private final SearchKeywordBroker broker = new SearchKeywordBroker();
 
 //    @ExceptionHandler(ParseException.class)
@@ -81,7 +76,7 @@ public class SchoolController {
 
     // 학교의 클래스 정보들 가져오기
     @PostMapping(value = "/class/get.do")
-    public List<ClassVO> getClasses(@RequestBody @Valid ClassDTO classDTOForSelect) {
+    public List<ClassVO> getClasses(@RequestBody ClassDTO classDTOForSelect) {
         log.info(classDTOForSelect);
         return schoolService.getClasses(classDTOForSelect);
     }
@@ -107,9 +102,9 @@ public class SchoolController {
     }
 
     @PostMapping(value = "/join/class")
-    public JoinClassResult joinClass(@RequestBody @Valid ClassJoinDTO classJoinDTO) throws ParseException {
+    public DefaultSchoolResultView joinClass(@RequestBody @Valid ClassJoinDTO classJoinDTO) throws ParseException {
         log.info(classJoinDTO);
-        JoinClassResult result = new JoinClassResult(); // 클래스 신청에 대한 유저 view
+        DefaultSchoolResultView result = new DefaultSchoolResultView(); // 클래스 신청에 대한 유저 view
 
         int insertedRow = schoolService.joinClass(classJoinDTO);
 
@@ -127,6 +122,28 @@ public class SchoolController {
 
         log.info(result);
         return result;
+    }
 
+    @GetMapping(value = "/class/auth")
+    public DefaultSchoolResultView classAuthDo(HttpServletRequest request) {
+        DefaultSchoolResultView view = new DefaultSchoolResultView(); // user view
+        // 파라미터 가져오기
+        int schoolId = Integer.parseInt(request.getParameter("schoolId"));
+        int classId = Integer.parseInt(request.getParameter("classId"));
+        String qrToken = request.getParameter("qr-token");
+        String emailToken = request.getParameter("mail-token");
+        String now = request.getParameter("now");
+
+        // timestamp 값
+        long timestamp = Long.parseLong(now);
+
+        // 토큰값에서 subject 추출.
+        String planet = tokenGeneratorService.getSubject(qrToken);
+        String email = tokenGeneratorService.getSubject(emailToken);
+
+        // 인증에 필요한 데이터 dto
+        ClassAuthDTO authDTO = new ClassAuthDTO(schoolId, classId, planet, email);
+
+        return schoolService.classAuth(authDTO, timestamp);
     }
 }

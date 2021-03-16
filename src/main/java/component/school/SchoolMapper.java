@@ -1,6 +1,7 @@
 package component.school;
 
 import component.member.vo.MemberDeviceVO;
+import component.school.dto.ClassAuthDTO;
 import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
@@ -31,4 +32,5 @@ public interface SchoolMapper {
 
     List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(@Param("weekday") int weekday);
 
+    int classAuth(ClassAuthDTO classAuthDTO);
 }

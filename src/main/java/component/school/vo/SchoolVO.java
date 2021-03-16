@@ -13,5 +13,7 @@ public class SchoolVO {
     private String oneLineMessage;
     private String imagePath;
     private int allMembers;
+    private int sumPerson;
+    private double avgPerson;
     private List<SchoolHashTags> hashTags;
 }
