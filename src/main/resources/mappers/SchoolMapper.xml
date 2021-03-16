@@ -45,10 +45,10 @@
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
         select tmp.category_id,tmp.school_id,tmp.school_name,tmp.set_location,tmp.one_line_message,tmp.image_path
-        ,tmp.all_members,tttmp.sum_person,tttmp.avg_person,h.hashtags_id,h.hashtags
+        ,tmp.all_members,tttmp.sum_person,tttmp.avg_person,tmp.cumulative_amount,h.hashtags_id,h.hashtags
         from
         (select s.category_id,s.school_id,s.school_name,s.set_location,s.one_line_message,
-        s.image_path,count(s.school_id) as all_members
+        s.image_path,s.cumulative_amount,count(s.school_id) as all_members
         From school as s
         left outer join class_members as c on c.school_id = s.school_id group by s.school_id) as tmp -- 학교, 총 재학인원
         left outer join school_hashtags as h on h.school_id = tmp.school_id
