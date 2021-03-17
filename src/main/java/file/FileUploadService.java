@@ -14,10 +14,10 @@ import java.util.UUID;
 @Component
 public class FileUploadService {
 
-    public void fileUpload(String path, MultipartFile multipartFile) {
+    public int fileUpload(String path, MultipartFile multipartFile) {
         String ext = getExtension(multipartFile);
         if (ext == null) {
-            return;
+            return -1; // 확장자 없음
         }
         File targetFile = new File(path + getUUID() + ext); // file 생성
         try {
@@ -31,8 +31,12 @@ public class FileUploadService {
         log.info("file upload finish");
         log.info("----------------");
         if (targetFile.exists()) {
-
+            log.info(targetFile);
+            log.info(targetFile.getPath());
+            log.info(targetFile.getAbsolutePath());
+            return 1; // 파일 업로드 성공
         }
+        return 0; // 파일업로드 실패
     }
 
     private String getUUID() { // 고유 식별자 만들기

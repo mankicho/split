@@ -25,6 +25,10 @@ public class SearchKeywordBroker {
     public SearchKeywordBroker() {
         try {
             ws = connect();
+
+            if (ws.getState().compareTo(WebSocketState.OPEN) == 0) {
+                getKeywordNumFromRankServer();
+            }
         } catch (IOException | WebSocketException e) {
             e.printStackTrace();
         }
