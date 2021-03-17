@@ -2,10 +2,12 @@ package controller;
 
 import component.plan.PlanAttendanceDTO;
 import component.plan.auth.PlanAuthService;
+import component.school.dto.ClassAuthDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/plan/auth")
+@Log4j2
 public class PlanAuthController {
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -31,25 +34,14 @@ public class PlanAuthController {
     @Setter(onMethod_ = {@Autowired})
     private TokenGeneratorService tokenGeneratorService;
 
-    @GetMapping(value = "/check.do")
-    public int authDo(HttpServletRequest request) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        String token = request.getParameter("qr-token");
-        String emailToken = request.getParameter("mail-token");
-        String planet = tokenGeneratorService.getSubject(token);
-        String email = tokenGeneratorService.getSubject(emailToken);
-        hashMap.put("token", token); // 토큰 (15 초마다 바뀌는 QR 코드)
-        hashMap.put("planet", planet); // 어느곳에서 인증하는지
-        hashMap.put("authenticateTime", format.format(new Date())); // 현재시간(인증할 때)
-        hashMap.put("email", email); // 이메일
-        hashMap.put("authenticateFlag", true);
-        hashMap.put("weekday", new Date().getDay());
-
-        return planAuthService.planAuthLog(hashMap);
-    }
+//    @GetMapping(value = "/check.do")
+//    public int authDo(HttpServletRequest request) {
+//
+//    }
 
     /**
      * 플랜 출석기록 가져오기
+     *
      * @param planLogId
      * @return
      */

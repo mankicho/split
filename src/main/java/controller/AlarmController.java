@@ -28,13 +28,6 @@ public class AlarmController {
     public int exceptionHandler() {
         return 0;
     }
-//    @ExceptionHandler({
-//            HttpMessageNotReadableException.class,
-//            JsonParseException.class
-//    })
-//    public JsonParseMessage handlerJsonParseException() {
-//        return new JsonParseMessage("적절하지 않은 데이터 입니다.");
-//    }
 
     // 개인의 알림 다 가져오기
     @PostMapping(value = "/get.do")

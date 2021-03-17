@@ -2,6 +2,7 @@ package controller;
 
 import component.member.MemberService;
 import component.sms.SMSService;
+import component.sms.SMSView;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,23 +34,14 @@ public class SMSController {
      * @return
      */
     @PostMapping(value = "/reg/receive.do")
-    public HashMap<String, String> sendMessageForReg(HttpServletRequest request) {
-        HashMap<String, String> hashMap = new HashMap<>();
+    public SMSView sendMessageForReg(HttpServletRequest request) {
         String phoneNumber = request.getParameter("pNum");
 
         String pNumInDB = memberService.isExistPhoneNumber(phoneNumber);
-        if (pNumInDB != null && pNumInDB.equals(phoneNumber)) {
-            hashMap.put("status", "600"); // 이미 존재하는 핸드폰번호
-            return hashMap;
-        }
-        int code = smsService.sendSMSForReg(phoneNumber);
-        if (code > 999) {
-            hashMap.put("status", "202");
-        } else {
-            hashMap.put("status", "500");
-        }
-        hashMap.put("code", code + "");
-        return hashMap;
+//        if (pNumInDB != null && pNumInDB.equals(phoneNumber)) {
+//            return new SMSView(-1, 500);
+//        }
+        return smsService.sendSMSForReg(phoneNumber);
     }
 
     /**
@@ -57,14 +49,15 @@ public class SMSController {
      * @return
      */
     @PostMapping(value = "/upt/receive.do")
-    public int sendMessageForUpg(HttpServletRequest request) {
+    public SMSView sendMessageForUpg(HttpServletRequest request) {
         String phoneNumber = request.getParameter("pNum");
-        log.info(phoneNumber);
         String pNumInDB = memberService.isExistPhoneNumber(phoneNumber);
-        System.out.println("pNum = " + pNumInDB);
-        if (pNumInDB == null || pNumInDB.equals("")) {
-            return -1;
-        }
+//        if (pNumInDB == null || pNumInDB.equals("")) {
+//            SMSView view = new SMSView();
+//            view.setStatus(500);
+//            view.setCode(-1);
+//            return view;
+//        }
         return smsService.sendSMSForFindEmail(phoneNumber);
     }
 }

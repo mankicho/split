@@ -11,6 +11,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,6 +36,14 @@ import java.util.*;
 public class MemberController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+
+    @Value("#{path['local_home']}")
+    private String home;
+
+    //    @Value("#{path['server_home']}")
+//    private String home;
+
+    private final FileUploadService fileUploadService;
     // member service(register, login, find password and so on)
     private final MemberService memberService;
     // password encoder
@@ -87,11 +96,25 @@ public class MemberController {
         return "fail";
     }
 
+
+    // todo 1. 변경될 로직(회원가입)
+    // 트랜잭션 구현 필요
+    @PostMapping(value = "/register2.do")
+    public int insertMember(HttpServletRequest request, @RequestParam("file") MultipartFile multipartFile) {
+        String data = request.getParameter("memberDTO");
+        log.info("data = " + data);
+
+        int savedFile = fileUploadService.fileUpload(home, multipartFile);
+        log.info(savedFile);
+        return memberService.registerMember(data);
+    }
+
+
     // 트랜잭션 구현 필요
     @PostMapping(value = "/register.do")
     public int insertMember(@RequestBody MemberDTO memberDTO) {
         String pw = memberDTO.getPw();
-        // todo 1. pw check(right format?)
+//        // todo 1. pw check(right format?)
         String encodedPassword = passwordEncoder.encode(pw); // pw 인코딩
         memberDTO.setPw(encodedPassword);
 

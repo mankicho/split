@@ -20,20 +20,21 @@ import java.io.*;
 public class FileController {
     private final FileUploadService fileUploadService;
 
-//    @Value("#{path['local_home']}")
-//    private String home;
-//
-    @Value("#{path['server_home']}")
+    @Value("#{path['local_home']}")
     private String home;
 
+//    @Value("#{path['server_home']}")
+//    private String home;
+
     @PostMapping(value = "/main/upload")
-    public void fileUploadMain(HttpServletRequest request, MultipartFile multipartFile) {
+    public void fileUploadMain(MultipartFile multipartFile) {
         if (multipartFile == null) {
-            log.info("nullnullnullnullnull");
+            log.info("multipartFile is null");
             return;
         }
         String path = home + "/profile/main/"; // 파일 경로
-        fileUploadService.fileUpload(path, multipartFile);
+        int savedFile = fileUploadService.fileUpload(path, multipartFile);
+
         log.info("multipartFile = " + multipartFile);
     }
 

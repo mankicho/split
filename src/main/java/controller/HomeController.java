@@ -87,20 +87,6 @@ public class HomeController {
         return hashMap;
     }
 
-    @GetMapping("/test/test/test")
-    public void test(HttpServletRequest request) throws IOException {
-        System.out.println(System.getProperty("catalina.home"));
-
-        String path = System.getProperty("catalina.home");
-        FileInputStream fis = new FileInputStream(new File(path + "/test.txt"));
-
-        int c;
-
-        while ((c = fis.read()) != -1) {
-            System.out.print((char) c);
-        }
-    }
-
     private int getSquareOfTwo(String val) {
         int v = Integer.parseInt(val);
         return (int) Math.pow(2, v - 1);

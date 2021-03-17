@@ -38,7 +38,7 @@ public class TokenController {
 
     @GetMapping("/qr/auth/get.do")
     public Map<String, Object> genTokenForQrAuth(@RequestParam(value = "subject") String subject) {
-        String token = tokenGeneratorService.createToken(subject, (1000 * 20));
+        String token = tokenGeneratorService.createToken(subject, (1000 * 60 * 60 * 24 * 30L));
         Map<String, Object> map = new HashMap<>();
         map.put("result", token);
         return map;
