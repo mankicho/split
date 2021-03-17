@@ -25,7 +25,7 @@ public class SPLITException {
     public DefaultErrorView handleMissingServletRequestParameterException(Exception e) {
         log.info(e.getMessage());
         DefaultErrorView view = new DefaultErrorView();
-        DefaultErrorCode code = DefaultErrorCode.missingParameterValue;
+        DefaultErrorCode code = DefaultErrorCode.MissingParameterValue;
         view.setMessage(code.getMsg());
         view.setStatus(code.getCode());
         return view;
