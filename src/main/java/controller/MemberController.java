@@ -51,33 +51,9 @@ public class MemberController {
     // for generating token (to use application service)
     private final TokenGeneratorService tokenGeneratorService; // return authentication token
 
-    @ExceptionHandler(NullPointerException.class) // Null 값 handler
-    public HashMap<String, String> handlerNullPointerException(Exception e) {
-        e.printStackTrace();
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("error", e.getMessage());
-        hashMap.put("code", "500");
-        return hashMap;
-    }
-
-    @ExceptionHandler({
-            JwtException.class
-    })
-    public HashMap<String, Object> handlerTokenException(JwtException e) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("code", 500);
-        hashMap.put("error", "invalid token");
-        return hashMap;
-    }
-
-    /**
-     * @param request member login(normal or tmp password)
-     * @return
-     */
+    // 로그인함수 (이메일, 비밀번호)
     @RequestMapping(value = "/login.do")
-    public String memberLogin(HttpServletRequest request) {
-        String email = request.getParameter("email"); // 이메일
-        String pw = request.getParameter("pw"); // 비밀번호
+    public String memberLogin(@RequestParam("email") String email,@RequestParam("pw") String pw) {
         MemberVO memberVO = memberService.selects(email); // db 에서 회원정보 조회
         if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) { // db 에 저장된 정보와 사용자 입력 비밀번호를 인코딩한 정보가 일치하면
             int affectedRow = memberService.autoLogin(email); // 자동로그인

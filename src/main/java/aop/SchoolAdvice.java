@@ -43,7 +43,7 @@ public class SchoolAdvice {
     }
 
     @Around("execution(* component.school.SchoolService.*(..))")
-    public Object aroundAdvice(ProceedingJoinPoint pjp) throws Throwable {
+    public Object timeToProcess(ProceedingJoinPoint pjp) throws Throwable {
         // before advice
         sw.start();
 
