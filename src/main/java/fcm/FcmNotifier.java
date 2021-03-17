@@ -16,11 +16,11 @@ import java.io.IOException;
 @Log4j
 public class FcmNotifier {
 
-//    @Value("#{path['fcm_local']}")
-//    private String fcmPath;
-
-    @Value("#{path['fcm_server']}")
+    @Value("#{path['fcm_local']}")
     private String fcmPath;
+//
+//    @Value("#{path['fcm_server']}")
+//    private String fcmPath;
 
     public void sendFCM(String tokenId, String title, String content) {
         try {

@@ -1,16 +1,12 @@
 package controller;
 
-import component.plan.PlanService;
-import component.plan.PlanVO;
-import component.zone.ZoneVO;
+import component.school.SchoolService;
+import component.zone.vo.ZoneVO;
 import component.zone.ZoneService;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/split/zone")
 @Log4j
+@RequiredArgsConstructor
 public class ZoneController {
 
     @ExceptionHandler({
@@ -33,14 +30,7 @@ public class ZoneController {
         return hashMap;
     }
 
-    /**
-     * communicate with zone DB Object
-     */
-    @Setter(onMethod_ = {@Autowired})
-    private ZoneService zoneService;
-
-    @Setter(onMethod_ = {@Autowired})
-    private PlanService planService;
+    private final ZoneService zoneService; // 지도 DB 에 접근하는 Service
 
     /**
      * get zones by 500M around certain point(distance can changed)
@@ -50,17 +40,11 @@ public class ZoneController {
     @GetMapping(value = "/get.do") // 지도에 표시할 공간 가져오기
     public List<ZoneVO> getZones() {
         return zoneService.selectZones();
-
     }
 
     @GetMapping(value = "/check/exist")
     public int isExist(@RequestParam("code") String code) {
         return zoneService.isExist(code);
-    }
-
-    @GetMapping(value = "/all/plan/at/certain/zone")
-    public List<PlanVO> selectsAllPlansAtCertainZone(@RequestParam("placeSetting") String placeSetting) {
-        return planService.selectsAllPlansAtCertainZone(placeSetting);
     }
 
     @GetMapping(value = "/auto/complete")

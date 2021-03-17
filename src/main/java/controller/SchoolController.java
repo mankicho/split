@@ -5,10 +5,9 @@ import component.school.dto.ClassAuthDTO;
 import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
-import component.school.view.DefaultSchoolResultView;
+import exception.view.DefaultErrorView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
-import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
@@ -18,7 +17,6 @@ import rank.SearchKeywordBroker;
 import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,15 +32,6 @@ public class SchoolController {
 
     private final TokenGeneratorService tokenGeneratorService;
     private final SearchKeywordBroker broker = new SearchKeywordBroker();
-
-//    @ExceptionHandler(ParseException.class)
-//    @ResponseBody
-//    public JoinClassResult handleValidationException(ParseException e) {
-//        JoinClassResult result = new JoinClassResult();
-//        result.setStatus(400);
-//        result.setInsertedRow(-1);
-//        return result;
-//    }
 
     // 학교 개설
     @PostMapping(value = "/create.do")
@@ -74,6 +63,11 @@ public class SchoolController {
         return schoolService.getSchools(categoryId);
     }
 
+    @GetMapping(value = "/by/planet/code/get.do")
+    public List<SchoolVO> getSchoolsByPlanetCode(@RequestParam("planetCode") String planetCode) {
+        return schoolService.getSchoolsByPlanetCode(planetCode);
+    }
+
     // 학교의 클래스 정보들 가져오기
     @PostMapping(value = "/class/get.do")
     public List<ClassVO> getClasses(@RequestBody ClassDTO classDTOForSelect) {
@@ -101,18 +95,17 @@ public class SchoolController {
         return array.toList();
     }
 
+    // 클래스 가입하기
     @PostMapping(value = "/join/class")
-    public DefaultSchoolResultView joinClass(@RequestBody @Valid ClassJoinDTO classJoinDTO) throws ParseException {
+    public DefaultErrorView joinClass(@RequestBody ClassJoinDTO classJoinDTO) throws ParseException {
         log.info(classJoinDTO);
-        DefaultSchoolResultView result = new DefaultSchoolResultView(); // 클래스 신청에 대한 유저 view
+        DefaultErrorView result = new DefaultErrorView(); // 클래스 신청에 대한 유저 view
 
         int insertedRow = schoolService.joinClass(classJoinDTO);
 
         if (insertedRow == -1) {
             throw new ParseException(classJoinDTO.getStartDate() + " or " + classJoinDTO.getEndDate(), 0);
         }
-
-        result.setInsertedRow(insertedRow);
 
         if (insertedRow == 0) {
             result.setStatus(500); // DB 오류
@@ -125,8 +118,7 @@ public class SchoolController {
     }
 
     @GetMapping(value = "/class/auth")
-    public DefaultSchoolResultView classAuthDo(HttpServletRequest request) {
-        DefaultSchoolResultView view = new DefaultSchoolResultView(); // user view
+    public DefaultErrorView classAuthDo(HttpServletRequest request) {
         // 파라미터 가져오기
         int schoolId = Integer.parseInt(request.getParameter("schoolId"));
         int classId = Integer.parseInt(request.getParameter("classId"));
