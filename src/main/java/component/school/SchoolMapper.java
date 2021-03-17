@@ -16,6 +16,8 @@ import java.util.Map;
 public interface SchoolMapper {
     List<SchoolVO> getSchools(int categoryId); // 학교정보 가져오기
 
+    List<SchoolVO> getSchoolsByPlanetCode(@Param("planetCode") String planetCode);
+
     int registerSchool(SchoolDTO schoolDTO); // 학교 만들기
 
     int saveHashTag(HashMap<String, Object> hashMap); // 학교 해시태그 저장

@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+// alarm message 는 alarm message 의 JSON data 자체를 DB 에 저장한다. json data 를 저장하기위한 handler class.
 public class AlarmJsonTypeHandler extends BaseTypeHandler<Object> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
@@ -19,21 +20,18 @@ public class AlarmJsonTypeHandler extends BaseTypeHandler<Object> {
     @Override
     public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
         Object d = rs.getObject(columnName);
-        if (d == null) return d;
         return JacksonParsing.toMap(d.toString());
     }
 
     @Override
     public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
         Object d = rs.getObject(columnIndex);
-        if (d == null) return d;
         return JacksonParsing.toMap(d.toString());
     }
 
     @Override
     public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         Object d = cs.getObject(columnIndex);
-        if (d == null) return d;
         return JacksonParsing.toMap(d.toString());
     }
 

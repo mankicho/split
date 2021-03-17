@@ -6,7 +6,9 @@ import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
 import component.member.vo.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.annotations.Param;
+import org.json.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class MemberService {
 
     private final MailService mailService;
@@ -41,6 +44,29 @@ public class MemberService {
 
         return memberMapper.registerMember(memberDTO);
     }
+
+    // todo 1. 바뀔 서비스
+    public int registerMember(String data) {
+
+        JSONObject jsonMemberDTO = new JSONObject(data);
+
+        log.info("jsonMemberDTO.toString() = " + jsonMemberDTO.toString());
+        String email = jsonMemberDTO.getString("email");
+        String pw = jsonMemberDTO.getInt("pw") + "";
+        String sex = jsonMemberDTO.getString("sex");
+        String bornTime = jsonMemberDTO.getInt("bornTime") + "";
+        String phoneNumber = jsonMemberDTO.getString("phoneNumber");
+        String nickname = jsonMemberDTO.getString("nickname");
+
+        MemberDTO memberDTO = new MemberDTO(email, pw, phoneNumber, sex, bornTime, nickname);
+        log.info("memberDTO = " + memberDTO);
+//        // todo 1. pw check(right format?)
+        String encodedPassword = passwordEncoder.encode(pw); // pw 인코딩
+        memberDTO.setPw(encodedPassword);
+
+        return memberMapper.registerMember(memberDTO);
+    }
+
 
     /**
      * @param email user's withdraw

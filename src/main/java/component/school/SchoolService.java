@@ -1,24 +1,18 @@
 package component.school;
 
-import component.member.vo.MemberDeviceVO;
 import component.school.dto.ClassAuthDTO;
 import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
-import component.school.view.DefaultSchoolResultView;
+import exception.view.DefaultErrorView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +28,10 @@ public class SchoolService {
 
     public List<SchoolVO> getSchools(int categoryId) {
         return schoolMapper.getSchools(categoryId);
+    }
+
+    public List<SchoolVO> getSchoolsByPlanetCode(String planetCode) {
+        return schoolMapper.getSchoolsByPlanetCode(planetCode);
     }
 
     public int registerSchool(SchoolDTO schoolDTO) {
@@ -70,15 +68,14 @@ public class SchoolService {
         return schoolMapper.joinClass(classJoinDTO);
     }
 
-    public DefaultSchoolResultView classAuth(ClassAuthDTO classAuthDTO, long timestamp) {
-        DefaultSchoolResultView view = new DefaultSchoolResultView();
+    public DefaultErrorView classAuth(ClassAuthDTO classAuthDTO, long timestamp) {
+        DefaultErrorView view = new DefaultErrorView();
         if (new Date(timestamp).compareTo(new Date()) > 0) { // qr 코드의 timestamp 값이 현재보다 크면
             SchoolErrorCode errorCode = SchoolErrorCode.FutureThanCurrentTimeError;
-            return new DefaultSchoolResultView(errorCode);
+            return new DefaultErrorView(errorCode);
         }
 
         int insertedRow = schoolMapper.classAuth(classAuthDTO);
-        view.setInsertedRow(insertedRow);
 
         if (insertedRow == 0) {
             view.setStatus(500);
