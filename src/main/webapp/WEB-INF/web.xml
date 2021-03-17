@@ -69,4 +69,8 @@
         <error-code>408</error-code>
         <location>/errors/error408.jsp</location>
     </error-page>
+    <error-page>
+        <error-code>415</error-code>
+        <location>/errors/error408.jsp</location>
+    </error-page>
 </web-app>
