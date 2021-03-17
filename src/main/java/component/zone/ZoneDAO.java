@@ -1,11 +1,10 @@
 package component.zone;
 
+import component.zone.vo.ZoneVO;
 import lombok.Setter;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Repository

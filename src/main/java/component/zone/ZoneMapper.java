@@ -1,9 +1,8 @@
 package component.zone;
 
+import component.zone.vo.ZoneVO;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface ZoneMapper {

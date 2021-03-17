@@ -1,6 +1,8 @@
-package component.zone;
+package component.zone.vo;
 
-import component.plan.PlanVO;
+import component.school.vo.SchoolVO;
+import component.zone.ZoneImageDTO;
+import component.zone.ZoneOperDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -14,9 +16,9 @@ public class ZoneVO {
     private double lat; // 위도
     private double lng; // 경도
     private int todayVisitor; // 오늘 방문자 수
+    private int num;
     private ZoneOperDTO zoneOperDTO; // 운영시간
     private List<ZoneImageDTO> zoneImageDTOList;
-    private List<PlanVO> planList;
 }
 
 

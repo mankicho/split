@@ -1,8 +1,7 @@
 package component.zone;
 
-import org.apache.ibatis.annotations.Param;
+import component.zone.vo.ZoneVO;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface ZoneService {
