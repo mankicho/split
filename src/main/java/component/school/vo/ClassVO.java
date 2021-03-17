@@ -1,10 +1,6 @@
 package component.school.vo;
 
 import lombok.Data;
-
-import java.sql.Date;
-import java.sql.Time;
-
 @Data
 public class ClassVO {
     private int classId;

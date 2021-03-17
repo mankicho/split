@@ -1,6 +1,5 @@
 package component.zone.vo;
 
-import component.school.vo.SchoolVO;
 import component.zone.ZoneImageDTO;
 import component.zone.ZoneOperDTO;
 import lombok.Data;

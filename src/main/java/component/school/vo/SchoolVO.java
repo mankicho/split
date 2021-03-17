@@ -1,9 +1,7 @@
 package component.school.vo;
 
 import lombok.Data;
-
 import java.util.List;
-
 @Data
 public class SchoolVO {
     private int categoryId; // 카테고리 Id
