@@ -5,7 +5,8 @@ import lombok.Data;
 public enum SchoolErrorCode {
     DateMustBeFuture(451, "date must be future"),
     ParseError(450, "invalid date format"),
-    FutureThanCurrentTimeError(452,"timestamp is ahead of current");
+    FutureThanCurrentTimeError(452,"timestamp is ahead of current"),
+    OutOfRangeError(453,"categoryId is out of range");
 
     private int status;
     private String msg;

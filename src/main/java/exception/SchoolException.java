@@ -1,6 +1,6 @@
 package exception;
 
-import component.school.view.DefaultSchoolResultView;
+import exception.view.DefaultErrorView;
 import exception.error.SchoolErrorCode;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,14 +15,16 @@ public class SchoolException {
 
     @ExceptionHandler(ParseException.class)
     @ResponseBody
-    public DefaultSchoolResultView handleParseException(ParseException e) {
-        log.info(e.getMessage());
-        DefaultSchoolResultView result = new DefaultSchoolResultView();
+    public DefaultErrorView handleParseException(ParseException e) {
+        return errorToView(SchoolErrorCode.ParseError);
+    }
 
-        SchoolErrorCode code = SchoolErrorCode.ParseError;
-        result.setStatus(code.getStatus());
-        result.setInsertedRow(-1);
-        result.setMessage(code.getMsg());
-        return result;
+
+
+    private DefaultErrorView errorToView(SchoolErrorCode code){
+        DefaultErrorView view = new DefaultErrorView();
+        view.setMessage(code.getMsg());
+        view.setStatus(code.getStatus());
+        return view;
     }
 }

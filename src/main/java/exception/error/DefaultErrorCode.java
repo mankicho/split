@@ -1,7 +1,7 @@
 package exception.error;
 
 public enum DefaultErrorCode {
-
+    missingParameterValue(454,"parameter value is missing"),
     NullPointer(500, "invalid data(null)");
     private int code;
     private String msg;
