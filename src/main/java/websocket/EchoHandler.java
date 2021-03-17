@@ -3,7 +3,6 @@ package websocket;
 import component.member.vo.MemberDeviceVO;
 import component.member.MemberMapper;
 import component.note.NoteMapper;
-import component.plan.PlanMapper;
 import component.school.SchoolMapper;
 import component.zone.ZoneMapper;
 import fcm.FcmNotifier;
@@ -36,7 +35,6 @@ public class EchoHandler extends TextWebSocketHandler {
 
     private final MemberMapper memberMapper;
     private final ZoneMapper zoneMapper;
-    private final PlanMapper planMapper;
     private final SchoolMapper schoolMapper;
     private final FcmNotifier fcmNotifier;
     private final NoteMapper noteMapper;
@@ -122,15 +120,6 @@ public class EchoHandler extends TextWebSocketHandler {
                 aps.setCafeMap(cafeCodeSocketSessionMap);
                 aps.setUserMap(userEmailSocketSessionMap);
                 return aps;
-            case 3: // 플랜 참여
-                PlanSharingInProcessStrategy planSharingInProcessStrategy = new PlanSharingInProcessStrategy();
-                planSharingInProcessStrategy.setUserMap(userEmailSocketSessionMap);
-                planSharingInProcessStrategy.setPlanMapper(planMapper);
-                planSharingInProcessStrategy.setFcmNotifier(fcmNotifier);
-                planSharingInProcessStrategy.setMemberMapper(memberMapper);
-                return planSharingInProcessStrategy;
-//            case 4: // 플랜 참여 철회
-//                return new PlanSharingOutProcessStrategy();
             case 5: // 집중시간
                 String user = object.getString("user");
                 int mode = object.getInt("mode");

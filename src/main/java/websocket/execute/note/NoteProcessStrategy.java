@@ -1,14 +1,11 @@
 package websocket.execute.note;
 
-import com.google.gson.JsonObject;
 import component.note.NoteDTO;
 import component.note.NoteMapper;
-import component.note.NoteVO;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import websocket.MessageGenerator;
 import websocket.execute.DataProcessStrategy;
 
 import java.io.IOException;

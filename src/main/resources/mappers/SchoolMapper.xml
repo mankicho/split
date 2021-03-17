@@ -39,6 +39,7 @@
         <result property="allMembers" column="all_members"/>
         <result property="sumPerson" column="sum_person"/>
         <result property="avgPerson" column="avg_person"/>
+        <result property="cumulativeAmount" column="cumulative_amount"/>
         <collection property="hashTags" resultMap="hashTags"/>
     </resultMap>
 
@@ -53,17 +54,34 @@
         left outer join class_members as c on c.school_id = s.school_id group by s.school_id) as tmp -- 학교, 총 재학인원
         left outer join school_hashtags as h on h.school_id = tmp.school_id
         left outer join
-        (select school_id,sum(cnt) as sum_person, avg(cnt) as avg_person from (select *,count(*) as cnt from class_auth_log
+        (select school_id,sum(cnt) as sum_person, avg(cnt) as avg_person from (select *,count(*) as cnt from
+        class_auth_log
         group by date_format(auth_date,'%Y-%m-%d') order by school_id) as ttmp group by school_id) as tttmp
         on tmp.school_id = tttmp.school_id-- 해시태그
+
         <if test="value != 0">
             where category_id = #{categoryId};
         </if>
-
     </select>
-<!-- mysql 8.0 version 이상부터 -->
-<!--    select school_id,sum(cnt), avg(cnt),dense_rank() over(order by sum(cnt) desc, log_id asc) as acc_rank, dense_rank() over(order by avg(cnt) desc, log_id asc) as avg_rank-->
-<!--    from (select *,count(*) as cnt from class_auth_log group by date_format(auth_date,'%Y-%m-%d') order by school_id) as ttmp group by school_id;-->
+
+    <select id="getSchoolsByPlanetCode" parameterType="string" resultMap="schoolVO">
+         select tmp.category_id,tmp.school_id,tmp.school_name,tmp.set_location,tmp.one_line_message,tmp.image_path
+        ,tmp.all_members,tttmp.sum_person,tttmp.avg_person,tmp.cumulative_amount,h.hashtags_id,h.hashtags
+        from
+        (select s.category_id,s.school_id,s.school_name,s.set_location,s.one_line_message,
+        s.image_path,s.cumulative_amount,count(s.school_id) as all_members
+        From school as s
+        left outer join class_members as c on c.school_id = s.school_id group by s.school_id) as tmp -- 학교, 총 재학인원
+        left outer join school_hashtags as h on h.school_id = tmp.school_id
+        left outer join
+        (select school_id,sum(cnt) as sum_person, avg(cnt) as avg_person from (select *,count(*) as cnt from class_auth_log
+        group by date_format(auth_date,'%Y-%m-%d') order by school_id) as ttmp group by school_id) as tttmp
+        on tmp.school_id = tttmp.school_id-- 해시태그
+        where tmp.set_location = #{planetCode}
+    </select>
+    <!-- mysql 8.0 version 이상부터 -->
+    <!--    select school_id,sum(cnt), avg(cnt),dense_rank() over(order by sum(cnt) desc, log_id asc) as acc_rank, dense_rank() over(order by avg(cnt) desc, log_id asc) as avg_rank-->
+    <!--    from (select *,count(*) as cnt from class_auth_log group by date_format(auth_date,'%Y-%m-%d') order by school_id) as ttmp group by school_id;-->
     <insert id="registerSchool" parameterType="SchoolDTO">
         INSERT INTO school(category_id,member_email,school_name,set_location,one_line_message) values
         (#{categoryId},#{memberEmail},#{schoolName},#{setLocation},#{oneLineMessage})

@@ -1,7 +1,5 @@
 package websocket.execute;
 
-import component.plan.PlanService;
-import component.plan.PlanServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
@@ -17,7 +15,6 @@ public class AttendanceProcessStrategy extends DataProcessStrategy {
     private Map<String, WebSocketSession> cafeMap;
     private Map<String, WebSocketSession> userMap;
 
-    private PlanService planService = new PlanServiceImpl();
 
     public void setCafeMap(Map<String, WebSocketSession> cafeMap) {
         this.cafeMap = cafeMap;
@@ -42,9 +39,6 @@ public class AttendanceProcessStrategy extends DataProcessStrategy {
             }
         }
         // todo 2. 해당 플랜을 참여하는 유저들에게 알림.
-        int planLogId = object.getInt("planLogId");
-        List<String> emails = planService.getAllEmailOfPlans(planLogId);
-        emails.stream().filter(email -> userMap.get(email) != null).forEach(email -> sendMessageToUser(email,tm));
 
         // todo 3. 내 친구들에게 소식 알림
 
