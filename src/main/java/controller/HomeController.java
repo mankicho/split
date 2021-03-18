@@ -3,17 +3,12 @@ package controller;
 import component.home.HomeDataService;
 import component.home.view.HomeData;
 import component.member.MemberService;
-import component.member.vo.MemberTimerVO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 

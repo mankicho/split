@@ -1,17 +1,13 @@
 package controller;
 
-import com.google.gson.JsonParseException;
 import component.alarm.AlarmDTO;
 import component.alarm.AlarmService;
 import component.alarm.AlarmVO;
-import exception.error.JsonParseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLSyntaxErrorException;
 import java.util.Arrays;
 import java.util.List;

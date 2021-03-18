@@ -1,6 +1,5 @@
 package controller;
 
-import component.school.SchoolService;
 import component.zone.vo.ZoneVO;
 import component.zone.ZoneService;
 import lombok.RequiredArgsConstructor;
