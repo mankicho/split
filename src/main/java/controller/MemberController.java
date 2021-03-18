@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,7 +55,7 @@ public class MemberController {
 
     // 로그인함수 (이메일, 비밀번호)
     @RequestMapping(value = "/login.do")
-    public String memberLogin(@RequestParam("email") String email,@RequestParam("pw") String pw) {
+    public String memberLogin(@RequestParam("email") String email, @RequestParam("pw") String pw) {
         MemberVO memberVO = memberService.selects(email); // db 에서 회원정보 조회
         if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) { // db 에 저장된 정보와 사용자 입력 비밀번호를 인코딩한 정보가 일치하면
             int affectedRow = memberService.autoLogin(email); // 자동로그인
@@ -75,8 +77,8 @@ public class MemberController {
 
     // todo 1. 변경될 로직(회원가입)
     // 트랜잭션 구현 필요
-    @PostMapping(value = "/register2.do")
-    public int insertMember(HttpServletRequest request, @RequestParam("file") MultipartFile multipartFile) {
+    @PostMapping(value = "/registerWithFile.do")
+    public int insertMember(HttpServletRequest request, @RequestParam("file") MultipartFile multipartFile)   {
         String data = request.getParameter("memberDTO");
         log.info("data = " + data);
 

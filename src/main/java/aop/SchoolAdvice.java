@@ -18,7 +18,6 @@ import java.util.Arrays;
 @Log4j2
 @Component
 public class SchoolAdvice {
-    private StopWatch sw = new StopWatch();
 
     @Before("execution(* component.school.SchoolService.*(..))")
 
@@ -45,6 +44,7 @@ public class SchoolAdvice {
     @Around("execution(* component.school.SchoolService.*(..))")
     public Object timeToProcess(ProceedingJoinPoint pjp) throws Throwable {
         // before advice
+        StopWatch sw = new StopWatch();
         sw.start();
 
         Object result = pjp.proceed();
@@ -61,7 +61,7 @@ public class SchoolAdvice {
 
         // 실행시간은 로그로 남기는 것이 좋지만, 여기서는 콘솔창에 찍도록 한다.
         log.info("[ExecutionTime] " + taskName + " , " + total + "(ms)");
-
+        sw = null;
         return result;
     }
 

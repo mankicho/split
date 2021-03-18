@@ -21,7 +21,6 @@ import java.util.HashMap;
 @Component
 public class MemberAdvice {
 
-    private StopWatch sw = new StopWatch();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Before("execution(* component.member.MemberService.*(..))")
@@ -49,6 +48,7 @@ public class MemberAdvice {
     @Around("execution(* component.member.MemberService.*(..))")
     public Object timeToProcess(ProceedingJoinPoint pjp) throws Throwable {
         // before advice
+         StopWatch sw = new StopWatch();
         sw.start();
 
         Object result = pjp.proceed();
@@ -66,6 +66,7 @@ public class MemberAdvice {
         // 실행시간은 로그로 남기는 것이 좋지만, 여기서는 콘솔창에 찍도록 한다.
         log.info("[ExecutionTime] " + taskName + " , " + total + "(ms)");
 
+        sw = null;
         return result;
     }
 }
