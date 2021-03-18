@@ -48,7 +48,8 @@ public class FileController {
     @GetMapping(value = "/get.do", produces = MediaType.IMAGE_JPEG_VALUE)
     public void getImage(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String path = req.getParameter("imagePath");
-        FileInputStream fis = new FileInputStream(home + path);
+        log.info(path);
+        FileInputStream fis = new FileInputStream(home + "/" + path);
         OutputStream out = res.getOutputStream();
         FileCopyUtils.copy(fis, out);
         out.flush();
