@@ -1,16 +1,16 @@
 package websocket.execute;
 
 import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
-@Log4j
+@Log4j2
 public class AttendanceProcessStrategy extends DataProcessStrategy {
     private Map<String, WebSocketSession> cafeMap;
     private Map<String, WebSocketSession> userMap;
