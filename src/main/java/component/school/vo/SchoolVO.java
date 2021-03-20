@@ -14,5 +14,6 @@ public class SchoolVO {
     private int sumPerson; // 누적 출석인원
     private double avgPerson; // 하루 평균 출석인원
     private int cumulativeAmount; // 누적 출석금액
+    private int todayPerson; // 오늘 예약자
     private List<SchoolHashTags> hashTags; // 해시태그
 }

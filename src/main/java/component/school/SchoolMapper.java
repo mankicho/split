@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SchoolMapper {
-    List<SchoolVO> getSchools(int categoryId); // 학교정보 가져오기
+    List<SchoolVO> getSchools(@Param("categoryId") int categoryId,@Param("weekday") int weekday); // 학교정보 가져오기
 
     List<SchoolVO> getSchoolsByPlanetCode(@Param("planetCode") String planetCode);
 

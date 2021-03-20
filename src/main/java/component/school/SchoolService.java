@@ -27,8 +27,8 @@ public class SchoolService {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public List<SchoolVO> getSchools(int categoryId) {
-        return schoolMapper.getSchools(categoryId);
+    public List<SchoolVO> getSchools(int categoryId,int weekday) {
+        return schoolMapper.getSchools(categoryId,weekday);
     }
 
     public List<SchoolVO> getSchoolsByPlanetCode(String planetCode) {

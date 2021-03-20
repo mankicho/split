@@ -5,6 +5,7 @@ import component.school.dto.ClassAuthDTO;
 import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
+import component.school.view.ClassAuthView;
 import exception.view.DefaultErrorView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
@@ -59,8 +60,8 @@ public class SchoolController {
 
     // 학교 정보 가져오기
     @GetMapping(value = "/get.do")
-    public List<SchoolVO> getSchools(@RequestParam("categoryId") int categoryId) {
-        return schoolService.getSchools(categoryId);
+    public List<SchoolVO> getSchools(@RequestParam("categoryId") int categoryId, @RequestParam("weekday") int weekday) {
+        return schoolService.getSchools(categoryId, weekday);
     }
 
     @GetMapping(value = "/by/planet/code/get.do")
@@ -117,8 +118,9 @@ public class SchoolController {
         return result;
     }
 
+    // 인증하기
     @GetMapping(value = "/class/auth")
-    public DefaultErrorView classAuthDo(HttpServletRequest request) {
+    public ClassAuthView classAuthDo(HttpServletRequest request) {
         // 파라미터 가져오기
         int schoolId = Integer.parseInt(request.getParameter("schoolId"));
         int classId = Integer.parseInt(request.getParameter("classId"));
