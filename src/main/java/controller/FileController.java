@@ -36,6 +36,7 @@ public class FileController {
         int savedFile = fileUploadService.fileUpload(path, multipartFile);
 
         log.info("multipartFile = " + multipartFile);
+        // todo 1. 업로드가 잘 되었는지 유저에게 리턴값이 있어야함.
     }
 
     @PostMapping(value = "/back/upload")
@@ -43,9 +44,11 @@ public class FileController {
         String path = home + "/profile/back/"; // 파일 경로
         fileUploadService.fileUpload(path, multipartFile);
         log.info("multipartFile = " + multipartFile);
+
+        // todo 1. 업로드가 잘 되었는지 유저에게 리턴값이 있어야함.
     }
 
-    @GetMapping(value = "/get.do", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/get.do", produces = MediaType.IMAGE_PNG_VALUE)
     public void getImage(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String path = req.getParameter("imagePath");
         log.info(path);
