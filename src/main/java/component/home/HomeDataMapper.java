@@ -1,5 +1,6 @@
 package component.home;
 
+import component.home.view.HomeData;
 import org.apache.ibatis.annotations.Param;
 
 import java.sql.Date;
@@ -14,4 +15,6 @@ public interface HomeDataMapper {
     int selectPlanAuthLogsFor30MinutesOfSuccessUsers(@Param("fromtime") String fromTime, @Param("totime") String toTime); // 30분 단위로 인증한 유저가 총 몇명인가
 
     int selectUsersTotalCheckTime(@Param("email") String email);
+
+    HomeData getHomeData(HomeDataDTO homeDataDTO);
 }

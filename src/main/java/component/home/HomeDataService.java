@@ -1,17 +1,38 @@
 package component.home;
 
-import org.apache.ibatis.annotations.Param;
+import component.home.view.HomeData;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.util.HashMap;
 
-public interface HomeDataService {
-    int selectPlanAuthLogsOfToday(); // 오늘 총 예약자가 총 몇명인가
+@Service
+@Log4j2
+@RequiredArgsConstructor
+public class HomeDataService {
 
-    int selectPlanAuthLogsFor30Minutes(HashMap<String,String> hashMap); // 30분 단위로 예약자가 총 몇명인가
+    private final HomeDataMapper homeDataMapper;
 
-    int selectPlanAuthLogsFor30MinutesOfSuccessUsers(String fromTime, String toTime); // 30분 단위로 인증한 유저가 총 몇명인가
+    public int selectPlanAuthLogsOfToday() {
+        return homeDataMapper.selectPlanAuthLogsOfToday();
+    }
 
-    int selectUsersTotalCheckTime(String email);
+    public int selectPlanAuthLogsFor30Minutes(HashMap<String, String> hashMap) {
+        return homeDataMapper.selectPlanAuthLogsFor30Minutes(hashMap);
+    }
 
+    public int selectPlanAuthLogsFor30MinutesOfSuccessUsers(String fromTime, String toTime) {
+        return homeDataMapper.selectPlanAuthLogsFor30MinutesOfSuccessUsers(fromTime, toTime);
+    }
+
+    public int selectUsersTotalCheckTime(String email) {
+        return homeDataMapper.selectUsersTotalCheckTime(email);
+    }
+
+    public HomeData getHomeData(HomeDataDTO homeDataDTO) {
+        return homeDataMapper.getHomeData(homeDataDTO);
+    }
 }

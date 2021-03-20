@@ -5,9 +5,7 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Setter
-@Getter
+@Data
 public class MemberControllerStatus {
     private int status;
 }

@@ -4,6 +4,7 @@ import component.school.dto.ClassAuthDTO;
 import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
+import component.school.view.ClassAuthView;
 import exception.view.DefaultErrorView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
@@ -68,19 +69,23 @@ public class SchoolService {
         return schoolMapper.joinClass(classJoinDTO);
     }
 
-    public DefaultErrorView classAuth(ClassAuthDTO classAuthDTO, long timestamp) {
-        DefaultErrorView view = new DefaultErrorView();
+    public ClassAuthView classAuth(ClassAuthDTO classAuthDTO, long timestamp) {
         if (new Date(timestamp).compareTo(new Date()) > 0) { // qr 코드의 timestamp 값이 현재보다 크면
             SchoolErrorCode errorCode = SchoolErrorCode.FutureThanCurrentTimeError;
-            return new DefaultErrorView(errorCode);
+            ClassAuthView view = new ClassAuthView(errorCode);
+            view.setAuthenticatedRow(-1);
+            return view;
         }
 
-        int insertedRow = schoolMapper.classAuth(classAuthDTO);
+        ClassAuthView view = new ClassAuthView();
+        int insertedRow = schoolMapper.classAuth(classAuthDTO); // 출석체크
 
-        if (insertedRow == 0) {
+        if (insertedRow == 0) {  // DB 에러
             view.setStatus(500);
+            view.setAuthenticatedRow(0);
             view.setMessage("server error");
         } else {
+            view.setAuthenticatedRow(1);
             view.setStatus(202);
             view.setMessage("success");
         }
