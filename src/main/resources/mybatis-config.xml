@@ -24,6 +24,8 @@
         <typeAlias type="component.school.vo.ClassVO" alias="ClassVO"/>
         <typeAlias type="component.school.dto.ClassDTO" alias="ClassDTO"/>
         <typeAlias type="component.school.dto.ClassJoinDTO" alias="ClassJoinDTO"/>
+        <typeAlias type="component.school.dto.ClassAuthDTO" alias="ClassAuthDTO"/>
+        <typeAlias type="component.home.HomeDataDTO" alias="HomeDataDTO"/>
 
 
     </typeAliases>
