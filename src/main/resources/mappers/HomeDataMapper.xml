@@ -2,6 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.home.HomeDataMapper">
+
+    <resultMap id="homeData" type="component.home.view.HomeData">
+        <result property="memberEmail" column="member_email"/>
+        <result property="num" column="num"/>
+        <result property="schoolId" column="school_id"/>
+        <result property="class_id" column="classId"/>
+        <result property="schoolName" column="school_name"/>
+        <result property="imagePath" column="image_path"/>
+        <result property="allNums" column="all_nums"/>
+    </resultMap>
+
     <select id="selectPlanAuthLogsOfToday" resultType="int">
         SELECT COUNT(*) from plan_auth_log where date_format(authenticate_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
     </select>
@@ -13,7 +24,19 @@
 
 
     <select id="selectUsersTotalCheckTime" parameterType="string" resultType="int"> <!-- 유저의 총 출석체크 회수 -->
-        select count(*) from plan_auth_log where date_format(authenticate_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d');
+        select count(*) from plan_auth_log where date_format(authenticate_time,'%Y-%m-%d') =
+        date_format(now(),'%Y-%m-%d');
     </select>
 
+    <select id="getHomeData" parameterType="HomeDataDTO" resultMap="homeData">
+        select att.*,sch.school_id,sch.class_id,sch.school_name,sch.image_path,
+        (select count(*) from class_auth_log where date_format(now(),'%Y-%m-%d')) as all_nums  from
+        (select member_email,count(*) as num from class_auth_log where member_email = #{memberEmail}) att
+        left outer join
+        (
+        select c.school_id, c.class_id, c.member_email, s.school_name,s.image_path
+        from class_members as c left outer join school as s on s.school_id = c.school_id
+        where c.member_email = #{memberEmail} and set_day <![CDATA[&]]> #{weekday} != 0) as sch
+        on att.member_email = sch.member_email;
+    </select>
 </mapper>
