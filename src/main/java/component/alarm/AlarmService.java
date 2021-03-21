@@ -21,7 +21,6 @@ public class AlarmService {
     }
 
 
-    @Transactional
     public int updateReadFlag(int[] idArr) {
         // read flag update
         alarmMapper.updateReadFlag(idArr);

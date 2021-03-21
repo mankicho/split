@@ -178,6 +178,7 @@ public class EchoHandler extends TextWebSocketHandler {
 
     @Scheduled(cron = "0 30 * * * *") // 출석체크 시스템 알림
     public void sendSystemMessageForAttendance() {
+        log.info("current thread is " + Thread.currentThread().getName());
         DayOfWeek weekday = LocalDate.now().getDayOfWeek(); // 요일
         List<MemberDeviceVO> deviceList = schoolMapper.getDevicesForPushNotificationOfAttendance(getSquareOfWeekday(weekday)); // 출석체크가 임박한 유저의 디바이스 토큰 가져오기
 

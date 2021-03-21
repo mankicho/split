@@ -20,15 +20,10 @@ public class AlarmController {
 
     private final AlarmService alarmService;
 
-    @ExceptionHandler(SQLSyntaxErrorException.class)
-    public int exceptionHandler() {
-        return 0;
-    }
 
     // 개인의 알림 다 가져오기
     @PostMapping(value = "/get.do")
-    public List<AlarmVO> getAlarms(HttpServletRequest request) {
-        String email = request.getParameter("email");
+    public List<AlarmVO> getAlarms(@RequestParam("email") String email) {
         return alarmService.getAlarms(email);
     }
 
@@ -40,12 +35,6 @@ public class AlarmController {
         int updatedRow = alarmService.updateReadFlag(arr);
         log.info(updatedRow);
         return updatedRow;
-    }
-
-    @PostMapping(value = "/insert.do")
-    public int saveAlarms(@RequestBody AlarmDTO alarmDTO) {
-        log.info(alarmDTO);
-        return alarmService.saveAlarms(alarmDTO);
     }
 
     @GetMapping(value = "/delete.do")

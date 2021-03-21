@@ -1,6 +1,7 @@
-package aop;
+package aop.service;
 
 import exception.error.SchoolErrorCode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,17 +11,20 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+import security.token.TokenGeneratorService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Aspect
 @Log4j2
 @Component
+@RequiredArgsConstructor
 public class SchoolAdvice {
+    private final TokenGeneratorService tokenGeneratorService;
 
     @Before("execution(* component.school.SchoolService.*(..))")
-
     public void beforeSchoolService() {
         log.info("-----------------schoolService called-----------------");
     }
@@ -35,10 +39,18 @@ public class SchoolAdvice {
         }
 
         int categoryId = (int) parameters[0];
-        if (categoryId < 0 || categoryId > 5) {
+        if (categoryId < 0 || categoryId > 10) {
             log.info(SchoolErrorCode.OutOfRangeError + "--> " + categoryId);
         }
         log.info("client select schools of category[" + categoryId + "]");
+    }
+
+    @Before("execution(* controller.SchoolController.classAuthDo(..))")
+    public void setClassAuthDTO(JoinPoint joinPoint) {
+        Object[] parameters = joinPoint.getArgs();
+
+        HttpServletRequest request = (HttpServletRequest) parameters[0];
+
     }
 
     @Around("execution(* component.school.SchoolService.*(..))")

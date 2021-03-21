@@ -1,15 +1,14 @@
 package controller;
 
+import component.home.HomeDataDTO;
 import component.home.HomeDataService;
 import component.home.view.HomeData;
 import component.member.MemberService;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -18,15 +17,13 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/")
 @Log4j2
+@RequiredArgsConstructor
 public class HomeController {
 
-    @Setter(onMethod_ = {@Autowired})
-    private HomeDataService homeDataService;
+    private final HomeDataService homeDataService;
 
-    @Setter(onMethod_ = {@Autowired})
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @ExceptionHandler({ParseException.class})
     @GetMapping(value = "/")
     public String home() {
         return "index";
@@ -50,9 +47,11 @@ public class HomeController {
     }
 
     @PostMapping(value = "/home/data/get.do")
-    public HomeData getHomeData(){
-        return null;
+    @ResponseBody
+    public HomeData getHomeData(@RequestBody HomeDataDTO homeDataDTO) {
+        return homeDataService.getHomeData(homeDataDTO);
     }
+
     private int getSquareOfTwo(String val) {
         int v = Integer.parseInt(val);
         return (int) Math.pow(2, v - 1);

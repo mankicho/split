@@ -18,17 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ZoneController {
 
-    @ExceptionHandler({
-            NumberFormatException.class
-    })
-    public HashMap<String, Object> handleNumberFormatException(NumberFormatException e) {
-        log.error("error", e);
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("error", e.getClass().getName());
-        hashMap.put("message", e.getMessage());
-        return hashMap;
-    }
-
     private final ZoneService zoneService; // 지도 DB 에 접근하는 Service
 
     /**

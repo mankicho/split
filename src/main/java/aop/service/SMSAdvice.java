@@ -1,4 +1,4 @@
-package aop;
+package aop.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 
 @Aspect
@@ -21,7 +22,7 @@ public class SMSAdvice {
     public void logAfterLogin(JoinPoint joinPoint) {
         Object[] parameters = joinPoint.getArgs();
         String phoneNumber = (String) parameters[0];
-        log.info("SMSService["+LocalDateTime.now() + "] parameter : " + phoneNumber);
+        log.info("SMSService parameter : " + phoneNumber);
     }
 
 }

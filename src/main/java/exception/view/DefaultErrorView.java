@@ -1,19 +1,15 @@
 package exception.view;
 
-import exception.error.SchoolErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import exception.error.DefaultErrorCode;
+import view.DefaultResultView;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class DefaultErrorView {
-    private int status;
-    private String message;
-
-    public DefaultErrorView(SchoolErrorCode code) {
-        this.status = code.getStatus();
-        this.message = code.getMsg();
+public class DefaultErrorView extends DefaultResultView {
+    public DefaultErrorView(DefaultErrorCode code) {
+        super(code);
     }
+
+    public DefaultErrorView() {
+        super();
+    }
+
 }

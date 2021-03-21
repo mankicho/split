@@ -1,20 +1,22 @@
 package component.school.view;
 
 import exception.error.SchoolErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import view.DefaultResultView;
 
-@Data
-@NoArgsConstructor
+@Getter
+@ToString
+@Setter
 @AllArgsConstructor
-public class ClassAuthView {
-    private int status;
+@NoArgsConstructor
+public class ClassAuthView extends DefaultResultView {
+
     private int authenticatedRow;
-    private String message;
 
     public ClassAuthView(SchoolErrorCode code) {
         this.status = code.getStatus();
-        this.message = code.getMsg();
+        this.msg = code.getMsg();
+        this.authenticatedRow = 0;
     }
+
 }

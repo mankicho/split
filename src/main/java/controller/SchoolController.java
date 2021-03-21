@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import rank.RankServerStatus;
 import rank.SearchKeywordBroker;
 import security.token.TokenGeneratorService;
+import view.DefaultResultView;
+import view.ResultView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -98,9 +100,9 @@ public class SchoolController {
 
     // 클래스 가입하기
     @PostMapping(value = "/join/class")
-    public DefaultErrorView joinClass(@RequestBody ClassJoinDTO classJoinDTO) throws ParseException {
+    public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO) throws ParseException {
         log.info(classJoinDTO);
-        DefaultErrorView result = new DefaultErrorView(); // 클래스 신청에 대한 유저 view
+        DefaultResultView result = new DefaultResultView(); // 클래스 신청에 대한 유저 view
 
         int insertedRow = schoolService.joinClass(classJoinDTO);
 

@@ -41,15 +41,16 @@
         <result property="todayPerson" column="todayPerson"/>
         <result property="avgPerson" column="avg_person"/>
         <result property="cumulativeAmount" column="cumulative_amount"/>
+        <result property="period" column="period"/>
         <collection property="hashTags" resultMap="hashTags"/>
     </resultMap>
 
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
-        select tmp.category_id,tmp.school_id,tmp.school_name,tmp.set_location,tmp.one_line_message,tmp.image_path,
+        select tmp.category_id,tmp.school_id,tmp.school_name,tmp.set_location,tmp.one_line_message,tmp.image_path,tmp.period,
         ttttmp.cnt as today_person,tmp.all_members,tttmp.sum_person,tttmp.avg_person,tmp.cumulative_amount,h.hashtags_id,h.hashtags
         from
-        (select s.category_id,s.school_id,s.school_name,s.set_location,s.one_line_message,
+        (select s.category_id,s.school_id,s.school_name,s.set_location,s.one_line_message,s.period,
         s.image_path,s.cumulative_amount,count(s.school_id) as all_members
         From school as s
         left outer join class_members as c on c.school_id = s.school_id group by s.school_id) as tmp -- 학교, 총 재학인원
@@ -138,22 +139,30 @@
          (#{schoolId},#{weekdayType},time_format(#{authTime},'%H:%i:%s'))
     </insert>
 
-    <insert id="joinClass" parameterType="ClassJoinDTO">
+    <insert id="joinClassInOfficial" parameterType="ClassJoinDTO">
         insert into class_members
         (select null,#{schoolId},#{classId},#{setDay},#{memberEmail},
         #{startDate},#{endDate},#{setPaymentAmount} from dual
         where (select count(*) from class_members where member_email = #{memberEmail}) = 0);
     </insert>
 
+    <insert id="joinClassInNonOfficial" parameterType="ClassJoinDTO">
+        insert into class_members
+        (select null,#{schoolId},#{classId},#{setDay},#{memberEmail},
+        #{startDate},#{endDate},#{setPaymentAmount} from dual
+        where (select count(*) from class_members where member_email = #{memberEmail}) = 0);
+    </insert>
     <select id="getDevicesForPushNotificationOfAttendance" parameterType="int" resultMap="memberDeviceVO">
-        select *,(select school_name from school where member_email = m.member_email) as school_name
-        from member_device as m where exists(
+        select *,(
+        select school_name from class_members as c left outer join school as s on c.school_id = s.school_id where c.member_email = m.member_email) as school_name
+        from member_device as m
+        where member_email in(
         select member_email from
         (select * from class_members where (date_format(now(),'%Y-%m-%d') between start_date and end_date)
-        and set_day <![CDATA[&]]> #{weekday} != 0) as tmp -- 오늘 출석체크 해야하는 유저 조회
+        and set_day <![CDATA[&]]> 64 != 0) as tmp -- 오늘 출석체크 해야하는 유저 조회
         left outer join class as c on c.class_id = tmp.class_id -- 클래스 고유정보 조회
         where time_format(now(),'%H:%i:%s') <![CDATA[<=]]> auth_time and -- 출석할 시간인지 ??
-        time_format(date_add(now(), INTERVAL 1 HOUR),'%H:%i:%s') <![CDATA[>=]]> auth_time); -- 1시간 범위
+        time_format(date_add(now(), INTERVAL 1 HOUR),'%H:%i:%s') <![CDATA[>=]]> auth_time)
     </select>
 
     <insert id="classAuth" parameterType="ClassAuthDTO">

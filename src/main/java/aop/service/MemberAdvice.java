@@ -1,4 +1,4 @@
-package aop;
+package aop.service;
 
 import lombok.extern.log4j.Log4j;
 import org.aspectj.lang.JoinPoint;
@@ -48,7 +48,7 @@ public class MemberAdvice {
     @Around("execution(* component.member.MemberService.*(..))")
     public Object timeToProcess(ProceedingJoinPoint pjp) throws Throwable {
         // before advice
-         StopWatch sw = new StopWatch();
+        StopWatch sw = new StopWatch();
         sw.start();
 
         Object result = pjp.proceed();
@@ -69,4 +69,18 @@ public class MemberAdvice {
         sw = null;
         return result;
     }
+
+    @Around("execution(* component.member.MemberService.autoLogin(..))")
+    public Object aroundMemberLogin(ProceedingJoinPoint pjp) throws Throwable {
+        Object[] parameters = pjp.getArgs();
+        String email = (String) parameters[0];
+        log.info("login request ==> [" + email + "]");
+        Object result = pjp.proceed();
+
+        log.info(email + " member login");
+        return result;
+    }
+
+
 }
+

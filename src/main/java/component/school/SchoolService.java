@@ -27,8 +27,8 @@ public class SchoolService {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public List<SchoolVO> getSchools(int categoryId,int weekday) {
-        return schoolMapper.getSchools(categoryId,weekday);
+    public List<SchoolVO> getSchools(int categoryId, int weekday) {
+        return schoolMapper.getSchools(categoryId, weekday);
     }
 
     public List<SchoolVO> getSchoolsByPlanetCode(String planetCode) {
@@ -83,11 +83,11 @@ public class SchoolService {
         if (insertedRow == 0) {  // DB 에러
             view.setStatus(500);
             view.setAuthenticatedRow(0);
-            view.setMessage("server error");
+            view.setMsg("server error");
         } else {
             view.setAuthenticatedRow(1);
             view.setStatus(202);
-            view.setMessage("success");
+            view.setMsg("success");
         }
         return view;
 

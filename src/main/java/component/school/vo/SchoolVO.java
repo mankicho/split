@@ -1,6 +1,8 @@
 package component.school.vo;
 
 import lombok.Data;
+
+import java.util.Date;
 import java.util.List;
 @Data
 public class SchoolVO {
@@ -15,5 +17,6 @@ public class SchoolVO {
     private double avgPerson; // 하루 평균 출석인원
     private int cumulativeAmount; // 누적 출석금액
     private int todayPerson; // 오늘 예약자
+    private Date period; // 모집 기간
     private List<SchoolHashTags> hashTags; // 해시태그
 }
