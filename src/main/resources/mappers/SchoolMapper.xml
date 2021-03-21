@@ -61,7 +61,7 @@
         (select school_id,sum(cnt) as sum_person, avg(cnt) as avg_person from (select *,count(*) as cnt from
         class_auth_log
         group by date_format(auth_date,'%Y-%m-%d') order by school_id) as ttmp group by school_id) as tttmp
-        on tmp.school_id = tttmp.school_id;
+        on tmp.school_id = tttmp.school_id
         <if test="categoryId != 0">
             where category_id = #{categoryId};
         </if>
