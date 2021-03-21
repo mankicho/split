@@ -45,7 +45,7 @@ public class AlarmService {
         return alarmMapper.saveAlarms(alarmDTO);
     }
 
-    public int deleteAlarm(@Param("alarmId") int alarmId) {
+    public int deleteAlarm(int alarmId) {
         return alarmMapper.deleteAlarm(alarmId);
     }
 }

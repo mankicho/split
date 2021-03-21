@@ -30,7 +30,9 @@ public interface SchoolMapper {
 
     List<SchoolVO> getSchoolsBySearch(String keyword); // 검색으로 학교 가져오기
 
-    int joinClass(ClassJoinDTO classJoinDTO);
+    int joinClassInOfficial(ClassJoinDTO classJoinDTO);
+
+    int joinClassInNonOfficial(ClassJoinDTO classJoinDTO);
 
     List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(@Param("weekday") int weekday);
 

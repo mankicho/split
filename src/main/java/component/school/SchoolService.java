@@ -59,14 +59,19 @@ public class SchoolService {
         return schoolMapper.getSchoolsBySearch(keyword);
     }
 
-    public int joinClass(ClassJoinDTO classJoinDTO) throws ParseException {
+    public int joinClass(ClassJoinDTO classJoinDTO,int type) throws ParseException {
         Date today = new Date();
         if (simpleDateFormat.parse(classJoinDTO.getStartDate()).compareTo(today) < 0
                 || simpleDateFormat.parse(classJoinDTO.getEndDate()).compareTo(today) < 0) {
             // 예약 날짜가 오늘 이전이면
             return -1;
         }
-        return schoolMapper.joinClass(classJoinDTO);
+
+        if(type == 0){ // 비공식
+            return schoolMapper.joinClassInOfficial(classJoinDTO);
+        }else{ // 공식
+            return schoolMapper.joinClassInNonOfficial(classJoinDTO);
+        }
     }
 
     public ClassAuthView classAuth(ClassAuthDTO classAuthDTO, long timestamp) {

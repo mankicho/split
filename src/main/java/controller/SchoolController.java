@@ -100,11 +100,11 @@ public class SchoolController {
 
     // 클래스 가입하기
     @PostMapping(value = "/join/class")
-    public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO) throws ParseException {
+    public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO,@RequestParam("type") int type) throws ParseException {
         log.info(classJoinDTO);
         DefaultResultView result = new DefaultResultView(); // 클래스 신청에 대한 유저 view
 
-        int insertedRow = schoolService.joinClass(classJoinDTO);
+        int insertedRow = schoolService.joinClass(classJoinDTO,type);
 
         if (insertedRow == -1) {
             throw new ParseException(classJoinDTO.getStartDate() + " or " + classJoinDTO.getEndDate(), 0);

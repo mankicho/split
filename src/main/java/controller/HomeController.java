@@ -29,23 +29,6 @@ public class HomeController {
         return "index";
     }
 
-    @ResponseBody
-    @GetMapping(value = "/home/today/allUser/get.do")
-    public int selectPlanAuthLogsOfToday() {
-        return homeDataService.selectPlanAuthLogsOfToday();
-    }
-
-    @ResponseBody
-    @GetMapping(value = "/home/today/allUsers/by30M/get.do")
-    public int selectPlanAuthLogsFor30Minutes() {
-        return homeDataService.selectPlanAuthLogsFor30Minutes(new HashMap<>());
-    }
-
-    @GetMapping(value = "/home/today/success/allUsers/by30M/get.do")
-    public int selectPlanAUthLogsFor30MinutesOfSuccessUsers() {
-        return homeDataService.selectPlanAuthLogsFor30MinutesOfSuccessUsers("", "");
-    }
-
     @PostMapping(value = "/home/data/get.do")
     @ResponseBody
     public HomeData getHomeData(@RequestBody HomeDataDTO homeDataDTO) {
