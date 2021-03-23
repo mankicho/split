@@ -1,14 +1,12 @@
 package aop.service;
 
+import component.school.dto.ClassJoinDTO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import security.token.TokenGeneratorService;
@@ -77,8 +75,34 @@ public class SchoolAdvice {
         return result;
     }
 
-    @Before("execution(* component.school.SchoolService.*(..))")
-    public void aroundAdvice(JoinPoint joinPoint) {
+    @Around("execution(* component.school.SchoolService.joinClass(..))")
+    public Object aroundAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        Object[] parameters = proceedingJoinPoint.getArgs();
+        ClassJoinDTO dto = (ClassJoinDTO) parameters[0];
+        int type = (int) parameters[1];
+        if (type == 0) {
+            log.info("nonOfficial class join request ==> " + dto.toString());
+        } else {
+            log.info("official class join request ==> " + dto.toString());
+        }
 
+        Object object = proceedingJoinPoint.proceed();
+        int affectedRow = (int) object;
+
+        if (affectedRow == 0) { // 가입 실패시
+            log.info("class join fail");
+        } else if (affectedRow == -1) {
+            log.info("class join fail ==> reservation date is same or before with today");
+        } else {
+            log.info("class join success : insertedRow = [" + affectedRow + "]");
+        }
+
+        return object;
     }
+
+    @AfterThrowing(value = "execution(* component.school.SchoolService.joinClass(..))", throwing = "e")
+    public void logErrorAboutJoinClass(Exception e) {
+        log.info(e.getMessage());
+    }
+
 }

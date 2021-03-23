@@ -6,6 +6,7 @@ import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
 import component.school.view.ClassAuthView;
+import component.school.vo.SchoolExplorerVO;
 import exception.view.DefaultErrorView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
@@ -75,6 +76,7 @@ public class SchoolController {
     @PostMapping(value = "/class/get.do")
     public List<ClassVO> getClasses(@RequestBody ClassDTO classDTOForSelect) {
         log.info(classDTOForSelect);
+
         return schoolService.getClasses(classDTOForSelect);
     }
 
@@ -100,11 +102,10 @@ public class SchoolController {
 
     // 클래스 가입하기
     @PostMapping(value = "/join/class")
-    public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO,@RequestParam("type") int type) throws ParseException {
-        log.info(classJoinDTO);
+    public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO, @RequestParam("type") int type) throws ParseException {
         DefaultResultView result = new DefaultResultView(); // 클래스 신청에 대한 유저 view
 
-        int insertedRow = schoolService.joinClass(classJoinDTO,type);
+        int insertedRow = schoolService.joinClass(classJoinDTO, type);
 
         if (insertedRow == -1) {
             throw new ParseException(classJoinDTO.getStartDate() + " or " + classJoinDTO.getEndDate(), 0);
@@ -112,11 +113,12 @@ public class SchoolController {
 
         if (insertedRow == 0) {
             result.setStatus(500); // DB 오류
+            result.setMsg("join class fail");
         } else {
             result.setStatus(202);
+            result.setMsg("join class success");
         }
 
-        log.info(result);
         return result;
     }
 
@@ -141,5 +143,11 @@ public class SchoolController {
         ClassAuthDTO authDTO = new ClassAuthDTO(schoolId, classId, planet, email);
 
         return schoolService.classAuth(authDTO, timestamp);
+    }
+
+    @GetMapping(value = "/explorer/get.do")
+    public SchoolExplorerVO getExplorer(@RequestParam("schoolId") int schoolId, @RequestParam("classId") int classId,
+                                        @RequestParam("weekday") int weekday) {
+        return schoolService.getExplorer(schoolId, classId, weekday);
     }
 }

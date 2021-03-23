@@ -6,6 +6,7 @@ import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
 import component.school.vo.ClassVO;
+import component.school.vo.SchoolExplorerVO;
 import component.school.vo.SchoolVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -37,4 +38,6 @@ public interface SchoolMapper {
     List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(@Param("weekday") int weekday);
 
     int classAuth(ClassAuthDTO classAuthDTO);
+
+    SchoolExplorerVO getExplorer(@Param("schoolId") int schoolId,@Param("classId") int classId,@Param("weekday") int weekday);
 }

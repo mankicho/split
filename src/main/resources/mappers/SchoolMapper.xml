@@ -3,6 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.school.SchoolMapper">
 
+    <!-- 탐험단 -->
+    <resultMap id="schoolExplorerVO" type="component.school.vo.SchoolExplorerVO">
+        <result property="schoolId" column="school_id"/>
+        <result property="allAccPayment" column="all_acc_payment"/>
+        <result property="allDailyPayment" column="all_daily_payment"/>
+        <result property="specialAccPayment" column="special_acc_payment"/>
+        <result property="specialDailyPayment" column="special_daily_payment"/>
+        <result property="allAvgAttendance" column="all_avg_attendance"/>
+        <result property="allAccAttendance" column="all_acc_attendance"/>
+        <result property="specialAccAttendance" column="special_acc_attendance"/>
+        <result property="specialAvgAttendance" column="special_avg_attendance"/>
+        <result property="allTodayAmount" column="all_today_amount"/>
+        <result property="specialTodayAmount" column="special_today_amount"/>
+    </resultMap>
     <!-- get member device token -->
     <resultMap id="memberDeviceVO" type="component.member.vo.MemberDeviceVO">
         <result property="memberEmail" column="member_email"/>
@@ -14,8 +28,6 @@
     <!-- class vo -->
     <resultMap id="classVO" type="component.school.vo.ClassVO">
         <result property="classId" column="class_id"/>
-        <!--        <result property="schoolId" column="school_id"/>-->
-        <!--        <result property="weekdayType" column="weekday_type"/>-->
         <result property="authTime" column="auth_time"/>
         <result property="allMembers" column="all_members"/>
         <result property="authMembers" column="auth_members"/>
@@ -23,45 +35,44 @@
 
     <!-- school hashtag -->
     <resultMap id="hashTags" type="component.school.vo.SchoolHashTags">
-        <result property="schoolId" column="school_id"/>
         <result property="hashtagsId" column="hashtags_id"/>
         <result property="hashTag" column="hashtags"/>
     </resultMap>
 
     <!-- school vo -->
     <resultMap id="schoolVO" type="component.school.vo.SchoolVO">
-        <result property="categoryId" column="category_id"/>
         <result property="schoolId" column="school_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="schoolType" column="school_type"/>
+        <result property="memberEmail" column="member_email"/>
         <result property="schoolName" column="school_name"/>
         <result property="setLocation" column="set_location"/>
         <result property="oneLineMessage" column="one_line_message"/>
         <result property="imagePath" column="image_path"/>
-        <result property="allMembers" column="all_members"/>
+        <result property="cumulativeAmount" column="cumulative_amount"/>
         <result property="sumPerson" column="sum_person"/>
         <result property="todayPerson" column="todayPerson"/>
-        <result property="avgPerson" column="avg_person"/>
-        <result property="cumulativeAmount" column="cumulative_amount"/>
         <result property="period" column="period"/>
+        <result property="days" column="days"/>
         <collection property="hashTags" resultMap="hashTags"/>
     </resultMap>
 
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
-        select tmp.category_id,tmp.school_id,tmp.school_name,tmp.set_location,tmp.one_line_message,tmp.image_path,tmp.period,
-        ttttmp.cnt as today_person,tmp.all_members,tttmp.sum_person,tttmp.avg_person,tmp.cumulative_amount,h.hashtags_id,h.hashtags
-        from
-        (select s.category_id,s.school_id,s.school_name,s.set_location,s.one_line_message,s.period,
-        s.image_path,s.cumulative_amount,count(s.school_id) as all_members
-        From school as s
-        left outer join class_members as c on c.school_id = s.school_id group by s.school_id) as tmp -- 학교, 총 재학인원
-        left outer join (select school_id, count(*) as cnt from class_members where date_format(now(),'%Y-%m-%d') between start_date and end_date and
-        set_day <![CDATA[&]]> #{weekday} != 0 group by school_id) as ttttmp on ttttmp.school_id = tmp.school_id
-        left outer join school_hashtags as h on h.school_id = tmp.school_id
+        select s.*,datediff(date_format(now(),'%Y-%m-%d'),date_format(found_date,'%Y-%m-%d')) as days,
+        reservation_num.today_person,hashtag.hashtags_id,hashtag.hashtags,
+        acc_attendance.sum_person
+        from school as s left outer join
+        (select * from
+        (select school_id,count(*) as today_person
+        from class_members
+        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)
+        group by school_id) as
+        tmp) as reservation_num on s.school_id = reservation_num.school_id
+        left outer join school_hashtags as hashtag on s.school_id = hashtag.school_id
         left outer join
-        (select school_id,sum(cnt) as sum_person, avg(cnt) as avg_person from (select *,count(*) as cnt from
-        class_auth_log
-        group by date_format(auth_date,'%Y-%m-%d') order by school_id) as ttmp group by school_id) as tttmp
-        on tmp.school_id = tttmp.school_id
+        (select * from
+        (select school_id,count(*) as sum_person from class_auth_log group by school_id) as tmp) as acc_attendance on s.school_id = acc_attendance.school_id
         <if test="categoryId != 0">
             where category_id = #{categoryId};
         </if>
@@ -96,7 +107,7 @@
     </insert>
 
     <select id="getClasses" parameterType="hashmap" resultMap="classVO">
-        select * from
+        select tmp.class_id,tmp.all_members,auth_table.auth_members from
         (select * ,count(*) as all_members from
         (select *  from class_members as c where school_id = #{schoolId} and date_format(#{selectedDate},'%Y-%m-%d')
         between start_date and end_date and set_day <![CDATA[&]]> #{weekday} != 0) as ttmp -- 선택한 날짜, 유저의 요일에 맞게 가져옴
@@ -105,6 +116,7 @@
         select school_id,class_id,count(*) as auth_members from class_auth_log
         where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') group by school_id,class_id) as auth_table
         on auth_table.school_id = tmp.school_id and auth_table.class_id = tmp.class_id;
+
     </select>
 
     <insert id="saveHashTag" parameterType="hashmap">
@@ -150,7 +162,7 @@
         insert into class_members
         (select null,#{schoolId},#{classId},#{setDay},#{memberEmail},
         #{startDate},#{endDate},#{setPaymentAmount} from dual
-        where (select count(*) from class_members where member_email = #{memberEmail}) = 0);
+        where (select count(*) from class_members where school_id = #{schoolId}) = 0);
     </insert>
     <select id="getDevicesForPushNotificationOfAttendance" parameterType="int" resultMap="memberDeviceVO">
         select *,(
@@ -159,7 +171,7 @@
         where member_email in(
         select member_email from
         (select * from class_members where (date_format(now(),'%Y-%m-%d') between start_date and end_date)
-        and set_day <![CDATA[&]]> 64 != 0) as tmp -- 오늘 출석체크 해야하는 유저 조회
+        and set_day <![CDATA[&]]> #{weekday} != 0) as tmp -- 오늘 출석체크 해야하는 유저 조회
         left outer join class as c on c.class_id = tmp.class_id -- 클래스 고유정보 조회
         where time_format(now(),'%H:%i:%s') <![CDATA[<=]]> auth_time and -- 출석할 시간인지 ??
         time_format(date_add(now(), INTERVAL 1 HOUR),'%H:%i:%s') <![CDATA[>=]]> auth_time)
@@ -168,5 +180,29 @@
     <insert id="classAuth" parameterType="ClassAuthDTO">
         INSERT INTO class_auth_log values (null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now())
     </insert>
+
+    <select id="getExplorer" resultMap="schoolExplorerVO" parameterType="int">
+        select tmp1.*,tmp2.special_acc_payment,tmp2.special_daily_payment,tmp3.all_avg_attendance,tmp3.all_acc_attendance,tmp4.special_avg_attendance,
+      tmp4.special_acc_attendance,tmp5.all_today_amount,tmp6.special_today_amount from(
+      select #{schoolId} as school_id, sum(daily_total_payment) as all_acc_payment,truncate((sum(daily_total_payment)/sum(daily_cnt_person)),-2) as all_daily_payment
+      From school_class_daily_payment where class_id = #{classId}) as tmp1
+      left outer join -- 모든갤럭시 누적보증금, 모든갤럭시 하루평균 보증금
+      (select school_id,sum(daily_total_payment) as special_acc_payment,truncate((sum(daily_total_payment)/sum(daily_cnt_person)),-2) as special_daily_payment
+      from school_class_daily_payment where school_id = #{schoolId} and class_id = #{classId}) as tmp2 on tmp1.school_id = tmp2.school_id
+      left outer join -- 특정학교 누적보증금, 특정갤럭시 하루 평균 보증금
+      (select #{schoolId} as school_id,ifnull(truncate(sum(all_members)/sum(auth_members),2),0) as all_avg_attendance ,sum(auth_members) as all_acc_attendance
+      from school_daily_attendance_rate where class_id = #{classId}) as tmp3 on tmp1.school_id = tmp3.school_id
+      left outer join -- 모든 갤럭시의 평균 출석율, 평균 출석인원
+	  (select school_id,ifnull(truncate(sum(all_members)/sum(auth_members),2),0) as special_avg_attendance ,sum(auth_members) as special_acc_attendance
+       from school_daily_attendance_rate where school_id = #{schoolId} and class_id = #{classId}) as tmp4 on tmp1.school_id = tmp4.school_id
+       left outer join -- 특정학교, 특정 갤럭시 평균 출석율, 평균 출석인원
+      (select #{schoolId} as school_id,sum(set_payment_amount) as all_today_amount
+       from class_members where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)
+       and (class_id = #{classId})) as tmp5 on tmp1.school_id = tmp5.school_id
+       left outer join
+      (select school_id,sum(set_payment_amount) as special_today_amount
+       from class_members where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)
+      and (class_id = #{classId} and school_id = #{schoolId})) as tmp6 on tmp1.school_id = tmp6.school_id
+    </select>
 </mapper>
 

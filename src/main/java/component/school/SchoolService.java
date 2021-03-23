@@ -5,19 +5,19 @@ import component.school.dto.ClassDTO;
 import component.school.dto.ClassJoinDTO;
 import component.school.dto.SchoolDTO;
 import component.school.view.ClassAuthView;
+import component.school.vo.SchoolExplorerVO;
 import exception.view.DefaultErrorView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +40,11 @@ public class SchoolService {
     }
 
     public List<ClassVO> getClasses(ClassDTO classDTOForSelect) {
-        return schoolMapper.getClasses(classDTOForSelect);
+        List<ClassVO> classVOList = schoolMapper.getClasses(classDTOForSelect);
+        addClassVO(classVOList); // 출석체크 할 학생이 없는 class 도 list 에 추가한다.
+        return classVOList;
     }
 
-//    public int registerClass(ClassDTO classDTO) {
-//        return schoolMapper.registerClass(classDTO);
-//    }
 
     public int saveHashTag(HashMap<String, Object> hashMap) {
         return schoolMapper.saveHashTag(hashMap);
@@ -59,7 +58,7 @@ public class SchoolService {
         return schoolMapper.getSchoolsBySearch(keyword);
     }
 
-    public int joinClass(ClassJoinDTO classJoinDTO,int type) throws ParseException {
+    public int joinClass(ClassJoinDTO classJoinDTO, int type) throws ParseException {
         Date today = new Date();
         if (simpleDateFormat.parse(classJoinDTO.getStartDate()).compareTo(today) < 0
                 || simpleDateFormat.parse(classJoinDTO.getEndDate()).compareTo(today) < 0) {
@@ -67,9 +66,9 @@ public class SchoolService {
             return -1;
         }
 
-        if(type == 0){ // 비공식
+        if (type == 0) { // 비공식
             return schoolMapper.joinClassInOfficial(classJoinDTO);
-        }else{ // 공식
+        } else { // 공식
             return schoolMapper.joinClassInNonOfficial(classJoinDTO);
         }
     }
@@ -95,6 +94,24 @@ public class SchoolService {
             view.setMsg("success");
         }
         return view;
+    }
 
+    public SchoolExplorerVO getExplorer(int schoolId, int classId, int weekday) {
+        return schoolMapper.getExplorer(schoolId, classId, weekday);
+    }
+
+    private void addClassVO(List<ClassVO> classVOS) {
+        for (int i = 1; i <= 24; i++) {
+            boolean isSame = false;
+            for (ClassVO classVO : classVOS) {
+                if (i == classVO.getClassId()) {
+                    isSame = true;
+                    break;
+                }
+            }
+            if (!isSame) {
+                classVOS.add(new ClassVO(i, 0, 0));
+            }
+        }
     }
 }
