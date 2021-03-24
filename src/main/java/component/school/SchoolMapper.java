@@ -1,12 +1,14 @@
 package component.school;
 
 import component.member.vo.MemberDeviceVO;
-import component.school.dto.ClassAuthDTO;
-import component.school.dto.ClassDTO;
-import component.school.dto.ClassJoinDTO;
-import component.school.dto.SchoolDTO;
+import component.school.dto.*;
+import component.school.explorer.dto.SchoolExplorerDTO;
+import component.school.explorer.dto.SchoolExplorerRewardDTO;
+import component.school.explorer.vo.SchoolExplorerMyInfo;
 import component.school.vo.ClassVO;
-import component.school.vo.SchoolExplorerVO;
+import component.school.explorer.vo.SchoolClassAvgAttendanceRateVO;
+import component.school.explorer.vo.SchoolExplorerAttendanceListVO;
+import component.school.explorer.vo.SchoolRewardVO;
 import component.school.vo.SchoolVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SchoolMapper {
-    List<SchoolVO> getSchools(@Param("categoryId") int categoryId,@Param("weekday") int weekday); // 학교정보 가져오기
+    List<SchoolVO> getSchools(@Param("categoryId") int categoryId, @Param("weekday") int weekday); // 학교정보 가져오기
 
     List<SchoolVO> getSchoolsByPlanetCode(@Param("planetCode") String planetCode);
 
@@ -39,5 +41,13 @@ public interface SchoolMapper {
 
     int classAuth(ClassAuthDTO classAuthDTO);
 
-    SchoolExplorerVO getExplorer(@Param("schoolId") int schoolId,@Param("classId") int classId,@Param("weekday") int weekday);
+    SchoolRewardVO getExplorerReward(@Param("schoolId") int schoolId, @Param("classId") int classId, @Param("weekday") int weekday);
+
+    List<SchoolExplorerAttendanceListVO> getAttendanceList(SchoolExplorerDTO schoolExplorerDTO);
+
+    SchoolClassAvgAttendanceRateVO getAttendanceRate(@Param("schoolId") int schoolId,@Param("classId") int classId);
+
+    int getPredictReward(SchoolExplorerRewardDTO schoolExplorerPredictRewardDTO);
+
+    SchoolExplorerMyInfo getMyInfo(@Param("schoolId") int schoolId,@Param("classId") int classId,@Param("memberEmail") String memberEmail);
 }

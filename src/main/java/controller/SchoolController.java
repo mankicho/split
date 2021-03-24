@@ -1,13 +1,11 @@
 package controller;
 
 import component.school.SchoolService;
-import component.school.dto.ClassAuthDTO;
-import component.school.dto.ClassDTO;
-import component.school.dto.ClassJoinDTO;
-import component.school.dto.SchoolDTO;
+import component.school.dto.*;
+import component.school.explorer.dto.SchoolExplorerDTO;
+import component.school.explorer.dto.SchoolExplorerRewardDTO;
+import component.school.explorer.vo.*;
 import component.school.view.ClassAuthView;
-import component.school.vo.SchoolExplorerVO;
-import exception.view.DefaultErrorView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
 import lombok.RequiredArgsConstructor;
@@ -131,6 +129,11 @@ public class SchoolController {
         String qrToken = request.getParameter("qr-token");
         String emailToken = request.getParameter("mail-token");
         String now = request.getParameter("now");
+        String latStr = request.getParameter("lat");
+        String lngStr = request.getParameter("lng");
+
+        double lat = Double.parseDouble(latStr);
+        double lng = Double.parseDouble(lngStr);
 
         // timestamp 값
         long timestamp = Long.parseLong(now);
@@ -142,12 +145,32 @@ public class SchoolController {
         // 인증에 필요한 데이터 dto
         ClassAuthDTO authDTO = new ClassAuthDTO(schoolId, classId, planet, email);
 
-        return schoolService.classAuth(authDTO, timestamp);
+        return schoolService.classAuth(authDTO, timestamp, lat, lng);
     }
 
-    @GetMapping(value = "/explorer/get.do")
-    public SchoolExplorerVO getExplorer(@RequestParam("schoolId") int schoolId, @RequestParam("classId") int classId,
-                                        @RequestParam("weekday") int weekday) {
-        return schoolService.getExplorer(schoolId, classId, weekday);
+    // 탐험단 - 상금 탭 가져오기
+    @PostMapping(value = "/explorer/reward/get.do")
+    public SchoolRewardVO getExplorerReward(@RequestBody SchoolExplorerRewardDTO schoolExplorerRewardDTO) {
+        SchoolRewardVO schoolRewardVO = schoolService.getExplorerReward(schoolExplorerRewardDTO);
+        int predictReward = schoolService.getPredictReward(schoolExplorerRewardDTO);
+        schoolRewardVO.setPredictReward(predictReward);
+        return schoolRewardVO;
+    }
+
+    // 탐험단 정보 가져오기
+    @PostMapping(value = "/explorer/att/list/get.do")
+    public SchoolExplorerVO getExplorerVO(@RequestBody SchoolExplorerDTO schoolExplorerDTO) {
+        int schoolId = schoolExplorerDTO.getSchoolId();
+        int classId = schoolExplorerDTO.getClassId();
+        List<SchoolExplorerAttendanceListVO> schoolExplorerAttendanceListVOS = schoolService.getAttendanceList(schoolExplorerDTO);
+        SchoolClassAvgAttendanceRateVO schoolClassAvgAttendanceRateVO = schoolService.getAttendanceRate(schoolId, classId);
+
+        return new SchoolExplorerVO(schoolExplorerAttendanceListVOS, schoolClassAvgAttendanceRateVO);
+    }
+
+    @PostMapping(value = "/explorer/my/info/get.do")
+    public SchoolExplorerMyInfo getMyInfo(@RequestParam("schoolId") int schoolId, @RequestParam("classId") int classId,
+                                          @RequestParam("memberEmail") String memberEmail) {
+        return schoolService.getMyInfo(schoolId, classId, memberEmail);
     }
 }

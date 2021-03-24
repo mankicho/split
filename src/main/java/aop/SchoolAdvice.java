@@ -1,6 +1,8 @@
-package aop.service;
+package aop;
 
 import component.school.dto.ClassJoinDTO;
+import component.school.explorer.dto.SchoolExplorerDTO;
+import component.school.explorer.dto.SchoolExplorerRewardDTO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +14,6 @@ import org.springframework.util.StopWatch;
 import security.token.TokenGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Aspect
@@ -98,6 +99,33 @@ public class SchoolAdvice {
         }
 
         return object;
+    }
+
+    @Around("execution(* component.school.SchoolService.getAttendanceList(..))")
+    public Object aroundGetExplorerVOAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        Object[] parameters = proceedingJoinPoint.getArgs();
+        SchoolExplorerDTO dto = (SchoolExplorerDTO) parameters[0];
+        log.info(dto);
+
+        Object returnValue = proceedingJoinPoint.proceed();
+
+        log.info(returnValue);
+        return returnValue;
+    }
+
+    @Around("execution(* component.school.SchoolService.*(..))")
+    public Object getExploreAttendanceRateAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        Object returnValue = proceedingJoinPoint.proceed();
+        log.info(returnValue);
+        return returnValue;
+    }
+
+
+    @Before("execution(* component.school.SchoolService.getExplorerReward(..))")
+    public void getExplorerRewardAdvice(JoinPoint joinPoint) throws Throwable {
+        Object[] parameters = joinPoint.getArgs();
+        log.info(parameters[0].toString());
+        SchoolExplorerRewardDTO schoolExplorerRewardDTO = (SchoolExplorerRewardDTO) parameters[0];
     }
 
     @AfterThrowing(value = "execution(* component.school.SchoolService.joinClass(..))", throwing = "e")
