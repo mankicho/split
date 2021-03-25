@@ -1,5 +1,6 @@
 package component.zone;
 
+import component.zone.vo.ZoneLatLngVO;
 import component.zone.vo.ZoneVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,4 +14,6 @@ public interface ZoneMapper {
     int isExist(@Param("code") String code);
 
     List<String> autoComplete();
+
+    ZoneLatLngVO getZone(@Param("planetCode") String planetCode);
 }

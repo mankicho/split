@@ -1,7 +1,7 @@
 package component.zone.vo;
 
-import component.zone.ZoneImageDTO;
-import component.zone.ZoneOperDTO;
+import component.zone.dto.ZoneImageDTO;
+import component.zone.dto.ZoneOperDTO;
 import lombok.Data;
 
 import java.util.List;

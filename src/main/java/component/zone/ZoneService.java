@@ -1,18 +1,36 @@
 package component.zone;
 
+import component.zone.vo.ZoneLatLngVO;
 import component.zone.vo.ZoneVO;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface ZoneService {
+@Service
+@RequiredArgsConstructor
+public class ZoneService {
 
-    List<ZoneVO> selectZones(); // 특정 위치 반경의 존 가져오기
+    private final ZoneMapper zoneMapper;
 
-    int recordSearching(String email, String words);
+    public List<ZoneVO> selectZones() {
+        return zoneMapper.selectZones();
+    }
 
-    int isExist(String code);
+    public int recordSearching(String email, String words) {
+        return 0;
+    }
 
-    List<String> autoComplete();
+    public int isExist(String code) {
+        return zoneMapper.isExist(code);
+    }
 
+    public List<String> autoComplete() {
+        return zoneMapper.autoComplete();
+    }
 
 }

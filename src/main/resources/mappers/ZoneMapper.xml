@@ -2,7 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.zone.ZoneMapper">
-    <resultMap id="zoneOperMap" type="component.zone.ZoneOperDTO">
+    <!-- zone 의 위치 lat,lng -->
+    <resultMap id="zoneLatLngVO" type="component.zone.vo.ZoneLatLngVO">
+        <result property="planetCode" column="planet_code"/>
+        <result property="lag" column="lag"/>
+        <result property="lng" column="lng"/>
+    </resultMap>
+    <resultMap id="zoneOperMap" type="component.zone.dto.ZoneOperDTO">
         <result property="code" column="planet_code"/>
         <result property="monday" column="monday"/>
         <result property="tuesday" column="tuesday"/>
@@ -13,7 +19,7 @@
         <result property="sunday" column="sunday"/>
     </resultMap>
 
-    <resultMap id="imageMap" type="component.zone.ZoneImageDTO">
+    <resultMap id="imageMap" type="component.zone.dto.ZoneImageDTO">
         <result property="code" column="planet_code"/>
         <result property="innerImage" column="inner_image_path"/>
         <result property="outerImage" column="outer_image_path"/>
@@ -40,10 +46,7 @@
          left outer join (
          select *,count(*) as num from school group by set_location) as s on p.planet_code = s.set_location ;
     </select>
-    <!--    select * from planet as p-->
-    <!--    left join planet_oper_time as o on o.planet_code = p.planet_code-->
-    <!--    left join planet_image as i on p.planet_code = i.planet_code-->
-    <!--    left join plan as l on p.planet_code = l.place_setting-->
+
     <select id="isExist" parameterType="string" resultType="int">
         select count(*) from planet where planet_code = #{code}
     </select>
@@ -52,5 +55,7 @@
         select area_name from disnct order by area_name
     </select>
 
-
+    <select id="getZone" parameterType="string" resultMap="zoneLatLngVO">
+        select planet_code,lat,lng from planet where planet_code = #{planetCode};
+    </select>
 </mapper>

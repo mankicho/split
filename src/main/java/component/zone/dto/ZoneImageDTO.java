@@ -1,4 +1,4 @@
-package component.zone;
+package component.zone.dto;
 
 import lombok.Data;
 
