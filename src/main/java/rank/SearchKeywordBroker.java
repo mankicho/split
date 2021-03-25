@@ -16,9 +16,9 @@ import java.util.Map;
 public class SearchKeywordBroker {
 
     private WebSocket ws;
-    private String rankServer = "http://165.246.197.126:8090/echo/alarm";
+    private String rankServer = "http://165.246.197.126:8090/echo/alarm";  // 검색어서버 url
 
-    String myMessage;
+    String myMessage; // 메세지
 
     // websocket 생성이 실패하면 IOException 발생.
     // handshakes 도중에 error 발생 시 WebsocketException 발생.
@@ -55,7 +55,7 @@ public class SearchKeywordBroker {
 
                 })
                 .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE)
-                .connect();
+                .   connect();
     }
 
     public RankServerStatus sendKeywordToSearchRankServer(String str) {

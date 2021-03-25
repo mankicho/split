@@ -9,9 +9,9 @@
         <typeAlias alias="MemberDTO" type="component.member.dto.MemberDTO"/>
         <typeAlias alias="AuthDTO" type="component.member.AuthDTO"/>
         <typeAlias type="component.zone.vo.ZoneVO" alias="ZoneVO"/>
-        <typeAlias type="component.zone.ZoneOperDTO" alias="ZoneOperDTO"/>
-        <typeAlias type="component.zone.ZoneImageDTO" alias="ZoneImageDTO"/>
-        <typeAlias type="component.zone.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
+        <typeAlias type="component.zone.dto.ZoneOperDTO" alias="ZoneOperDTO"/>
+        <typeAlias type="component.zone.dto.ZoneImageDTO" alias="ZoneImageDTO"/>
+        <typeAlias type="component.zone.dto.ZoneSearchingRecordDTO" alias="ZoneSearchingRecordDTO"/>
         <typeAlias type="component.member.dto.MemberTmpInfoDTO" alias="MemberTmpInfoDTO"/>
         <typeAlias type="component.member.vo.FriendAddRequestVO" alias="FriendAddRequestVO"/>
         <typeAlias type="component.member.vo.MemberDeviceVO" alias="MemberDeviceVO"/>
@@ -26,6 +26,8 @@
         <typeAlias type="component.school.dto.ClassJoinDTO" alias="ClassJoinDTO"/>
         <typeAlias type="component.school.dto.ClassAuthDTO" alias="ClassAuthDTO"/>
         <typeAlias type="component.home.HomeDataDTO" alias="HomeDataDTO"/>
+        <typeAlias type="component.school.explorer.dto.SchoolExplorerDTO" alias="SchoolExplorerDTO"/>
+        <typeAlias type="component.school.explorer.dto.SchoolExplorerRewardDTO" alias="SchoolExplorerRewardDTO"/>
 
 
     </typeAliases>
