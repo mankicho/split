@@ -273,13 +273,14 @@
     </select>
 
     <select id="getMyInfo" resultMap="schoolExplorerMyInfo">
-    select tmp1.cnt as total_num,tmp2.attendance_num as my_attendance_num,tmp1.all_amount,`sum`,
+    select tmp1.set_day,tmp1.cnt as total_num,tmp2.attendance_num as my_attendance_num,tmp1.all_amount,`sum`,
     (tmp1.set_payment_amount * tmp2.attendance_num) as my_payment,p.member_point,
-    (select dummy_date from
-    (select * from dummy_date where dummy_date > date_Format(now(),'%Y-%m-%d') and (tmp1.set_day <![CDATA[&]]> weekday != 0)
-    order by dummy_date asc limit 1) as tmp) as `date`
+    (select dummy_date from class_members as c left outer join dummy_date as d on dummy_date
+    between date_format(date_add(now(),interval 1 day),'%Y-%m-%d') and end_date
+    where member_email = #{memberEmail} and set_day <![CDATA[&]]> weekday != 0
+    and school_id = #{schoolId} and class_id = #{classId} limit 1) as `date`
     ,490 as dust from
-    (select set_day,school_id,class_id,cnt,cnt*set_payment_amount as all_amount ,set_payment_amount from class_members
+    (select set_day,school_id,class_id,cnt,cnt*set_payment_amount as all_amount ,set_payment_amount from class_members /*STRAIGHT_JOIN  */
     where school_id = #{schoolId} and class_id = #{classId} and member_email = #{memberEmail}) as tmp1
     left outer join
     (select member_email,school_id,class_id,count(*) as attendance_num from class_auth_log
