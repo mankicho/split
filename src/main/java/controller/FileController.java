@@ -43,15 +43,12 @@ public class FileController {
     public void fileUploadBackground(@RequestParam("file") MultipartFile multipartFile) {
         String path = home + "/profile/back/"; // 파일 경로
         fileUploadService.fileUpload(path, multipartFile);
-        log.info("multipartFile = " + multipartFile);
-
         // todo 1. 업로드가 잘 되었는지 유저에게 리턴값이 있어야함.
     }
 
     @GetMapping(value = "/get.do", produces = MediaType.IMAGE_PNG_VALUE)
     public void getImage(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String path = req.getParameter("imagePath");
-        log.info(path);
         FileInputStream fis = new FileInputStream(home + "/" + path);
         OutputStream out = res.getOutputStream();
         FileCopyUtils.copy(fis, out);

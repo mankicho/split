@@ -48,7 +48,6 @@ public class FcmNotifier {
                     .build();
 
             String response = FirebaseMessaging.getInstance().send(msg);
-            log.info("successfully sent message: " + response);
         } catch (IOException | FirebaseMessagingException e) {
             log.info("IOException : " + e.getMessage());
             e.printStackTrace();
