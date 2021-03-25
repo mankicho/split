@@ -10,7 +10,7 @@
         <result property="allAmount" column="all_amount"/>
         <result property="myPayment" column="my_payment"/>
         <result property="memberPoint" column="member_point"/>
-        <result property="setDay" column="set_day"/>
+        <result property="date" column="date"/>
         <result property="dust" column="dust"/>
     </resultMap>
     <!-- 탐험단 - 평균 출석률 -->
@@ -273,16 +273,20 @@
     </select>
 
     <select id="getMyInfo" resultMap="schoolExplorerMyInfo">
-    select tmp1.cnt as total_num,tmp2.attendance_num as my_attendance_num,tmp1.all_amount,
-    (tmp1.set_payment_amount * tmp2.attendance_num) as my_payment,p.member_point,tmp1.set_day,490 as dust from
+    select tmp1.cnt as total_num,tmp2.attendance_num as my_attendance_num,tmp1.all_amount,`sum`,
+    (tmp1.set_payment_amount * tmp2.attendance_num) as my_payment,p.member_point,
+    (select dummy_date from
+    (select * from dummy_date where dummy_date > date_Format(now(),'%Y-%m-%d') and (tmp1.set_day <![CDATA[&]]> weekday != 0)
+    order by dummy_date asc limit 1) as tmp) as `date`
+    ,490 as dust from
     (select set_day,school_id,class_id,cnt,cnt*set_payment_amount as all_amount ,set_payment_amount from class_members
     where school_id = #{schoolId} and class_id = #{classId} and member_email = #{memberEmail}) as tmp1
     left outer join
     (select member_email,school_id,class_id,count(*) as attendance_num from class_auth_log
     where school_id = #{schoolId} and class_id = #{classId} and member_email = #{memberEmail}) as tmp2
     on  tmp1.school_id = tmp2.school_id and tmp1.school_id = tmp2.school_id
-    left outer join members_point as p on tmp2.member_email = p.member_email
-
+    left outer join (select *,sum(member_point) as `sum` from members_point group by member_email) as p
+    on tmp2.member_email = p.member_email;
     </select>
 </mapper>
 
