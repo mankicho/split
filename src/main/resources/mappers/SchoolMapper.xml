@@ -3,6 +3,29 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.school.SchoolMapper">
 
+    <resultMap id="hashtagsVO" type="component.school.vo.SchoolHashTags">
+        <result property="hashtagsId" column="hashtags_id"/>
+        <result property="hashTag" column="hashtags"/>
+    </resultMap>
+
+    <!-- 나의 탐험단 리스트 -->
+    <resultMap id="myExplorersVO" type="component.school.explorer.vo.SchoolMyExplorersVO">
+        <result property="schoolId" column="school_id"/>
+        <result property="classId" column="class_id"/>
+        <result property="schoolName" column="school_name"/>
+        <result property="schoolType" column="school_type"/>
+        <result property="nickname" column="nickname"/>
+        <result property="imagePath" column="image_path"/>
+        <result property="todayReservedPerson" column="today_reserved_person"/>
+        <collection property="hashTags" resultMap="hashtagsVO"/>
+    </resultMap>
+    <!-- class_members -->
+    <resultMap id="classAuthVO" type="component.school.vo.ClassAuthVO">
+        <result property="schoolId" column="school_id"/>
+        <result property="classId" column="class_id"/>
+        <result property="diff" column="diff"/>
+        <result property="setLocation" column="set_location"/>
+    </resultMap>
     <!-- 탐험단 - 나의 정보 -->
     <resultMap id="schoolExplorerMyInfo" type="component.school.explorer.vo.SchoolExplorerMyInfo">
         <result property="totalNum" column="total_num"/>
@@ -189,16 +212,15 @@
         where (select count(*) from class_members where school_id = #{schoolId}) = 0);
     </insert>
     <select id="getDevicesForPushNotificationOfAttendance" parameterType="int" resultMap="memberDeviceVO">
-        select *,(
-        select school_name from class_members as c left outer join school as s on c.school_id = s.school_id where c.member_email = m.member_email) as school_name
-        from member_device as m
-        where member_email in(
-        select member_email from
-        (select * from class_members where (date_format(now(),'%Y-%m-%d') between start_date and end_date)
-        and set_day <![CDATA[&]]> #{weekday} != 0) as tmp -- 오늘 출석체크 해야하는 유저 조회
-        left outer join class as c on c.class_id = tmp.class_id -- 클래스 고유정보 조회
-        where time_format(now(),'%H:%i:%s') <![CDATA[<=]]> auth_time and -- 출석할 시간인지 ??
-        time_format(date_add(now(), INTERVAL 1 HOUR),'%H:%i:%s') <![CDATA[>=]]> auth_time)
+        select member_email,school_name,device_type,device_token from
+        (select m.*,s.school_name,date_format(concat(date_format(now(),'%Y-%m-%d'),' ',c.auth_time),'%Y-%m-%d %H:%i:%s')
+        as auth_time,de.device_token,de.device_type
+        from class_members as m left outer join school as s on m.school_id = s.school_id
+        left outer join class as c on m.class_id = c.class_id
+        left outer join member_device as de on m.member_email = de.member_email
+        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)) as tmp
+        where unix_timestamp(now())-unix_timestamp(auth_time) between 0 and 1800;
+
     </select>
 
     <insert id="classAuth" parameterType="ClassAuthDTO">
@@ -288,6 +310,34 @@
     on  tmp1.school_id = tmp2.school_id and tmp1.school_id = tmp2.school_id
     left outer join (select *,sum(member_point) as `sum` from members_point group by member_email) as p
     on tmp2.member_email = p.member_email;
+    </select>
+
+    <select id="getMyClassMembers" parameterType="classAuthDTO" resultMap="classAuthVO">
+        select school_id,class_id,diff,ifnull(set_location,' ') as set_location from(select *,(unix_timestamp(auth_time)-unix_timestamp(now())) as diff from (select s.set_location,m.*,
+        if(m.class_id = 17,date_format(concat(date_format(date_add(now(),interval 1 day),'%Y-%m-%d'),' ',auth_time),'%Y-%m-%d %H:%i:%s'),
+        date_format(concat(date_format(now(),'%Y-%m-%d'),' ',auth_time),'%Y-%m-%d %H:%i:%s')) as auth_time
+        from class_members as m
+        left outer join school as s
+        on m.school_id = s.school_Id
+        left outer join class as c
+        on m.class_id = c.class_id
+        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0) and
+        (m.member_email = #{memberEmail})) as t) as p;
+    </select>
+
+    <select id="getMyExplorersVO" parameterType="string" resultMap="myExplorersVO">
+     select c.school_id,c.class_id,s.school_name,s.school_type,s.image_path,tmp.cnt as today_reserved_person,h.hashtags_id,h.hashtags
+    ,(select nickname from members where email = s.member_email) as nickname
+     from class_members as c
+     left outer join school as s
+     on c.school_id = s.school_id
+     left outer join
+     school_hashtags as h
+     on s.school_id = h.school_id
+     left outer join
+     (select school_id,count(*) as cnt from class_members group by school_id) as tmp
+     on c.school_id = tmp.school_id
+     where c.member_email = #{memberEmail} order by c.school_id;
     </select>
 </mapper>
 

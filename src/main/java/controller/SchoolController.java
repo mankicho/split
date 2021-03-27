@@ -8,6 +8,7 @@ import component.school.explorer.vo.*;
 import component.school.view.ClassAuthView;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
+import component.zone.ZoneService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
@@ -31,6 +32,7 @@ import java.util.List;
 public class SchoolController {
 
     private final SchoolService schoolService;
+    private final ZoneService zoneService;
 
     private final TokenGeneratorService tokenGeneratorService;
     private final SearchKeywordBroker broker = new SearchKeywordBroker();
@@ -120,32 +122,10 @@ public class SchoolController {
         return result;
     }
 
-    // 인증하기
+    // 공식 갤럭시 인증하기
     @GetMapping(value = "/class/auth")
-    public ClassAuthView classAuthDo(HttpServletRequest request) {
-        // 파라미터 가져오기
-        int schoolId = Integer.parseInt(request.getParameter("schoolId"));
-        int classId = Integer.parseInt(request.getParameter("classId"));
-        String qrToken = request.getParameter("qr-token");
-        String emailToken = request.getParameter("mail-token");
-        String now = request.getParameter("now");
-        String latStr = request.getParameter("lat");
-        String lngStr = request.getParameter("lng");
-
-        double lat = Double.parseDouble(latStr);
-        double lng = Double.parseDouble(lngStr);
-
-        // timestamp 값
-        long timestamp = Long.parseLong(now);
-
-        // 토큰값에서 subject 추출.
-        String planet = tokenGeneratorService.getSubject(qrToken);
-        String email = tokenGeneratorService.getSubject(emailToken);
-
-        // 인증에 필요한 데이터 dto
-        ClassAuthDTO authDTO = new ClassAuthDTO(schoolId, classId, planet, email);
-
-        return schoolService.classAuth(authDTO, timestamp, lat, lng);
+    public ClassAuthView classAuthDo(ClassAuthDTO classAuthDTO) {
+        return schoolService.classAuth(classAuthDTO);
     }
 
     // 탐험단 - 상금 탭 가져오기
@@ -172,5 +152,10 @@ public class SchoolController {
     public SchoolExplorerMyInfo getMyInfo(@RequestParam("schoolId") int schoolId, @RequestParam("classId") int classId,
                                           @RequestParam("memberEmail") String memberEmail) {
         return schoolService.getMyInfo(schoolId, classId, memberEmail);
+    }
+
+    @PostMapping(value = "/my/explorer/list/get.do")
+    public List<SchoolMyExplorersVO> getMyExplorersVO(@RequestParam("memberEmail") String memberEmail) {
+        return schoolService.getMyExplorersVO(memberEmail);
     }
 }

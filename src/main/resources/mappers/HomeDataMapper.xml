@@ -3,14 +3,31 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.home.HomeDataMapper">
 
+    <resultMap id="homeDataMyInfo" type="component.home.vo.HomeDataMyInfo">
+        <result property="myAttCheck" column="my_att_check"/>
+        <result property="myDust" column="my_dust"/>
+        <result property="allUniverseNum" column="all_universe_num"/>
+        <result property="memberPoint" column="member_point"/>
+    </resultMap>
+
+    <resultMap id="homeExplorerVO" type="component.home.vo.HomeExplorerVO">
+        <result property="schoolId" column="school_id"/>
+        <result property="schoolType" column="school_type"/>
+        <result property="schoolName" column="school_name"/>
+        <result property="setLocation" column="set_location"/>
+        <result property="imagePath" column="image_path"/>
+        <result property="myNeedTotalCheckNum" column="my_need_total_check_num"/>
+        <result property="classId" column="class_id"/>
+        <result property="setPaymentAmount" column="set_payment_amount"/>
+        <result property="myTotalCheckNum" column="my_total_check_num"/>
+        <result property="todayReservedPerson" column="today_reserved_person"/>
+        <result property="dummyDate" column="dummy_date"/>
+    </resultMap>
+
     <resultMap id="homeData" type="component.home.view.HomeData">
         <result property="memberEmail" column="member_email"/>
-        <result property="num" column="num"/>
-        <result property="schoolId" column="school_id"/>
-        <result property="class_id" column="classId"/>
-        <result property="schoolName" column="school_name"/>
-        <result property="imagePath" column="image_path"/>
-        <result property="allNums" column="all_nums"/>
+        <collection property="homeDataMyInfo" resultMap="homeDataMyInfo"/>
+        <collection property="homeExplorerVOS" resultMap="homeExplorerVO"/>
     </resultMap>
 
     <select id="selectPlanAuthLogsOfToday" resultType="int">
@@ -29,14 +46,36 @@
     </select>
 
     <select id="getHomeData" parameterType="HomeDataDTO" resultMap="homeData">
-        select att.*,sch.school_id,sch.class_id,sch.school_name,sch.image_path,
-        (select count(*) from class_auth_log where date_format(now(),'%Y-%m-%d')) as all_nums  from
-        (select member_email,count(*) as num from class_auth_log where member_email = #{memberEmail}) att
+        select p.member_email,p.member_point,d.dust,
+        (select count(*) from class_auth_log where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) as all_universe_num,
+        my.my_att_check,if((select planet_name from planet where planet_code = card.set_location) is not null,'지정장소','자유장소') as set_location,
+        card.image_path,card.my_need_total_check_num,card.school_name,card.school_type,card.school_id,card.class_id,card.set_payment_amount,card.my_total_check_num,card.today_reserved_person,card.dummy_date
+        from members_point as p left outer join members_dust as d on p.member_email = d.member_email
+        left outer join
+        (select member_email,count(*) as my_att_check from class_auth_log where member_email = #{memberEmail}) as my
+        on my.member_email = p.member_email
+        left outer join
+		(select s.school_id,s.school_type,s.school_name,s.set_location,s.image_path,c.member_email,c.class_id,c.cnt as my_need_total_check_num,
+        c.set_payment_amount,l.my_total_check_num,tmp.today_reserved_person,dummy_date
+        from school as s left outer join
+        class_members as c -- 학교 데이터
+        on s.school_id = c.school_id
+        left outer join
+        (select school_id,class_id,member_email,count(*) as my_total_check_num from class_auth_log group by school_id,class_Id,member_email) as l
+        on c.member_email = l.member_email and c.school_id = l.school_id and c.class_id = l.class_id
+        left outer join
+       (select school_id,class_id,count(*) as today_reserved_person from class_members
+        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)
+        group by school_id,class_id) as tmp -- 오늘 예약자
+        on c.school_id = tmp.school_id and c.class_id = tmp.class_id
         left outer join
         (
-        select c.school_id, c.class_id, c.member_email, s.school_name,s.image_path
-        from class_members as c left outer join school as s on s.school_id = c.school_id
-        where c.member_email = #{memberEmail} and set_day <![CDATA[&]]> #{weekday} != 0) as sch
-        on att.member_email = sch.member_email;
+        select school_id,class_id,dummy_date from class_members as c left outer join dummy_date as d on dummy_date
+        between date_format(date_add(now(),interval 1 day),'%Y-%m-%d') and end_date
+        where weekday <![CDATA[&]]> set_day != 0 group by school_id, class_id) as ttmp2 -- dummy_date
+        on c.school_id = ttmp2.school_id and c.class_id = ttmp2.class_id
+        where date_format(now(),'%Y-%m-%d') between start_date and end_date and c.member_email = #{memberEmail}) as card
+        on card.member_email = p.member_email where p.member_email = #{memberEmail};
+
     </select>
 </mapper>

@@ -12,11 +12,10 @@ import view.DefaultResultView;
 public class ClassAuthView extends DefaultResultView {
 
     private int authenticatedRow;
-
     public ClassAuthView(SchoolErrorCode code) {
         this.status = code.getStatus();
         this.msg = code.getMsg();
-        this.authenticatedRow = 0;
+        this.authenticatedRow = -1;
     }
 
 }

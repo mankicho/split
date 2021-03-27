@@ -3,18 +3,18 @@ package component.school;
 import component.school.dto.*;
 import component.school.explorer.dto.SchoolExplorerDTO;
 import component.school.explorer.dto.SchoolExplorerRewardDTO;
-import component.school.explorer.vo.SchoolExplorerMyInfo;
+import component.school.explorer.vo.*;
 import component.school.view.ClassAuthView;
-import component.school.explorer.vo.SchoolClassAvgAttendanceRateVO;
-import component.school.explorer.vo.SchoolExplorerAttendanceListVO;
-import component.school.explorer.vo.SchoolRewardVO;
+import component.school.vo.ClassAuthVO;
 import component.school.vo.ClassVO;
 import component.school.vo.SchoolVO;
 import component.zone.ZoneMapper;
 import component.zone.vo.ZoneLatLngVO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import security.token.TokenGeneratorService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,12 +22,16 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class SchoolService {
 
     private final SchoolMapper schoolMapper; // DB 쿼리문을 수행하는 mapper
+    private final TokenGeneratorService tokenGeneratorService;
 
     private final ZoneMapper zoneMapper;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // 날짜를 변환하기위한 포매터
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+    private SimpleDateFormat allFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public List<SchoolVO> getSchools(int categoryId, int weekday) { // 학교 가져오기
         return schoolMapper.getSchools(categoryId, weekday);
@@ -76,48 +80,54 @@ public class SchoolService {
     }
 
     // 출석 인증하기
-    public ClassAuthView classAuth(ClassAuthDTO classAuthDTO, long timestamp, double lat, double lng) {
+    public ClassAuthView classAuth(ClassAuthDTO classAuthDTO) {
 
+        long now = new Date().getTime();
         // qr 코드의 timestamp 값이 현재보다 크면
-        if (new Date(timestamp).compareTo(new Date()) > 0) {
-            SchoolErrorCode errorCode = SchoolErrorCode.FutureThanCurrentTimeError;
-            ClassAuthView view = new ClassAuthView(errorCode);
-            view.setAuthenticatedRow(-1);
-            return view;
+        if (!(now >= classAuthDTO.getNow() && now <= classAuthDTO.getNow() + 20000L)) {
+            log.info(simpleDateFormat.format(new Date(classAuthDTO.getNow())));
+            // qr 코드가 갱신되서 인증실패. 다시 요청해줘야힘
+            return new ClassAuthView(SchoolErrorCode.FutureThanCurrentTimeError);
         }
 
+        double dist = getDist(classAuthDTO);
+        log.info("dist = " + dist);
+        if (dist > 50.0) {
+            // 사용자 위치와 카페의 위치가 맞지않다.
+            return new ClassAuthView(SchoolErrorCode.PositionNotMatchError);
+        }
         ClassAuthView view = new ClassAuthView();
 
-        // 유저의 위치와 카페의 위치가 맞지않으면
-        String planetCode = classAuthDTO.getPlanetCode();
-        if (planetCode != null && planetCode.equals("")) {
-            ZoneLatLngVO latLngVO = zoneMapper.getZone(planetCode);
+        classAuthDTO.setMemberEmail(tokenGeneratorService.getSubject(classAuthDTO.getMemberEmail()));
+        log.info(classAuthDTO);
+        List<ClassAuthVO> myClassMembers = schoolMapper.getMyClassMembers(classAuthDTO);
+        if (myClassMembers == null || myClassMembers.isEmpty()) {
+            return new ClassAuthView(SchoolErrorCode.DoNotHavePlansError);
+        }
 
-            double zoneLat = latLngVO.getLat();
-            double zoneLng = latLngVO.getLng();
-
-            double dist = distance(lat, lng, zoneLat, zoneLng);
-
-            if(dist <= 50.0){
-                view.setMsg("invalid lat,lng from speck zone");
-                view.setStatus(400);
-                view.setAuthenticatedRow(-1);
-                return view;
+        ClassAuthVO myAuthVO = null;
+        for (ClassAuthVO vo : myClassMembers) {
+            if (vo.getDiff() <= 3600 && vo.getDiff() >= 0) {
+                myAuthVO = vo;
+                break;
             }
-
         }
 
-        int insertedRow = schoolMapper.classAuth(classAuthDTO); // 출석체크
-
-        if (insertedRow == 0) {  // DB 에러
-            view.setStatus(500);
-            view.setAuthenticatedRow(0);
-            view.setMsg("server error");
-        } else {
-            view.setAuthenticatedRow(1);
-            view.setStatus(202);
-            view.setMsg("success");
+        if (myAuthVO == null) {
+            return new ClassAuthView(SchoolErrorCode.NotProperTimeToAuthenticateError);
         }
+
+        String location = tokenGeneratorService.getSubject(classAuthDTO.getQrToken());
+
+        if (!(myAuthVO.getSetLocation().equals(location))) {
+            return new ClassAuthView(SchoolErrorCode.DifferentFromDesignatedPlace);
+        }
+
+        log.info(myAuthVO);
+
+        int schoolId = myAuthVO.getSchoolId();
+        int classId = myAuthVO.getClassId();
+        
         return view;
     }
 
@@ -144,9 +154,24 @@ public class SchoolService {
         return schoolMapper.getPredictReward(schoolExplorerPredictRewardDTO);
     }
 
-    public SchoolExplorerMyInfo getMyInfo(int schoolId, int classId, String memberEmail){
-        return schoolMapper.getMyInfo(schoolId,classId,memberEmail);
+    public SchoolExplorerMyInfo getMyInfo(int schoolId, int classId, String memberEmail) {
+        return schoolMapper.getMyInfo(schoolId, classId, memberEmail);
     }
+
+    // 사용자 인증정보에서 카페의 위치를 뽑아낸다.
+    private ZoneLatLngVO getZoneLatLngVO(ClassAuthDTO classAuthDTO) {
+        String qrCode = tokenGeneratorService.getSubject(classAuthDTO.getQrToken());
+        return zoneMapper.getZone(qrCode);
+    }
+
+    private double getDist(ClassAuthDTO classAuthDTO) {
+        ZoneLatLngVO zoneLatLngVO = getZoneLatLngVO(classAuthDTO);
+        double userLat = classAuthDTO.getLat();
+        double userLng = classAuthDTO.getLng();
+
+        return distance(userLat, userLng, zoneLatLngVO.getLat(), zoneLatLngVO.getLng());
+    }
+
     private void addClassVO(List<ClassVO> classVOS) { // 클래스 정보 가져오기에서 유저가 예약하지 않은 클래스정보를 추가하기위한 메소드
         for (int i = 1; i <= 24; i++) {
             boolean isSame = false;
@@ -162,6 +187,9 @@ public class SchoolService {
         }
     }
 
+    public List<SchoolMyExplorersVO> getMyExplorersVO(String memberEmail) {
+        return schoolMapper.getMyExplorersVO(memberEmail);
+    }
     // 경위도 계산거리
 
     private double deg2rad(double deg) {
