@@ -127,7 +127,7 @@ public class SchoolService {
 
         int schoolId = myAuthVO.getSchoolId();
         int classId = myAuthVO.getClassId();
-        
+
         return view;
     }
 

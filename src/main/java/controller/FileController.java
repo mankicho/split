@@ -20,11 +20,11 @@ import java.io.*;
 public class FileController {
     private final FileUploadService fileUploadService;
 
-    @Value("#{path['local_home']}")
-    private String home;
-
-//    @Value("#{path['server_home']}")
+//    @Value("#{path['local_home']}")
 //    private String home;
+//
+    @Value("#{path['server_home']}")
+    private String home;
 
     @PostMapping(value = "/main/upload")
     public void fileUploadMain(MultipartFile multipartFile) {
