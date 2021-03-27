@@ -20,7 +20,7 @@
         <util:properties id="db" location="file:/home/hosting_users/icnogari/tomcat/db.properties"/>
 <!--    <util:properties id="db"-->
 <!--                     location="file:C:\Users\82102\Desktop\apache-tomcat-8.5.57-windows-x64\apache-tomcat-8.5.57/db.properties"/>-->
-    
+
     <util:properties id="path" location="classpath:/config/path.properties"/>
 
     <tx:annotation-driven/>
