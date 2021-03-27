@@ -16,6 +16,7 @@ public class FileUploadAdvice {
 
     @Before("execution(* file.FileUploadService.*(..))")
     public void beforeDeleteAlarm() {
-        log.info("fileUpLoad service is called");
+        log.info("-----------------fileUploadService called-----------------");
+
     }
 }
