@@ -3,6 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="component.school.SchoolMapper">
 
+    <!-- test -->
+
+    <resultMap id="testVO" type="component.school.explorer.vo.SchoolTestVO">
+        <result property="schoolId" column="school_id"/>
+        <result property="sum" column="sum"/>
+        <result property="avg" column="avg"/>
+        <result property="days" column="days"/>
+        <result property="sumAmount" column="sum_amount"/>
+        <result property="avgAmount" column="avg_amount"/>
+    </resultMap>
+
     <resultMap id="hashtagsVO" type="component.school.vo.SchoolHashTags">
         <result property="hashtagsId" column="hashtags_id"/>
         <result property="hashTag" column="hashtags"/>
@@ -199,16 +210,16 @@
     </insert>
 
     <insert id="joinClassInOfficial" parameterType="ClassJoinDTO">
-        insert into class_members
+       insert into class_members
         (select null,#{schoolId},#{classId},#{setDay},#{memberEmail},
-        #{startDate},#{endDate},#{setPaymentAmount} from dual
-        where (select count(*) from class_members where member_email = #{memberEmail}) = 0);
+		#{startDate},#{endDate},#{cnt},#{setPaymentAmount} from dual
+        where (select count(*) from class_members where member_email = #{memberEmail} and class_id = #{classId}) = 0);
     </insert>
 
     <insert id="joinClassInNonOfficial" parameterType="ClassJoinDTO">
         insert into class_members
         (select null,#{schoolId},#{classId},#{setDay},#{memberEmail},
-        #{startDate},#{endDate},#{setPaymentAmount} from dual
+        #{startDate},#{endDate},#{cnt},#{setPaymentAmount} from dual
         where (select count(*) from class_members where school_id = #{schoolId}) = 0);
     </insert>
     <select id="getDevicesForPushNotificationOfAttendance" parameterType="int" resultMap="memberDeviceVO">
@@ -338,6 +349,15 @@
      (select school_id,count(*) as cnt from class_members group by school_id) as tmp
      on c.school_id = tmp.school_id
      where c.member_email = #{memberEmail} order by c.school_id;
+    </select>
+
+    <select id="getTest" parameterType="int" resultMap="testVO">
+    select tmp.*,ttmp.sum_amount,ttmp.avg_amount from (
+    select school_id,sum(all_members) as `sum`, round(sum(auth_members)/ days) as `avg`,days from school_daily_attendance_rate) as tmp
+    left outer join
+    (select school_id,sum(daily_total_payment) as `sum_amount`,round(sum(daily_total_payment) / sum(daily_cnt_person)) as avg_amount
+    from school_class_daily_payment where school_id = #{schoolId}) as ttmp
+    on tmp.school_id = ttmp.school_id
     </select>
 </mapper>
 

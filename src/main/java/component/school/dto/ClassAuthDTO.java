@@ -10,11 +10,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClassAuthDTO {
-        private int weekday;
-        private String qrToken; // insert 용
-        private String memberEmail; // 유저 이메일
-        private double lat;
-        private double lng;
-        private long now;
-        private String date;
+    private String qrToken; // insert 용
+    private long now;
+    private int weekday;
+    private String memberEmail; // 유저 토큰
+    private double lat; // 유저 위도
+    private double lng; // 유저 경도
+    private String date;  // 오늘날짜 yyyy-MM-dd
 }

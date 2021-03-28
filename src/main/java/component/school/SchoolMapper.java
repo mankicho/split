@@ -25,8 +25,6 @@ public interface SchoolMapper {
 
     List<ClassVO> getClasses(ClassDTO classDTOForSelect); // 클래스 가져오기
 
-//    int registerClass(ClassDTO classDTO); // 클래스 등록하기(삭제예정)
-
     int saveSearchKeyword(Map<String, Object> map); // 검색 키워드 저장하기
 
     List<SchoolVO> getSchoolsBySearch(String keyword); // 검색으로 학교 가져오기
@@ -60,4 +58,5 @@ public interface SchoolMapper {
     // 나의 탐험단
     List<SchoolMyExplorersVO> getMyExplorersVO(@Param("memberEmail") String memberEmail);
 
+    SchoolTestVO getTest(@Param("schoolId") int schoolId);
 }

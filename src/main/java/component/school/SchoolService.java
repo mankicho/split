@@ -13,6 +13,7 @@ import component.zone.vo.ZoneLatLngVO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import security.token.TokenGeneratorService;
 
@@ -72,7 +73,7 @@ public class SchoolService {
             return -1;
         }
 
-        if (type == 0) { // 비공식
+        if (type == 1) { // 비공식
             return schoolMapper.joinClassInOfficial(classJoinDTO);
         } else { // 공식
             return schoolMapper.joinClassInNonOfficial(classJoinDTO);
@@ -209,6 +210,10 @@ public class SchoolService {
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;
         return dist * 1609.344;
+    }
+
+    public SchoolTestVO getTest(int schoolId) {
+        return schoolMapper.getTest(schoolId);
     }
 
 

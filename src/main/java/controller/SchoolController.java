@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/school")
@@ -102,9 +103,9 @@ public class SchoolController {
 
     // 클래스 가입하기
     @PostMapping(value = "/join/class")
-    public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO, @RequestParam("type") int type) throws ParseException {
+    public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO) throws ParseException {
         DefaultResultView result = new DefaultResultView(); // 클래스 신청에 대한 유저 view
-
+        int type = classJoinDTO.getType();
         int insertedRow = schoolService.joinClass(classJoinDTO, type);
 
         if (insertedRow == -1) {
@@ -157,5 +158,18 @@ public class SchoolController {
     @PostMapping(value = "/my/explorer/list/get.do")
     public List<SchoolMyExplorersVO> getMyExplorersVO(@RequestParam("memberEmail") String memberEmail) {
         return schoolService.getMyExplorersVO(memberEmail);
+    }
+
+    @PostMapping(value = "/test/galaxy")
+    public Map<String, Object> testGalaxy(ClassDTO classDTO) {
+        List<ClassVO> classVOList = schoolService.getClasses(classDTO);
+        log.info(classDTO);
+        log.info(classVOList);
+        SchoolTestVO testVO = schoolService.getTest(classDTO.getSchoolId());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("classVOList", classVOList);
+        map.put("testVO", testVO);
+        return map;
     }
 }

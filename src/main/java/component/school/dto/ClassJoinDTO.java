@@ -11,5 +11,7 @@ public class ClassJoinDTO {
     private String memberEmail; // 유저 이메일
     private String startDate; // 시작 날짜
     private String endDate; // 끝 날짜
+    private int cnt; // 총 몇일
     private int setPaymentAmount; // 설정 결제요금
+    private int type; // 공식? 비공식?
 }
