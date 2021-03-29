@@ -11,5 +11,5 @@ public class ClassAuthLogDTO {
     private int schoolId;
     private int classId;
     private String memberEmail;
-    private String qrCode;
+    private String planetCode;
 }
