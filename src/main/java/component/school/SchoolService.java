@@ -124,7 +124,8 @@ public class SchoolService {
         String location = tokenGeneratorService.getSubject(classAuthDTO.getQrToken());
 
         // 지정장소가 있는데 유저가 찍은곳이 지정장소랑 맞지않으면
-        if (location != null && !(myAuthVO.getSetLocation().equals(location))) {
+        if (myAuthVO.getSetLocation() != null && !(myAuthVO.getSetLocation().equals(location))) {
+            log.info(myAuthVO);
             return new ClassAuthView(SchoolErrorCode.DifferentFromDesignatedPlace);
         }
 
