@@ -161,7 +161,7 @@ public class SchoolController {
     }
 
     @PostMapping(value = "/test/galaxy")
-    public Map<String, Object> testGalaxy(ClassDTO classDTO) {
+    public Map<String, Object> testGalaxy(@RequestBody ClassDTO classDTO) {
         List<ClassVO> classVOList = schoolService.getClasses(classDTO);
         log.info(classDTO);
         log.info(classVOList);

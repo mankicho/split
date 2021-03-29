@@ -8,6 +8,10 @@ public class DefaultErrorView extends DefaultResultView {
         super(code);
     }
 
+    public DefaultErrorView(int status) {
+        this.status = status;
+    }
+
     public DefaultErrorView() {
         super();
     }

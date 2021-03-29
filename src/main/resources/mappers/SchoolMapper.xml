@@ -4,7 +4,6 @@
 <mapper namespace="component.school.SchoolMapper">
 
     <!-- test -->
-
     <resultMap id="testVO" type="component.school.explorer.vo.SchoolTestVO">
         <result property="schoolId" column="school_id"/>
         <result property="sum" column="sum"/>
@@ -209,11 +208,13 @@
          (#{schoolId},#{weekdayType},time_format(#{authTime},'%H:%i:%s'))
     </insert>
 
-    <insert id="joinClassInOfficial" parameterType="ClassJoinDTO">
-       insert into class_members
-        (select null,#{schoolId},#{classId},#{setDay},#{memberEmail},
-		#{startDate},#{endDate},#{cnt},#{setPaymentAmount} from dual
-        where (select count(*) from class_members where member_email = #{memberEmail} and class_id = #{classId}) = 0);
+        <insert id="joinClassInOfficial" parameterType="ClassJoinDTO">
+            insert into class_members
+            (select null,#{schoolId},#{classId},#{setDay},#{memberEmail},#{startDate},#{endDate},
+            #{cnt},#{setPaymentAmount} from dual
+            where (select count(*) from class_members where (#{startDate} <![CDATA[<]]> end_date and #{endDate}
+            <![CDATA[>]]> start_date) and
+            member_email = #{memberEmail} and class_id = #{classId}) = 0);
     </insert>
 
     <insert id="joinClassInNonOfficial" parameterType="ClassJoinDTO">
@@ -234,7 +235,7 @@
 
     </select>
 
-    <insert id="classAuth" parameterType="ClassAuthDTO">
+    <insert id="classAuth" parameterType="ClassAuthLogDTO">
         INSERT INTO class_auth_log values (null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now())
     </insert>
 
@@ -247,10 +248,10 @@
       (select school_id,sum(daily_total_payment) as special_acc_payment,truncate((sum(daily_total_payment)/sum(daily_cnt_person)),0) as special_daily_payment
       from school_class_daily_payment where school_id = #{schoolId} and class_id = #{classId}) as tmp2 on tmp1.school_id = tmp2.school_id
       left outer join -- 특정학교 누적보증금, 특정갤럭시 하루 평균 보증금
-      (select #{schoolId} as school_id,ifnull(truncate(sum(auth_members)/sum(all_members),2),0) as all_avg_attendance ,sum(auth_members) as all_acc_attendance
+      (select #{schoolId} as school_id,ifnull(truncate(sum(auth_members)/sum(all_members),3),0) as all_avg_attendance ,sum(auth_members) as all_acc_attendance
       from school_daily_attendance_rate where class_id = #{classId}) as tmp3 on tmp1.school_id = tmp3.school_id
       left outer join -- 모든 갤럭시의 평균 출석율, 평균 출석인원
-	  (select school_id,ifnull(truncate(sum(auth_members) / sum(all_members),2),0) as special_avg_attendance ,sum(auth_members) as special_acc_attendance
+	  (select school_id,ifnull(truncate(sum(auth_members) / sum(all_members),3),0) as special_avg_attendance ,sum(auth_members) as special_acc_attendance
        from school_daily_attendance_rate where school_id = #{schoolId} and class_id = #{classId}) as tmp4 on tmp1.school_id = tmp4.school_id
        left outer join -- 특정학교, 특정 갤럭시 평균 출석율, 평균 출석인원
       (select #{schoolId} as school_id,sum(set_payment_amount) as all_today_amount
@@ -289,7 +290,7 @@
     </select>
 
     <select id="getPredictReward" parameterType="SchoolExplorerRewardDTO" resultType="int">
-    select ifnull(round((tmp2.sum / 2 * tmp1.rate * (tmp2.set_payment_amount)/tmp2.sum)),0) as predict_reward
+    select ifnull(round(((tmp2.sum / 2) * tmp1.rate * (tmp2.set_payment_amount)/tmp2.sum)),0) as predict_reward
     from (
     select class_id, truncate((1-sum(auth_members) / sum(all_members)),3) as rate
     from school_daily_attendance_rate where class_id = #{classId}) as tmp1

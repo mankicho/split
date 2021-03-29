@@ -54,7 +54,7 @@ public class MemberController {
         if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) { // db 에 저장된 정보와 사용자 입력 비밀번호를 인코딩한 정보가 일치하면
             int affectedRow = memberService.autoLogin(email); // 자동로그인
             if (affectedRow >= 1) {
-                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 15);
+                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 30L);
                 // 어플내의 기능을 이용하기위한 토큰 발급
             }
         }
@@ -62,7 +62,7 @@ public class MemberController {
         if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
             int affectedRow = memberService.autoLogin(email);
             if (affectedRow >= 1) {
-                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 15); // 유효기간 1달
+                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 30L); // 유효기간 1달
             }
         }
         return "fail";

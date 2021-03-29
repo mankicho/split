@@ -35,7 +35,7 @@ public interface SchoolMapper {
 
     List<MemberDeviceVO> getDevicesForPushNotificationOfAttendance(@Param("weekday") int weekday); // 푸시알림 보낼 디바이스정보 가져오기
 
-    int classAuth(ClassAuthDTO classAuthDTO); // 인증하기
+    int classAuth(ClassAuthLogDTO classAuthLogDTO); // 인증하기
 
     // 탐험단 - 상금
     SchoolRewardVO getExplorerReward(@Param("schoolId") int schoolId, @Param("classId") int classId, @Param("weekday") int weekday);
@@ -44,13 +44,13 @@ public interface SchoolMapper {
     List<SchoolExplorerAttendanceListVO> getAttendanceList(SchoolExplorerDTO schoolExplorerDTO);
 
     // 탐험단 -- 평균 출석률
-    SchoolClassAvgAttendanceRateVO getAttendanceRate(@Param("schoolId") int schoolId,@Param("classId") int classId);
+    SchoolClassAvgAttendanceRateVO getAttendanceRate(@Param("schoolId") int schoolId, @Param("classId") int classId);
 
     // 나의 예상 상금
     int getPredictReward(SchoolExplorerRewardDTO schoolExplorerPredictRewardDTO);
 
     // 탐험단 - 나의정보
-    SchoolExplorerMyInfo getMyInfo(@Param("schoolId") int schoolId,@Param("classId") int classId,@Param("memberEmail") String memberEmail);
+    SchoolExplorerMyInfo getMyInfo(@Param("schoolId") int schoolId, @Param("classId") int classId, @Param("memberEmail") String memberEmail);
 
     // 출석체크 인증할때 나의 갤럭시 정보들 가져오기
     List<ClassAuthVO> getMyClassMembers(ClassAuthDTO classAuthDTO);

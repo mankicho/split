@@ -92,7 +92,6 @@ public class SchoolService {
         }
 
         double dist = getDist(classAuthDTO);
-        log.info("dist = " + dist);
         if (dist > 50.0) {
             // 사용자 위치와 카페의 위치가 맞지않다.
             return new ClassAuthView(SchoolErrorCode.PositionNotMatchError);
@@ -100,34 +99,49 @@ public class SchoolService {
         ClassAuthView view = new ClassAuthView();
 
         classAuthDTO.setMemberEmail(tokenGeneratorService.getSubject(classAuthDTO.getMemberEmail()));
-        log.info(classAuthDTO);
         List<ClassAuthVO> myClassMembers = schoolMapper.getMyClassMembers(classAuthDTO);
+
+        // 인증할 플랜이 없음
         if (myClassMembers == null || myClassMembers.isEmpty()) {
             return new ClassAuthView(SchoolErrorCode.DoNotHavePlansError);
         }
 
+
         ClassAuthVO myAuthVO = null;
         for (ClassAuthVO vo : myClassMembers) {
+            // 1시간 이내에 인증할 플랜이 있는가
             if (vo.getDiff() <= 3600 && vo.getDiff() >= 0) {
                 myAuthVO = vo;
                 break;
             }
         }
 
+        // 1시간 이내에 인증할 플랜이 없으면
         if (myAuthVO == null) {
             return new ClassAuthView(SchoolErrorCode.NotProperTimeToAuthenticateError);
         }
 
         String location = tokenGeneratorService.getSubject(classAuthDTO.getQrToken());
 
-        if (!(myAuthVO.getSetLocation().equals(location))) {
+        // 지정장소가 있는데 유저가 찍은곳이 지정장소랑 맞지않으면
+        if (location != null && !(myAuthVO.getSetLocation().equals(location))) {
             return new ClassAuthView(SchoolErrorCode.DifferentFromDesignatedPlace);
         }
 
         log.info(myAuthVO);
 
-        int schoolId = myAuthVO.getSchoolId();
-        int classId = myAuthVO.getClassId();
+        ClassAuthLogDTO dto = new ClassAuthLogDTO(myAuthVO.getSchoolId(), myAuthVO.getClassId(), classAuthDTO.getMemberEmail(), location);
+
+        int insertedRow = schoolMapper.classAuth(dto);
+        if (insertedRow == 0) {
+            view.setStatus(5000);
+            view.setAuthenticatedRow(0);
+            view.setMsg("server error");
+        } else {
+            view.setStatus(202);
+            view.setAuthenticatedRow(1);
+            view.setMsg("success authenticate");
+        }
 
         return view;
     }
@@ -166,7 +180,7 @@ public class SchoolService {
     }
 
     private double getDist(ClassAuthDTO classAuthDTO) {
-        ZoneLatLngVO zoneLatLngVO = getZoneLatLngVO(classAuthDTO);
+        ZoneLatLngVO zoneLatLngVO = getZoneLatLngVO(classAuthDTO); // 사용자가 보내준 인증정보로 카페의 위치를 뽑아낸다.
         double userLat = classAuthDTO.getLat();
         double userLng = classAuthDTO.getLng();
 

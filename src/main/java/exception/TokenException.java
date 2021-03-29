@@ -1,5 +1,7 @@
 package exception;
 
+import exception.error.TokenErrorCode;
+import exception.view.DefaultErrorView;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,10 +17,9 @@ public class TokenException {
 
     @ExceptionHandler(JwtException.class)
     public @ResponseBody
-    HashMap<String, Object> handleExpiredJwtException(JwtException e) {
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("msg", "invalid token");
-        return hashMap;
+    DefaultErrorView handleExpiredJwtException(JwtException e) {
+        return new DefaultErrorView(10000);
     }
+
 
 }

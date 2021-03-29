@@ -2,6 +2,7 @@ package exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import exception.error.MemberErrorCode;
+import exception.error.TokenErrorCode;
 import exception.view.DefaultErrorView;
 import exception.error.DefaultErrorCode;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +28,12 @@ public class SPLITException {
         log.info(e.getMessage());
         DefaultErrorCode code = DefaultErrorCode.MissingParameterValue;
         return new DefaultErrorView(code);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public @ResponseBody
+    DefaultErrorView handleIllegalArgumentException() {
+        return new DefaultErrorView(DefaultErrorCode.IllegalDataException);
     }
 
     // null 에러 발생시

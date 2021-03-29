@@ -28,6 +28,7 @@
         <typeAlias type="component.home.HomeDataDTO" alias="HomeDataDTO"/>
         <typeAlias type="component.school.explorer.dto.SchoolExplorerDTO" alias="SchoolExplorerDTO"/>
         <typeAlias type="component.school.explorer.dto.SchoolExplorerRewardDTO" alias="SchoolExplorerRewardDTO"/>
+        <typeAlias type="component.school.dto.ClassAuthLogDTO" alias="ClassAuthLogDTO"/>
 
 
     </typeAliases>
