@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="component.mypage.MyPageMapper">
+    <resultMap id="myPageMainVO" type="component.mypage.MyPageMainVO">
+        <result property="memberEmail" column="member_email"/>
+        <result property="totalNum" column="total_num"/>
+        <result property="checkNum" column="check_num"/>
+        <result property="accPoint" column="acc_point"/>
+        <result property="dust" column="dust"/>
+        <result property="attImage" column="att_image"/>
+    </resultMap>
+    <select id="getMyMainPageVO" parameterType="MyPageMainDTO" resultMap="myPageMainVO">
+        select tmp.*,ttmp.check_num,tttmp.acc_point,ttttmp.dust,i.att_image
+        from (select member_email,count(*) as total_num from class_members as m
+        left outer join dummy_date as d
+        on d.dummy_date <![CDATA[>=]]> start_date and d.dummy_date <![CDATA[<=]]> date_format(now(),'%Y-%m-%d')
+        where member_email = #{memberEmail} and set_day <![CDATA[&]]> weekday != 0 order by school_id,class_id) as tmp
+        left outer join (
+        select member_email,count(*) as check_num from class_auth_log where member_email = #{memberEmail}
+        ) as ttmp on tmp.member_email = ttmp.member_email
+        left outer join
+        (select member_email,sum(member_point) as acc_point from members_point where member_email = #{memberEmail}) as tttmp
+        on tmp.member_email = tttmp.member_email
+        left outer join
+        (select member_email,if(dust>=70,'먼지뭉치','먼지') as dust from members_dust where member_email = #{memberEmail}) as ttttmp
+        on tmp.member_email = ttttmp.member_email
+        left outer join members_image as i
+        on tmp.member_email = i.member_email;
+    </select>
+</mapper>

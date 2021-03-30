@@ -42,7 +42,7 @@
     </delete>
 
     <select id="isExistNickname" resultType="string" parameterType="string">
-        SELECT nickname from members where nickname = #{nickname} q
+        SELECT nickname from members where nickname = #{nickname}
     </select>
 
     <select id="isExistEmail" resultType="string" parameterType="string">

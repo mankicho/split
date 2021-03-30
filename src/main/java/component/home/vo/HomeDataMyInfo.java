@@ -6,6 +6,7 @@ import lombok.Data;
 public class HomeDataMyInfo {
     private int myAttCheck;
     private int myDust;
+    private String dustLevel;
     private int allUniverseNum;
     private int memberPoint;
 }

@@ -104,7 +104,7 @@ public class SchoolController {
     // 클래스 가입하기
     @PostMapping(value = "/join/class")
     public ResultView joinClass(@RequestBody ClassJoinDTO classJoinDTO) throws ParseException {
-        DefaultResultView result = new DefaultResultView(); // 클래스 신청에 대한 유저 view
+        DefaultResultView result = new DefaultResultView(); // 클래스 신청에 대한 유저 v  iew
         int type = classJoinDTO.getType();
         int insertedRow = schoolService.joinClass(classJoinDTO, type);
 

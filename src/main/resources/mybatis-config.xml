@@ -29,6 +29,7 @@
         <typeAlias type="component.school.explorer.dto.SchoolExplorerDTO" alias="SchoolExplorerDTO"/>
         <typeAlias type="component.school.explorer.dto.SchoolExplorerRewardDTO" alias="SchoolExplorerRewardDTO"/>
         <typeAlias type="component.school.dto.ClassAuthLogDTO" alias="ClassAuthLogDTO"/>
+        <typeAlias type="component.mypage.MyPageMainDTO" alias="MyPageMainDTO"/>
 
 
     </typeAliases>
@@ -39,6 +40,7 @@
         <mapper class="component.zone.ZoneMapper"/>
         <mapper class="component.alarm.AlarmMapper"/>
         <mapper class="component.note.NoteMapper"/>
+        <mapper class="component.mypage.MyPageMapper"/>
     </mappers>
 
 </configuration>
