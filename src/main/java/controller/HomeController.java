@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -32,12 +33,13 @@ public class HomeController {
 
     @GetMapping(value = "/test.do")
     @ResponseBody
-    public Map<String, Object> test2() {
+    public Map<String, Object> test2(HttpServletRequest request) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> map = new HashMap<>();
         map.put("date", format.format(new Date()));
         map.put("milli", new Date().getTime());
-
+        map.put("nowDate", format.format(new Date(Long.parseLong(request.getParameter("now")))));
+        map.put("now", new Date(Long.parseLong(request.getParameter("now"))));
         return map;
     }
 
