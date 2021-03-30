@@ -29,6 +29,16 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping(value = "/test.do")
+    @ResponseBody
+    public Map<String, Object> test2() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("date", new Date());
+        map.put("milli", new Date().getTime());
+
+        return map;
+    }
+
     @PostMapping(value = "/home/data/get.do")
     @ResponseBody
     public HomeData getHomeData(@RequestBody HomeDataDTO homeDataDTO) {
