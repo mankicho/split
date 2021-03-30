@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -32,8 +33,9 @@ public class HomeController {
     @GetMapping(value = "/test.do")
     @ResponseBody
     public Map<String, Object> test2() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Map<String, Object> map = new HashMap<>();
-        map.put("date", new Date());
+        map.put("date", format.format(new Date()));
         map.put("milli", new Date().getTime());
 
         return map;
