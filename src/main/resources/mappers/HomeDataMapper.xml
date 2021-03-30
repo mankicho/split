@@ -48,18 +48,18 @@
     </select>
 
     <select id="getHomeData" parameterType="HomeDataDTO" resultMap="homeData">
-       select p.member_email,p.member_point,d.dust,if(d.dust>=70,'먼지뭉치','먼지') as dust_level,
+       	select p.member_email,p.member_point,d.dust,if(d.dust>=70,'먼지뭉치','먼지') as dust_level,
         (select count(*) from class_auth_log where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) as all_universe_num,
         my.my_att_check,if((select planet_name from planet where planet_code = card.set_location) is not null,'지정장소','자유장소') as set_location,
         card.image_path,card.my_need_total_check_num,card.school_name,card.school_type,card.school_id,card.class_id,card.set_payment_amount,
-        card.my_total_check_num,card.today_reserved_person,card.dummy_date,ri.image_Type
+        card.my_total_check_num,card.today_reserved_person,card.dummy_date,ri.att_image
         from members_point as p
         left outer join members_dust as d on p.member_email = d.member_email
         left outer join
         (select member_email,count(*) as my_att_check from class_auth_log where member_email = #{memberEmail}) as my
         on my.member_email = p.member_email
-        left outer join members_rand_image as ri
-        on my.member_email = ri.member_email
+        left outer join members_image as ri
+        on p.member_email = ri.member_email
         left outer join
 		(select s.school_id,s.school_type,s.school_name,s.set_location,s.image_path,c.member_email,c.class_id,c.cnt as my_need_total_check_num,
         c.set_payment_amount,l.my_total_check_num,tmp.today_reserved_person,dummy_date
