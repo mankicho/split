@@ -9,7 +9,7 @@
         <result property="dustLevel" column="dust_level"/>
         <result property="allUniverseNum" column="all_universe_num"/>
         <result property="memberPoint" column="member_point"/>
-        <result property="imageType" column="image_type"/>
+        <result property="attImage" column="att_image"/>
     </resultMap>
 
     <resultMap id="homeExplorerVO" type="component.home.vo.HomeExplorerVO">

@@ -9,4 +9,5 @@ public class HomeDataMyInfo {
     private String dustLevel;
     private int allUniverseNum;
     private int memberPoint;
+    private String attImage;
 }
