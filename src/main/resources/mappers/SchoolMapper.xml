@@ -236,15 +236,14 @@
     </select>
 
     <insert id="classAuth" parameterType="ClassAuthLogDTO">
-
-       insert into class_auth_log
-        select null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now()
-        from dual
-        where (select count(*) from class_auth_log where school_id = #{schoolId} and class_id = #{classId}
-        and member_email = #{memberEmail} and
-        date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) = 0;
-
+        INSERT INTO class_auth_log values (null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now())
     </insert>
+<!--    insert into class_auth_log-->
+<!--    select null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now()-->
+<!--    from dual-->
+<!--    where (select count(*) from class_auth_log where school_id = #{schoolId} and class_id = #{classId}-->
+<!--    and member_email = #{memberEmail} and-->
+<!--    date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) = 0;-->
 
     <select id="getExplorerReward" resultMap="schoolRewardVO" parameterType="int">
         select tmp1.*,tmp2.special_acc_payment,tmp2.special_daily_payment,tmp3.all_avg_attendance,tmp3.all_acc_attendance,tmp4.special_avg_attendance,
