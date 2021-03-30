@@ -33,7 +33,7 @@ public class HomeController {
     @GetMapping(value = "/test.do")
     @ResponseBody
     public Map<String, Object> test2() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> map = new HashMap<>();
         map.put("date", format.format(new Date()));
         map.put("milli", new Date().getTime());
