@@ -307,12 +307,12 @@
     </select>
 
     <select id="getMyInfo" resultMap="schoolExplorerMyInfo">
-     select tmp1.set_day,tmp1.cnt as total_num,tmp2.attendance_num as my_attendance_num,tmp1.all_amount,`sum`,
-    (tmp1.set_payment_amount * tmp2.attendance_num) as my_payment,p.member_point,
+     select tmp1.set_day,tmp1.cnt as total_num,ifnull(tmp2.attendance_num,0) as my_attendance_num,tmp1.all_amount,ifnull(`sum`,0) as `sum`,
+    ifnull((tmp1.set_payment_amount * tmp2.attendance_num),0) as my_payment,ifnull(p.member_point,0) as member_point,
     (select dummy_date from class_members as c left outer join dummy_date as d on dummy_date
     between date_format(date_add(now(),interval 1 day),'%Y-%m-%d') and end_date
     where member_email = #{memberEmail} and set_day <![CDATA[&]]> #{weekday} != 0
-    and school_id = #{schoolId} and class_id = #{classId} limit 1) as `date`,dust
+    and school_id = #{schoolId} and class_id = #{classId} limit 1) as `date`,ifnull(dust,0) as dust
     from
     (select set_day,school_id,class_id,cnt,cnt*set_payment_amount as all_amount ,set_payment_amount from class_members
     where school_id = #{schoolId} and class_id = #{classId} and member_email = #{memberEmail}) as tmp1

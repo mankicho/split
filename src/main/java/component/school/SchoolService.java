@@ -172,8 +172,8 @@ public class SchoolService {
         return schoolMapper.getPredictReward(schoolExplorerPredictRewardDTO);
     }
 
-    public SchoolExplorerMyInfo getMyInfo(int schoolId, int classId, String memberEmail) {
-        return schoolMapper.getMyInfo(schoolId, classId, memberEmail);
+    public SchoolExplorerMyInfo getMyInfo(int schoolId, int classId, String memberEmail,int weekday) {
+        return schoolMapper.getMyInfo(schoolId, classId, memberEmail,weekday);
     }
 
     // 사용자 인증정보에서 카페의 위치를 뽑아낸다.
