@@ -151,8 +151,8 @@ public class SchoolController {
 
     @PostMapping(value = "/explorer/my/info/get.do")
     public SchoolExplorerMyInfo getMyInfo(@RequestParam("schoolId") int schoolId, @RequestParam("classId") int classId,
-                                          @RequestParam("memberEmail") String memberEmail, @RequestParam("weekday") int weekday) {
-        return schoolService.getMyInfo(schoolId, classId, memberEmail,weekday);
+                                          @RequestParam("memberEmail") String memberEmail) {
+        return schoolService.getMyInfo(schoolId, classId, memberEmail);
     }
 
     @PostMapping(value = "/my/explorer/list/get.do")

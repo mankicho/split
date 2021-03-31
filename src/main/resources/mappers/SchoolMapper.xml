@@ -116,9 +116,9 @@
 
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
-        select s.*,datediff(date_format(now(),'%Y-%m-%d'),date_format(found_date,'%Y-%m-%d')) as days,
-        ifnull(reservation_num.today_person,0) as today_person,hashtag.hashtags_id,hashtag.hashtags,
-        ifnull(acc_attendance.sum_person,0) as sum_person,ifnull(tmp.total_payment,0) as total_payment
+        select s.*,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days,
+        ifnull(reservation_num.today_person,0) as today_person, hashtag.hashtags_id, hashtag.hashtags,
+        ifnull(acc_attendance.sum_person,0) as sum_person, ifnull(tmp.total_payment,0) as total_payment
         , ifnull(tmp.daily_payment,0) as daily_payment
         from school as s left outer join
         (select * from
@@ -244,14 +244,15 @@
     </select>
 
     <insert id="classAuth" parameterType="ClassAuthLogDTO">
-        INSERT INTO class_auth_log values (null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now())
+            insert into class_auth_log
+            select null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now()
+            from dual
+            where (select count(*) from class_auth_log where school_id = #{schoolId} and class_id = #{classId}
+            and member_email = #{memberEmail} and
+            date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) = 0;
     </insert>
-    <!--    insert into class_auth_log-->
-    <!--    select null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now()-->
-    <!--    from dual-->
-    <!--    where (select count(*) from class_auth_log where school_id = #{schoolId} and class_id = #{classId}-->
-    <!--    and member_email = #{memberEmail} and-->
-    <!--    date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) = 0;-->
+<!--    &#45;&#45; INSERT INTO class_auth_log values (null,#{schoolId},#{classId},#{planetCode},#{memberEmail},now())-->
+
 
     <select id="getExplorerReward" resultMap="schoolRewardVO" parameterType="int">
       select tmp1.*,tmp2.special_acc_payment,tmp2.special_daily_payment,tmp3.all_avg_attendance,tmp3.all_acc_attendance,tmp4.special_avg_attendance,
@@ -325,7 +326,7 @@
     ifnull((tmp1.set_payment_amount * tmp2.attendance_num),0) as my_payment,ifnull(p.member_point,0) as member_point,
     (select dummy_date from class_members as c left outer join dummy_date as d on dummy_date
     between date_format(date_add(now(),interval 1 day),'%Y-%m-%d') and end_date
-    where member_email = #{memberEmail} and set_day <![CDATA[&]]> #{weekday} != 0
+    where member_email = #{memberEmail} and set_day <![CDATA[&]]> weekday != 0
     and school_id = #{schoolId} and class_id = #{classId} limit 1) as `date`,ifnull(dust,0) as dust
     from
     (select set_day,school_id,class_id,cnt,cnt*set_payment_amount as all_amount ,set_payment_amount from class_members
@@ -336,7 +337,7 @@
     on  tmp1.school_id = tmp2.school_id and tmp1.school_id = tmp2.school_id
     left outer join (select *,sum(member_point) as `sum` from members_point group by member_email) as p
     on tmp2.member_email = p.member_email
-    left outer join members_dust as d on tmp2.member_email = d.member_email;
+    left outer join members_dust as d on tmp2.member_email = d.member_email
     </select>
 
     <select id="getMyClassMembers" parameterType="classAuthDTO" resultMap="classAuthVO">

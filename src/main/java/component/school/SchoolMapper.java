@@ -50,8 +50,8 @@ public interface SchoolMapper {
     int getPredictReward(SchoolExplorerRewardDTO schoolExplorerPredictRewardDTO);
 
     // 탐험단 - 나의정보
-    SchoolExplorerMyInfo getMyInfo(@Param("schoolId") int schoolId, @Param("classId") int classId, @Param("memberEmail") String memberEmail
-    ,@Param("weekday") int weekday);
+    SchoolExplorerMyInfo getMyInfo(@Param("schoolId") int schoolId, @Param("classId") int classId,
+                                   @Param("memberEmail") String memberEmail);
 
     // 출석체크 인증할때 나의 갤럭시 정보들 가져오기
     List<ClassAuthVO> getMyClassMembers(ClassAuthDTO classAuthDTO);
