@@ -129,7 +129,7 @@
         left outer join
         (
         select school_id,sum(daily_total_payment) as total_payment, (sum(daily_total_payment) / sum(daily_cnt_person))
-        as daily_payment from school_class_daily_payment where school_id = #{schoolId}) as tmp
+        as daily_payment from school_class_daily_payment group by school_id) as tmp
         on s.school_id = tmp.school_id
         left outer join school_hashtags as hashtag on s.school_id = hashtag.school_id
         left outer join
