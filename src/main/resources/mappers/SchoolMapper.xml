@@ -114,7 +114,6 @@
         <collection property="hashTags" resultMap="hashTags"/>
     </resultMap>
 
-<!--
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
         select s.*,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days,-->
