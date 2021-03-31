@@ -402,12 +402,15 @@
     </select>
 
     <select id="getTest" parameterType="int" resultMap="testVO">
-    select tmp.*,ttmp.sum_amount,ttmp.avg_amount from (
-    select school_id,sum(all_members) as `sum`, round(sum(auth_members)/ days) as `avg`,days from school_daily_attendance_rate) as tmp
+    select l.school_id,l.sum,(l.sum/days) as `avg`, tmp.sum_amount,tmp.avg_amount from (select school_id,count(*) as `sum` from class_auth_log group by school_id) as l
+    left outer join school_daily_attendance_rate as rate
+    on l.school_id = rate.school_id
     left outer join
-    (select school_id,sum(daily_total_payment) as `sum_amount`,round(sum(daily_total_payment) / sum(daily_cnt_person)) as avg_amount
-    from school_class_daily_payment where school_id = #{schoolId}) as ttmp
-    on tmp.school_id = ttmp.school_id
+    ( select school_id,sum(daily_total_payment) as `sum_amount`,
+    (sum(daily_total_payment)/sum(daily_cnt_person)) as `avg_amount` from school_class_daily_payment
+    ) as tmp
+    on l.school_id = tmp.school_id
+    where l.school_Id = #{schoolId};
     </select>
 </mapper>
 
