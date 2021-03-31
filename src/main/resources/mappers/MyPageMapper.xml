@@ -27,7 +27,7 @@
         (select member_email,count(*) as check_num from class_auth_log where member_email = #{memberEmail}
         ) as ttmp
         on p.member_email = ttmp.member_email
-        where p.member_email = 'asdf@naver.com';
+        where p.member_email = #{memberEmail};
 
     </select>
 </mapper>
