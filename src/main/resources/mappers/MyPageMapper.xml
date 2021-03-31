@@ -11,21 +11,23 @@
         <result property="attImage" column="att_image"/>
     </resultMap>
     <select id="getMyMainPageVO" parameterType="MyPageMainDTO" resultMap="myPageMainVO">
-        select tmp.*,ttmp.check_num,tttmp.acc_point,ttttmp.dust,i.att_image
-        from (select member_email,count(*) as total_num from class_members as m
+        select p.member_email,p.acc_point,if(dust>=70,'먼지뭉치','먼지') as dust,ifnull(tmp.total_num,0) as total_num
+        ,ifnull(ttmp.check_num,0) as check_num,i.att_image
+        from members_dust as d
+        left outer join (select member_email,sum(member_point) as acc_point from members_point where member_email = #{memberEmail})
+        as p on d.member_email = p.member_email
+        left outer join members_image as i on p.member_email = i.member_email
+        left outer join
+        (select member_email,count(*) as total_num from class_members as m
         left outer join dummy_date as d
         on d.dummy_date <![CDATA[>=]]> start_date and d.dummy_date <![CDATA[<=]]> date_format(now(),'%Y-%m-%d')
-        where member_email = #{memberEmail} and set_day <![CDATA[&]]> weekday != 0 order by school_id,class_id) as tmp
-        left outer join (
-        select member_email,count(*) as check_num from class_auth_log where member_email = #{memberEmail}
-        ) as ttmp on tmp.member_email = ttmp.member_email
+        where member_email = #{memberEmail} and set_day <![CDATA[&]]> #{weekday} != 0 order by school_id,class_id) as tmp
+        on p.member_email = tmp.member_email
         left outer join
-        (select member_email,sum(member_point) as acc_point from members_point where member_email = #{memberEmail}) as tttmp
-        on tmp.member_email = tttmp.member_email
-        left outer join
-        (select member_email,if(dust>=70,'먼지뭉치','먼지') as dust from members_dust where member_email = #{memberEmail}) as ttttmp
-        on tmp.member_email = ttttmp.member_email
-        left outer join members_image as i
-        on tmp.member_email = i.member_email;
+        (select member_email,count(*) as check_num from class_auth_log where member_email = #{memberEmail}
+        ) as ttmp
+        on p.member_email = ttmp.member_email
+        where p.member_email = 'asdf@naver.com';
+
     </select>
 </mapper>
