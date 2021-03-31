@@ -94,7 +94,7 @@ public class SchoolService {
 
         double dist = getDist(classAuthDTO);
         log.info(dist);
-        if (dist > 50.0) {
+        if (dist > 70.0) {
             // 사용자 위치와 카페의 위치가 맞지않다.
             return new ClassAuthView(SchoolErrorCode.PositionNotMatchError);
         }
