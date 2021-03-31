@@ -109,6 +109,8 @@
         <result property="todayPerson" column="todayPerson"/>
         <result property="period" column="period"/>
         <result property="days" column="days"/>
+        <result property="totalPayment" column="total_payment"/>
+        <result property="dailyPayment" column="daily_payment"/>
         <collection property="hashTags" resultMap="hashTags"/>
     </resultMap>
 

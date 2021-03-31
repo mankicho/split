@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
+
 @Data
 public class SchoolVO {
     private int categoryId; // 카테고리 Id
@@ -17,6 +18,8 @@ public class SchoolVO {
     private int cumulativeAmount; // 누적 출석금액
     private int sumPerson; // 누적 출석인원
     private int days; // 학교 설립 경과 일수
+    private int totalPayment;
+    private int dailyPayment;
     private Date period; // 모집 기간
     private List<SchoolHashTags> hashTags; // 해시태그
 }
