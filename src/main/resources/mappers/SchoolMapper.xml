@@ -116,28 +116,26 @@
 
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
-        select s.*,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days,-->
-            ifnull(reservation_num.today_person,0) as today_person, hashtag.hashtags_id, hashtag.hashtags,
+        select s.*,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days,
+        ifnull(reservation_num.today_person,0) as today_person, hashtag.hashtags_id, hashtag.hashtags,
         ifnull(acc_attendance.sum_person,0) as sum_person, ifnull(tmp.total_payment,0) as total_payment
         , ifnull(tmp.daily_payment,0) as daily_payment
         from school as s left outer join
         (select * from
         (select school_id,count(*) as today_person
         from class_members
-        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} !=
-        0)
+        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)
         group by school_id) as
         tmp) as reservation_num on s.school_id = reservation_num.school_id
         left outer join
         (
-        select t1.school_id,(total_payment+tmp_sum) as total_payment,round(daily_payment ) as daily_payment
+        select t1.school_id,(total_payment+tmp_sum) as total_payment,round(daily_payment) as daily_payment
         from(select school_id,sum(daily_total_payment) as total_payment, (sum(daily_total_payment) /
         sum(daily_cnt_person))
         as daily_payment from school_class_daily_payment group by school_id) as t1
         left outer join
         (select school_id,sum(set_payment_amount) as `tmp_sum` from class_members
-        where set_day <![CDATA[&]]> (select weekday from dummy_date where dummy_date = date_format(now(),'%Y-%m-%d')) !=
-        0
+        where set_day <![CDATA[&]]> #{weekday} != 0
         and date_format(now(),'%Y-%m-%d') between start_date and end_date) as t2
         on t1.school_id = t2.school_id) as tmp
         on s.school_id = tmp.school_id
@@ -145,7 +143,7 @@
         left outer join
         (select * from
         (select school_id,count(*) as sum_person from class_auth_log group by school_id) as tmp) as acc_attendance on
-        s.school_id = acc_attendance.school_id
+        s.school_id = acc_attendance.school_id;
         <if test="categoryId != 0">
             where category_id = #{categoryId};
         </if>
