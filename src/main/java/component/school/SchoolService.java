@@ -191,7 +191,7 @@ public class SchoolService {
     }
 
     private void addClassVO(List<ClassVO> classVOS) { // 클래스 정보 가져오기에서 유저가 예약하지 않은 클래스정보를 추가하기위한 메소드
-        for (int i = 2; i <= 13; i++) {
+        for (int i = 2; i <= 11; i++) {
             boolean isSame = false;
             for (ClassVO classVO : classVOS) {
                 if (i == classVO.getClassId()) {

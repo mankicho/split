@@ -115,8 +115,9 @@
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
         select s.*,datediff(date_format(now(),'%Y-%m-%d'),date_format(found_date,'%Y-%m-%d')) as days,
-        reservation_num.today_person,hashtag.hashtags_id,hashtag.hashtags,
-        acc_attendance.sum_person
+        ifnull(reservation_num.today_person,0) as today_person,hashtag.hashtags_id,hashtag.hashtags,
+        ifnull(acc_attendance.sum_person,0) as sum_person,ifnull(tmp.total_payment,0) as total_payment
+        , ifnull(tmp.daily_payment,0) as daily_payment
         from school as s left outer join
         (select * from
         (select school_id,count(*) as today_person
@@ -125,6 +126,11 @@
         0)
         group by school_id) as
         tmp) as reservation_num on s.school_id = reservation_num.school_id
+        left outer join
+        (
+        select school_id,sum(daily_total_payment) as total_payment, (sum(daily_total_payment) / sum(daily_cnt_person))
+        as daily_payment from school_class_daily_payment where school_id = #{schoolId}) as tmp
+        on s.school_id = tmp.school_id
         left outer join school_hashtags as hashtag on s.school_id = hashtag.school_id
         left outer join
         (select * from
@@ -164,14 +170,14 @@
     </insert>
 
     <select id="getClasses" parameterType="hashmap" resultMap="classVO">
-        select tmp.class_id,tmp.all_members,auth_table.auth_members from
+        select tmp.class_id,tmp.all_members,ifnull(auth_table.auth_members,0) as auth_members from
         (select * ,count(*) as all_members from
         (select *  from class_members as c where school_id = #{schoolId} and date_format(#{selectedDate},'%Y-%m-%d')
         between start_date and end_date and set_day <![CDATA[&]]> #{weekday} != 0) as ttmp -- 선택한 날짜, 유저의 요일에 맞게 가져옴
         group by class_id) as tmp -- 경찰학교 클릭했을떄, class_id 별로 총 학생 수
         left outer join ( -- 오늘 출석한 유저의 총 숫자
         select school_id,class_id,count(*) as auth_members from class_auth_log
-        where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') group by school_id,class_id) as auth_table
+        where date_format(auth_date,'%Y-%m-%d') = date_format(#{selectedDate},'%Y-%m-%d') group by school_id,class_id) as auth_table
         on auth_table.school_id = tmp.school_id and auth_table.class_id = tmp.class_id;
 
     </select>
@@ -246,7 +252,7 @@
     <!--    date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) = 0;-->
 
     <select id="getExplorerReward" resultMap="schoolRewardVO" parameterType="int">
-        select tmp1.*,tmp2.special_acc_payment,tmp2.special_daily_payment,tmp3.all_avg_attendance,tmp3.all_acc_attendance,tmp4.special_avg_attendance,
+      select tmp1.*,tmp2.special_acc_payment,tmp2.special_daily_payment,tmp3.all_avg_attendance,tmp3.all_acc_attendance,tmp4.special_avg_attendance,
       tmp4.special_acc_attendance,tmp5.all_today_amount,tmp6.special_today_amount from(
       select #{schoolId} as school_id, sum(daily_total_payment) as all_acc_payment,truncate((sum(daily_total_payment)/sum(daily_cnt_person)),0) as all_daily_payment
       From school_class_daily_payment where class_id = #{classId}) as tmp1
