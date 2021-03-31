@@ -296,7 +296,7 @@
     </select>
 
     <select id="getPredictReward" parameterType="SchoolExplorerRewardDTO" resultType="int">
-    select ifnull(round(((tmp2.sum / 2) * tmp1.rate * (tmp2.set_payment_amount)/tmp2.sum)),0) as predict_reward
+    select ifnull(truncate(((tmp2.sum / 2) * tmp1.rate * (tmp2.set_payment_amount)/tmp2.sum),0),0) as predict_reward
     from (
     select class_id, truncate((1-sum(auth_members) / sum(all_members)),3) as rate
     from school_daily_attendance_rate where class_id = #{classId}) as tmp1
