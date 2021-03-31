@@ -80,8 +80,8 @@
         between date_format(date_add(now(),interval 1 day),'%Y-%m-%d') and end_date
         where weekday <![CDATA[&]]> set_day != 0 group by school_id, class_id) as ttmp2 -- dummy_date
         on c.school_id = ttmp2.school_id and c.class_id = ttmp2.class_id
-        where date_format(now(),'%Y-%m-%d') between start_date and end_date and c.member_email = #{memberEmail}) as card
-        on card.member_email = p.member_email where p.member_email = #{memberEmail};
+        where date_format(now(),'%Y-%m-%d') <![CDATA[<=]]> end_date and c.member_email = #{memberEmail}) as card
+        on card.member_email = p.member_email where p.member_email = #{memberEmail}
     </select>
 </mapper>
 
