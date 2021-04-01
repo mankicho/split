@@ -122,29 +122,24 @@
         , ifnull(tmp.daily_payment,0) as daily_payment
         from school as s left outer join
         (select * from
-        (select school_id,count(*) as today_person
+        (select school_id,count(*) as today_person -- 오늘 예약자
         from class_members
-        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} !=
-        0)
+        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)
         group by school_id) as
         tmp) as reservation_num on s.school_id = reservation_num.school_id
         left outer join
-        (
-        select t1.school_id,(total_payment+tmp_sum) as total_payment,round(daily_payment) as daily_payment
-        from(select school_id,sum(daily_total_payment) as total_payment, (sum(daily_total_payment) /
-        sum(daily_cnt_person))
-        as daily_payment from school_class_daily_payment group by school_id) as t1
+        (select galaxy_acc_amount.*,galaxy_daily_amount.daily_payment from
+        (select school_id,sum(cnt*set_payment_amount) as total_payment from class_members group by school_id) as galaxy_acc_amount -- 갤럭시 별 누적보증금
         left outer join
-        (select school_id,sum(set_payment_amount) as `tmp_sum` from class_members
-        where set_day <![CDATA[&]]> #{weekday} != 0
-        and date_format(now(),'%Y-%m-%d') between start_date and end_date) as t2
-        on t1.school_id = t2.school_id) as tmp
+        (select school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as daily_payment, count(*) as cnt
+        from class_members group by school_id) galaxy_daily_amount
+        on galaxy_acc_amount.school_id = galaxy_daily_amount.school_id) as tmp
         on s.school_id = tmp.school_id
         left outer join school_hashtags as hashtag on s.school_id = hashtag.school_id
         left outer join
         (select * from
         (select school_id,count(*) as sum_person from class_auth_log group by school_id) as tmp) as acc_attendance on
-        s.school_id = acc_attendance.school_id;
+        s.school_id = acc_attendance.school_id
         <if test="categoryId != 0">
             where category_id = #{categoryId};
         </if>
