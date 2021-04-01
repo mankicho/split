@@ -157,7 +157,7 @@ public class SchoolController {
 
     @PostMapping(value = "/my/explorer/list/get.do")
     public List<SchoolMyExplorersVO> getMyExplorersVO(@RequestParam("memberEmail") String memberEmail) {
-        return schoolService.getMyExplorersVO(memberEmail);
+            return schoolService.getMyExplorersVO(memberEmail);
     }
 
     @PostMapping(value = "/test/galaxy")
