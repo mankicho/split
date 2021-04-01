@@ -306,21 +306,21 @@
      (select #{schoolId} as school_id,sum(cnt*set_payment_amount) as all_acc_payment from class_members) as all_acc_payment-- 모든갤럭시 누적 보증금
     on all_galaxy_att.school_id = all_acc_payment.school_id
     left outer join(
-     select school_id,sum(set_payment_amount) as special_daily_amount
+     select school_id,sum(set_payment_amount) as special_today_amount
      from class_members where (date_format(now(),'%Y-%m-%d') between start_date and end_date)
      and (set_day <![CDATA[&]]> #{weekday} != 0) and (school_id = #{schoolId} and class_id = #{classId})) as special_today_amount -- 특정갤럭시 오늘 보증금
      on all_galaxy_att.school_id = special_today_amount.school_id
      left outer join
-     (select school_id,sum(set_payment_amount) as all_daily_amount
+     (select #{schoolId},sum(set_payment_amount) as all_today_amount
      from class_members where date_format(now(),'%Y-%m-%d') between start_date and end_date
      and set_day <![CDATA[&]]> #{weekday} != 0 and (class_id = #{classId})) as all_today_amount -- 모든갤럭시 오늘 보증금
     on all_galaxy_att.school_id = all_today_amount.school_id
     left outer join
-    (select school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as all_today_amount, count(*) as cnt
+    (select #{school_id},class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as all_daily_amount, count(*) as cnt
     from class_members where class_id = #{classId} group by class_id) as all_daily_amount  -- 모든 갤럭시 하루평균
     on all_galaxy_att.school_id = all_daily_amount.school_id
     left outer join
-    (select school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as special_today_amount, count(*) as cnt
+    (select school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as special_daily_amount, count(*) as cnt
     from class_members where school_id = #{schoolId} and class_id = #{classId} group by school_id,class_id) as special_daily_amount
     on all_galaxy_att.school_id = special_daily_amount.school_id; -- 특정 갤럭시 하루평균
     </select>
