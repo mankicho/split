@@ -288,8 +288,8 @@
     <select id="getExplorerReward" resultMap="schoolRewardVO" parameterType="int">
     select all_galaxy_att.*,if(special_galaxy_att.special_acc_attendance is null,0,round(special_galaxy_att.special_acc_attendance,2))
       as special_acc_attendance, if(special_galaxy_att.special_avg_attendance is null,0,round(special_galaxy_att.special_avg_attendance,2))
-       as special_avg_attendance ,ifnull(special_acc_payment,0) as special_acc_payment, all_acc_payment,ifnull(special_daily_amount,0)
-        as special_daily_amount,ifnull(all_daily_amount,0) as all_daily_amount,
+       as special_avg_attendance ,ifnull(special_acc_payment,0) as special_acc_payment, all_acc_payment,ifnull(special_daily_payment,0)
+        as special_daily_payment,ifnull(all_daily_payment,0) as all_daily_payment,
     ifnull(all_today_amount,0) as all_today_amount,ifnull(special_today_amount,0) as special_today_amount
      from(
     select #{schoolId} as school_id,sum(all_members) as all_acc_attendance, (round(sum(auth_members)/sum(all_members),2)) as all_avg_attendance
@@ -318,13 +318,13 @@
     on all_galaxy_att.school_id = all_today_amount.school_id
     left
      outer join
-    (select #{schoolId} as school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as all_daily_amount, count(*) as cnt
-    from class_members where class_id = #{classId} group by class_id) as all_daily_amount  -- 모든 갤럭시 하루평균
-    on all_galaxy_att.school_id = all_daily_amount.school_id
+    (select #{schoolId} as school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as all_daily_payment, count(*) as cnt
+    from class_members where class_id = #{classId} group by class_id) as all_daily_payment  -- 모든 갤럭시 하루평균
+    on all_galaxy_att.school_id = all_daily_payment.school_id
     left outer join
-    (select school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as special_daily_amount, count(*) as cnt
-    from class_members where school_id = #{schoolId} and class_id = #{classId} group by school_id,class_id) as special_daily_amount
-    on all_galaxy_att.school_id = special_daily_amount.school_id; -- 특정 갤럭시 하루평균
+    (select school_id,class_id,ifnull(round(sum(set_payment_amount)/count(*)),0) as special_daily_payment, count(*) as cnt
+    from class_members where school_id = #{schoolId} and class_id = #{classId} group by school_id,class_id) as special_daily_payment
+    on all_galaxy_att.school_id = special_daily_payment.school_id; -- 특정 갤럭시 하루평균
     </select>
 
     <select id="getAttendanceList" resultMap="schoolExplorerAttendanceListVO" parameterType="SchoolExplorerDTO">
