@@ -419,7 +419,8 @@
     </select>
 
     <select id="getTest" parameterType="int" resultMap="testVO">
-    select tmp.school_id,`sum`,days,(sum/days) as `avg`,ifnull(tttmp.sum_amount,0) as sum_amount,ifnull(tttmp.avg_amount,0) as avg_amount from(
+    select tmp.school_id,`sum`,days,round((sum/days)) as `avg`,ifnull(tttmp.sum_amount,0) as sum_amount,ifnull(tttmp.avg_amount,0) as avg_amount
+     from(
     select l.school_id,count(*) as `sum` from class_auth_log as l group by school_id) as tmp
     left outer join
 	(select l.*,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days
