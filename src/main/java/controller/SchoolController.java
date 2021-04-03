@@ -167,6 +167,8 @@ public class SchoolController {
         log.info(classVOList);
         SchoolTestVO testVO = schoolService.getTest(classDTO.getSchoolId());
 
+
+
         Map<String, Object> map = new HashMap<>();
         map.put("classVOList", classVOList);
         map.put("testVO", testVO);

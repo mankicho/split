@@ -419,22 +419,21 @@
     </select>
 
     <select id="getTest" parameterType="int" resultMap="testVO">
-    select tmp.school_id,`sum`,days,round((sum/days)) as `avg`,ifnull(tttmp.sum_amount,0) as sum_amount,ifnull(tttmp.avg_amount,0) as avg_amount
-     from(
-    select l.school_id,count(*) as `sum` from class_auth_log as l group by school_id) as tmp
-    left outer join
-	(select l.*,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days
-    from class_auth_log as l left outer join school as s
-    on l.school_id = s.school_id group by school_id) as ttmp
-    on tmp.school_id = ttmp.school_id
-    left outer join
-    (select c.school_id,sum(cnt*set_payment_amount) as sum_amount,tmp.avg_amount from class_members as c
+    select school_info.school_id,sum_amount,avg_amount,ifnull(days,0) as days, ifnull(sum,0) as sum,
+    ifnull(round((sum/days)),0) as `avg` From (
+    select c.school_id,sum(cnt*set_payment_amount) as sum_amount,tmp.avg_amount from class_members as c
     left outer join
     (select school_id,round((sum(set_payment_amount) / count(*)),0) as avg_amount
     from class_members where school_id = #{schoolId}) as tmp
-    on c.school_id = tmp.school_id ) as tttmp
-     on tmp.school_id = tttmp.school_id
-    where tmp.school_id = #{schoolId};
+    on c.school_id = tmp.school_id) school_info
+    left outer join
+	(select l.school_id,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days
+    from school as s left outer join class_auth_log as l
+    on l.school_id = s.school_id group by school_id) as days
+    on school_info.school_id = days.school_id
+    left outer join
+	(select l.school_id,count(*) as `sum` from class_auth_log as l group by school_id) as `sum`
+    on school_info.school_id = `sum`.school_id;
     </select>
 </mapper>
 
