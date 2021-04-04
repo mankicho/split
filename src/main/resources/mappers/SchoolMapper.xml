@@ -454,7 +454,7 @@
     left outer join
 	(select l.school_id,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days
     from school as s left outer join class_auth_log as l
-    on l.school_id = s.school_id group by school_id) as daysgetMyExplorersVO
+    on l.school_id = s.school_id group by school_id) as days
     on school_info.school_id = days.school_id
     left outer join
 	(select l.school_id,count(*) as `sum` from class_auth_log as l group by school_id) as `sum`
