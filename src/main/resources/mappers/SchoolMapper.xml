@@ -405,7 +405,7 @@
     from
     (select set_day,school_id,class_id,cnt,cnt*set_payment_amount as all_amount ,set_payment_amount from class_members
     where school_id = #{schoolId} and class_id = #{classId} and member_email = #{memberEmail}
-    order by start_date ) as tmp1
+    order by start_date limit 1) as tmp1
     left outer join
     (select member_email,school_id,class_id,count(*) as attendance_num from class_auth_log
     where school_id = #{schoolId} and class_id = #{classId} and member_email = #{memberEmail}) as tmp2
@@ -413,7 +413,6 @@
     left outer join (select *,sum(member_point) as `sum` from members_point group by member_email) as p
     on tmp2.member_email = p.member_email
     left outer join members_dust as d on tmp2.member_email = d.member_email
-    limit 1
     </select>
 
     <select id="getMyClassMembers" parameterType="classAuthDTO" resultMap="classAuthVO">
