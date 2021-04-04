@@ -86,15 +86,15 @@ public class SchoolService {
         long now = new Date().getTime();
         // qr 코드의 timestamp 값이 현재보다 크면
         log.info(now+","+classAuthDTO.getNow());
-        if (!(now >= classAuthDTO.getNow() && now <= classAuthDTO.getNow() + 20000L)) {
-            log.info(simpleDateFormat.format(new Date(classAuthDTO.getNow())));
-            // qr 코드가 갱신되서 인증실패. 다시 요청해줘야힘
-            return new ClassAuthView(SchoolErrorCode.FutureThanCurrentTimeError);
-        }
+//        if (!(now >= classAuthDTO.getNow()-60000L && now <= classAuthDTO.getNow() + 60000L)) {
+//            log.info(simpleDateFormat.format(new Date(classAuthDTO.getNow())));
+//             qr 코드가 갱신되서 인증실패. 다시 요청해줘야힘
+//            return new ClassAuthView(SchoolErrorCode.FutureThanCurrentTimeError);
+//        }
 
         double dist = getDist(classAuthDTO);
         log.info(dist);
-        if (dist > 70.0) {
+        if (dist > 100.0) {
             // 사용자 위치와 카페의 위치가 맞지않다.
             return new ClassAuthView(SchoolErrorCode.PositionNotMatchError);
         }
