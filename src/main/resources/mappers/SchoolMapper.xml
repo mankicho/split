@@ -344,6 +344,30 @@
     on tmp1.member_email = tmp3.member_email) as tmp left outer join members as m on tmp.member_email = m.email;
     </select>
 
+    <!--
+     select (select nickname from members where email = all_users.member_email) as nickname,auth_users.log_id,check_num.num,
+      (select if(log_id is null, (select att_image from members_image where member_email = all_users.member_email),
+      (select not_att_image
+      from members_image where member_email = all_users.member_email))) as image
+    from
+      (select * from class_members where school_id = #{schoolId} and class_id = #{classId} and
+    (date_format(#{selectedDate},'%Y-%m-%d') between start_date and end_date)
+    and (set_day <![CDATA[&]]> #{weekday} != 0)) as all_users
+    left outer join
+    (
+    select * from class_auth_log where school_id = #{schoolId} and class_id = #{classId} and
+    date_format(auth_date,'%Y-%m-%d') = date_format(#{selectedDate},'%Y-%m-%d')) as auth_users
+    on all_users.school_id = auth_users.school_id and all_users.class_id = auth_users.class_id
+    and all_users.member_email = auth_users.member_email
+    left outer join
+    (select member_email,count(*) as num From class_auth_log where school_id = #{schoolId} and class_id = #{classId}
+    group by member_email) as check_num
+    on all_users.member_email = check_num.member_email
+    order by log_id desc
+    -->
+
+
+
     <select id="getAttendanceRate" parameterType="int" resultMap="schoolClassAvgAttendanceRateVO">
     select auth_members,truncate(auth_members/all_members,3) as rate
     from school_daily_attendance_rate
@@ -351,9 +375,9 @@
     </select>
 
     <select id="getPredictReward" parameterType="SchoolExplorerRewardDTO" resultType="int">
-    select ifnull(truncate(((tmp2.sum / 2) * tmp1.rate * (tmp2.set_payment_amount)/tmp2.sum),0),0) as predict_reward
+    select *,ifnull(truncate(((tmp2.sum / 2) * tmp1.rate * (tmp2.set_payment_amount)/(tmp2.sum*(1-rate))),0),0) as predict_reward
     from (
-    select class_id, truncate((1-sum(auth_members) / sum(all_members)),3) as rate
+    select class_id, truncate((1-(sum(auth_members) / sum(all_members))),3) as rate
     from school_daily_attendance_rate where class_id = #{classId}) as tmp1
     left outer join
     (select class_id,c.set_payment_amount,`sum`
@@ -364,7 +388,8 @@
     and (set_day <![CDATA[&]]> #{weekday} != 0)) as ttmp
     where (date_format(now(),'%Y-%m-%d') between start_date and end_date)
     and (class_id = #{classId}) and (set_day <![CDATA[&]]> #{weekday} != 0) and (member_email = #{memberEmail})) as tmp2
-    on tmp1.class_id = tmp2.class_id
+    on tmp1.class_id = tmp2.class_id;
+
     </select>
 
 
@@ -429,7 +454,7 @@
     left outer join
 	(select l.school_id,datediff(date_format(now(),'%Y-%m-%d'), date_format(found_date,'%Y-%m-%d')) as days
     from school as s left outer join class_auth_log as l
-    on l.school_id = s.school_id group by school_id) as days
+    on l.school_id = s.school_id group by school_id) as daysgetMyExplorersVO
     on school_info.school_id = days.school_id
     left outer join
 	(select l.school_id,count(*) as `sum` from class_auth_log as l group by school_id) as `sum`
