@@ -85,7 +85,7 @@ public class SchoolService {
 
         long now = new Date().getTime();
         // qr 코드의 timestamp 값이 현재보다 크면
-        log.info(now+","+classAuthDTO.getNow());
+        log.info(now + "," + classAuthDTO.getNow());
 //        if (!(now >= classAuthDTO.getNow()-60000L && now <= classAuthDTO.getNow() + 60000L)) {
 //            log.info(simpleDateFormat.format(new Date(classAuthDTO.getNow())));
 //             qr 코드가 갱신되서 인증실패. 다시 요청해줘야힘
@@ -93,11 +93,11 @@ public class SchoolService {
 //        }
 
         double dist = getDist(classAuthDTO);
-        log.info(dist);
-        if (dist > 100.0) {
-            // 사용자 위치와 카페의 위치가 맞지않다.
-            return new ClassAuthView(SchoolErrorCode.PositionNotMatchError);
-        }
+        log.info(classAuthDTO.getMemberEmail() + " :" + dist);
+//        if (dist > 100.0) {
+//            // 사용자 위치와 카페의 위치가 맞지않다.
+//            return new ClassAuthView(SchoolErrorCode.PositionNotMatchError);
+//        }
         ClassAuthView view = new ClassAuthView();
 
         classAuthDTO.setMemberEmail(tokenGeneratorService.getSubject(classAuthDTO.getMemberEmail()));
@@ -126,10 +126,10 @@ public class SchoolService {
         String location = tokenGeneratorService.getSubject(classAuthDTO.getQrToken());
 
         // 지정장소가 있는데 유저가 찍은곳이 지정장소랑 맞지않으면
-        if ((myAuthVO.getSetLocation() != null && myAuthVO.getSetLocation().equals("")) && !(myAuthVO.getSetLocation().equals(location))) {
-            log.info(myAuthVO);
-            return new ClassAuthView(SchoolErrorCode.DifferentFromDesignatedPlace);
-        }
+//        if ((myAuthVO.getSetLocation() != null && myAuthVO.getSetLocation().equals("")) && !(myAuthVO.getSetLocation().equals(location))) {
+//            log.info(myAuthVO);
+//            return new ClassAuthView(SchoolErrorCode.DifferentFromDesignatedPlace);
+//        }
 
         log.info(myAuthVO);
 
