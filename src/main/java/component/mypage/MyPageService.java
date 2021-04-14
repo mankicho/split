@@ -1,5 +1,6 @@
 package component.mypage;
 
+import component.note.NoteDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,4 +12,5 @@ public class MyPageService {
     public MyPageMainVO getMyMainPageVO(MyPageMainDTO myPageMainDTO) {
         return myPageMapper.getMyMainPageVO(myPageMainDTO);
     }
+
 }

@@ -1,9 +1,13 @@
 package component.alarm;
 
+import component.alarm.dto.DeleteAlarmDTO;
+import component.alarm.response.AlarmResponse;
+import component.alarm.response.AlarmResponseType;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,31 +25,52 @@ public class AlarmService {
     }
 
 
-    public int updateReadFlag(int[] idArr) {
+    public AlarmResponse updateReadFlag(List<Integer> idArrList) {
+        if (idArrList == null || idArrList.isEmpty()) {
+            AlarmResponseType responseType = AlarmResponseType.NoDataToUpdate;
+            return AlarmResponse.builder().status(responseType.getStatus()).msg(responseType.getMsg()).build();
+        }
+        int[] arr = idArrList.stream().mapToInt(i -> i).toArray();
         // read flag update
-        alarmMapper.updateReadFlag(idArr);
+        int updatedRow = alarmMapper.updateReadFlag(arr);
         //
-        List<AlarmVO> alarmVOS = alarmMapper.getAlarmsByAlarmId(idArr);
-        boolean readAllFlag = true;
-        for (AlarmVO alarmVO : alarmVOS) {
-            if (!alarmVO.isReadFlag()) {
-                readAllFlag = false;
-                break;
-            }
-        }
-
-        if (!readAllFlag) {
-            return -1;
+        AlarmResponseType responseType;
+        if (updatedRow == 0) {
+            responseType = AlarmResponseType.ServerError;
         } else {
-            return 1;
+            responseType = AlarmResponseType.SuccessFulUpdateData;
         }
+        return AlarmResponse.builder().status(responseType.getStatus()).msg(responseType.getMsg()).build();
     }
 
     public int saveAlarms(AlarmDTO alarmDTO) {
         return alarmMapper.saveAlarms(alarmDTO);
     }
 
-    public int deleteAlarm(int alarmId) {
-        return alarmMapper.deleteAlarm(alarmId);
+    public AlarmResponse deleteAlarm(DeleteAlarmDTO deleteAlarmDTO) {
+        List<AlarmVO> alarmVOS = alarmMapper.getAlarms(deleteAlarmDTO.getMemberEmail());
+
+        boolean hasAlarm = false;
+        for (AlarmVO alarmVO : alarmVOS) {
+            if (alarmVO.getAlarmId() == deleteAlarmDTO.getAlarmId()) {
+                hasAlarm = true;
+                break;
+            }
+        }
+
+        if (!hasAlarm) {
+            AlarmResponseType type = AlarmResponseType.DontHaveTheAlarm;
+            return AlarmResponse.builder().status(type.getStatus()).msg(type.getMsg()).build();
+        }
+        int deletedRow = alarmMapper.deleteAlarm(deleteAlarmDTO.getAlarmId());
+
+        AlarmResponseType responseType;
+        if (deletedRow == 0) {
+            responseType = AlarmResponseType.ServerError;
+        } else {
+            responseType = AlarmResponseType.SuccessFulDeleteData;
+        }
+
+        return AlarmResponse.builder().status(responseType.getStatus()).msg(responseType.getMsg()).build();
     }
 }

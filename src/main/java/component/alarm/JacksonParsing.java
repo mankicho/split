@@ -35,28 +35,17 @@ public class JacksonParsing {
     }
 
     public static String toString(Object object, String charset) {
-        ByteArrayOutputStream output = null;
-        Writer write = null;
         String data = null;
 
-        try {
-            output = new ByteArrayOutputStream();
-            write = new OutputStreamWriter(output, charset);
-
+        // todo try-catch resources
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+             Writer write = new OutputStreamWriter(output, charset)
+        ) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(write, object);
             data = output.toString(charset);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
-        } finally {
-            if (output != null) try {
-                output.close();
-            } catch (IOException e) {
-            }
-            if (write != null) try {
-                write.close();
-            } catch (IOException e) {
-            }
         }
 
         return data;

@@ -67,4 +67,6 @@ public interface MemberMapper {
     int memberFollow(MemberFollowingDTO memberFollowingVO);
 
     Timestamp getRegDate(@Param("email") String email);
+
+    List<MemberDeviceVO> getMemberDeviceVOList();
 }

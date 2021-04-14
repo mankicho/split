@@ -30,6 +30,7 @@
         <typeAlias type="component.school.explorer.dto.SchoolExplorerRewardDTO" alias="SchoolExplorerRewardDTO"/>
         <typeAlias type="component.school.dto.ClassAuthLogDTO" alias="ClassAuthLogDTO"/>
         <typeAlias type="component.mypage.MyPageMainDTO" alias="MyPageMainDTO"/>
+        <typeAlias type="component.school.explorer.dto.MyExplorerDTO" alias="MyExplorerDTO"/>
 
 
     </typeAliases>

@@ -1,6 +1,7 @@
 package component.school;
 
 import component.school.dto.*;
+import component.school.explorer.dto.MyExplorerDTO;
 import component.school.explorer.dto.SchoolExplorerDTO;
 import component.school.explorer.dto.SchoolExplorerRewardDTO;
 import component.school.explorer.vo.*;
@@ -13,8 +14,8 @@ import component.zone.vo.ZoneLatLngVO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import security.token.TokenGeneratorService;
 
 import java.text.ParseException;
@@ -34,6 +35,7 @@ public class SchoolService {
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
     private SimpleDateFormat allFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    @Transactional(readOnly = true)
     public List<SchoolVO> getSchools(int categoryId, int weekday) { // 학교 가져오기
         return schoolMapper.getSchools(categoryId, weekday);
     }
@@ -133,7 +135,7 @@ public class SchoolService {
 
         log.info(myAuthVO);
 
-        ClassAuthLogDTO dto = new ClassAuthLogDTO(myAuthVO.getSchoolId(), myAuthVO.getClassId(), classAuthDTO.getMemberEmail(), location);
+        ClassAuthLogDTO dto = new ClassAuthLogDTO(myAuthVO.getSchoolId(), myAuthVO.getTid(), myAuthVO.getClassId(), classAuthDTO.getMemberEmail(), location);
 
         int insertedRow = schoolMapper.classAuth(dto);
         if (insertedRow == 0) {
@@ -151,10 +153,7 @@ public class SchoolService {
 
     // 탐험단 - 상금 탭 정보 가져오기
     public SchoolRewardVO getExplorerReward(SchoolExplorerRewardDTO schoolExplorerRewardDTO) {
-        int schoolId = schoolExplorerRewardDTO.getSchoolId();
-        int classId = schoolExplorerRewardDTO.getClassId();
-        int weekday = schoolExplorerRewardDTO.getWeekday();
-        return schoolMapper.getExplorerReward(schoolId, classId, weekday);
+        return schoolMapper.getExplorerReward(schoolExplorerRewardDTO);
     }
 
     // 특정 학교,클래스의 출석, 비출석 유저 정보 가져오기(사진, 닉네임, 인증횟수)
@@ -172,8 +171,8 @@ public class SchoolService {
         return schoolMapper.getPredictReward(schoolExplorerPredictRewardDTO);
     }
 
-    public SchoolExplorerMyInfo getMyInfo(int schoolId, int classId, String memberEmail) {
-        return schoolMapper.getMyInfo(schoolId, classId, memberEmail);
+    public SchoolExplorerMyInfo getMyInfo(int tid) {
+        return schoolMapper.getMyInfo(tid);
     }
 
     // 사용자 인증정보에서 카페의 위치를 뽑아낸다.
@@ -205,8 +204,8 @@ public class SchoolService {
         }
     }
 
-    public List<SchoolMyExplorersVO> getMyExplorersVO(String memberEmail) {
-        return schoolMapper.getMyExplorersVO(memberEmail);
+    public List<SchoolMyExplorersVO> getMyExplorersVO(MyExplorerDTO myExplorerDTO) {
+        return schoolMapper.getMyExplorersVO(myExplorerDTO);
     }
     // 경위도 계산거리
 
@@ -229,8 +228,8 @@ public class SchoolService {
         return dist * 1609.344;
     }
 
-    public SchoolTestVO getTest(int schoolId) {
-        return schoolMapper.getTest(schoolId);
+    public GalaxyStatisticVO getGalaxyOfExplorer(int schoolId) {
+        return schoolMapper.getGalaxyOfExplorer(schoolId);
     }
 
 

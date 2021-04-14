@@ -5,6 +5,7 @@ import com.neovisionaries.ws.client.*;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -13,28 +14,22 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j2
+@Component
 public class SearchKeywordBroker {
 
     private WebSocket ws;
-    private String rankServer = "http://165.246.197.126:8090/echo/alarm";  // 검색어서버 url
+
+    @Value("#{websocket['linux_websocket_server_url']}")
+    private String rankServer;
+
+    private String home;
 
     String myMessage; // 메세지
 
     // websocket 생성이 실패하면 IOException 발생.
     // handshakes 도중에 error 발생 시 WebsocketException 발생.
-    public SearchKeywordBroker() {
-        try {
-            ws = connect();
-
-            if (ws.getState().compareTo(WebSocketState.OPEN) == 0) {
-                getKeywordNumFromRankServer();
-            }
-        } catch (IOException | WebSocketException e) {
-            e.printStackTrace();
-        }
-    }
-
     public WebSocket connect() throws IOException, WebSocketException {
+        log.info("rankServer = " + rankServer);
         return new WebSocketFactory()
                 .setConnectionTimeout(20000)
                 .createSocket(rankServer)
@@ -55,11 +50,12 @@ public class SearchKeywordBroker {
 
                 })
                 .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE)
-                .   connect();
+                .connect();
     }
 
     public RankServerStatus sendKeywordToSearchRankServer(String str) {
-        if (ws.getState().compareTo(WebSocketState.CLOSED) == 0) {
+
+        if (ws == null || ws.getState().compareTo(WebSocketState.CLOSED) == 0) {
             ws = null;
             try {
                 ws = connect();
@@ -87,7 +83,7 @@ public class SearchKeywordBroker {
         JSONObject object = new JSONObject();
         object.put("type", 1);
 
-        if (ws.getState().compareTo(WebSocketState.CLOSED) == 0) {
+        if (ws == null || ws.getState().compareTo(WebSocketState.CLOSED) == 0) {
             try {
                 ws = connect();
             } catch (Exception e) {
@@ -101,5 +97,11 @@ public class SearchKeywordBroker {
         return myMessage;
     }
 
+    public void sendMessage() {
+        JSONObject object = new JSONObject();
+        object.put("nickname", "test");
+        object.put("type", 3);
+        ws.sendText(object.toString());
+    }
 
 }

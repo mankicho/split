@@ -1,11 +1,14 @@
 package component.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-@Data
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@ToString
 public class MemberDTO {
     private String email;
     private String pw;

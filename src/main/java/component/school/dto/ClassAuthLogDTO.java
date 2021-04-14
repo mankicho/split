@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClassAuthLogDTO {
     private int schoolId;
+    private int tid;
     private int classId;
     private String memberEmail;
     private String planetCode;

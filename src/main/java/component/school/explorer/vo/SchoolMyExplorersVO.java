@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class SchoolMyExplorersVO {
+    private int tid;
     private int schoolId;
     private int classId;
     private String schoolName;

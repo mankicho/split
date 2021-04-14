@@ -3,6 +3,8 @@ package controller;
 import component.home.HomeDataDTO;
 import component.home.HomeDataService;
 import component.home.view.HomeData;
+import component.home.vo.HomeDataMyInfo;
+import component.home.vo.HomeExplorerVO;
 import component.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -27,30 +32,32 @@ public class HomeController {
     private final MemberService memberService;
 
     @GetMapping(value = "/")
-    public String home() {
+    public String home() throws Exception {
+        log.info("user request..");
         return "index";
-    }
-
-    @GetMapping(value = "/test.do")
-    @ResponseBody
-    public Map<String, Object> test2(HttpServletRequest request) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Map<String, Object> map = new HashMap<>();
-        map.put("date", format.format(new Date()));
-        map.put("milli", new Date().getTime());
-        map.put("nowDate", format.format(new Date(Long.parseLong(request.getParameter("now")))));
-        map.put("now", new Date(Long.parseLong(request.getParameter("now"))));
-        return map;
     }
 
     @PostMapping(value = "/home/data/get.do")
     @ResponseBody
     public HomeData getHomeData(@RequestBody HomeDataDTO homeDataDTO) {
-        return homeDataService.getHomeData(homeDataDTO);
+        // todo 1. HomeDataMyInfo 가져오기
+        HomeDataMyInfo myInfo = homeDataService.getMyHomeInfo(homeDataDTO);
+        log.info(myInfo);
+        // todo 2. HomeExplorerVO List 가져오기
+        List<HomeExplorerVO> homeExplorerVOS = homeDataService.getMyHomeExplorers(homeDataDTO);
+        log.info(homeExplorerVOS);
+
+        return HomeData.builder()
+                .memberEmail(homeDataDTO.getMemberEmail())
+                .homeDataMyInfo(myInfo)
+                .homeExplorerVOS(homeExplorerVOS)
+                .build();
+
     }
 
     private int getSquareOfTwo(String val) {
         int v = Integer.parseInt(val);
+
         return (int) Math.pow(2, v - 1);
     }
 }

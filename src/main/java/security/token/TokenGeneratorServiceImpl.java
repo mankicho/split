@@ -15,9 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Service
-@PropertySource("classpath:config/admin.properties")
 public class TokenGeneratorServiceImpl implements TokenGeneratorService {
-    private static final String SECRET_KEY = "asjnejk8213kjbsdvkjbv9knqsdljvbqeuifb298fb3we89vsh89vf3oifnon3fb12";
+
+    private String SECRET_KEY = "asjnejk8213kjbsdvkjbv9knqsdljvbqeuifb298fb3we89vsh89vf3oifnon3fb12";
 
     @Value("#{admin_config['zcw16ggf2k4v88hb3']}")
     private String zcw16;
@@ -48,6 +48,8 @@ public class TokenGeneratorServiceImpl implements TokenGeneratorService {
 
     @Override
     public Date getExpiration(String token) {
+        System.out.println(SECRET_KEY + "ASLKD");
+        System.out.println(zcw16+"231238912");
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();

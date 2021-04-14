@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SchoolClassAvgAttendanceRateVO {
-    private int authMembers;
+    private int attNum;
     private double rate;
 }

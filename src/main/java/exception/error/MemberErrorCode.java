@@ -1,7 +1,4 @@
 package exception.error;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 public enum MemberErrorCode {
     SQLIntegrityConstraintViolationException(700,"duplicate entry for primary key");

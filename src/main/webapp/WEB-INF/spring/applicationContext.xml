@@ -17,13 +17,14 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
     <util:properties id="admin_config" location="classpath:/config/admin.properties"/>
-        <util:properties id="db" location="file:/home/hosting_users/icnogari/tomcat/db.properties"/>
-<!--    <util:properties id="db" location="file:/home/tomcat/apache-tomcat-8.5.64/db.properties"/>-->
+    <!--        <util:properties id="db" location="file:/home/hosting_users/icnogari/tomcat/db.properties"/>-->
+        <util:properties id="db" location="file:/home/tomcat/apache-tomcat-8.5.64/db.properties"/>
 <!--    <util:properties id="db"-->
 <!--                     location="file:C:\Users\82102\Desktop\apache-tomcat-8.5.57-windows-x64\apache-tomcat-8.5.57/db.properties"/>-->
 
     <util:properties id="path" location="classpath:/config/path.properties"/>
     <util:properties id="token" location="classpath:/config/token.properties"/>
+    <util:properties id="websocket" location="classpath:/config/websocket.properties"/>
 
     <tx:annotation-driven/>
     <context:component-scan base-package="websocket"/>
@@ -35,7 +36,7 @@
     <context:component-scan base-package="fcm"/>
     <context:component-scan base-package="system"/>
     <context:component-scan base-package="file"/>
-<!--    <context:component-scan base-package="rank"/>-->
+    <context:component-scan base-package="rank"/>
     <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
     <task:annotation-driven/>

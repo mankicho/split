@@ -2,11 +2,13 @@ package component.note;
 
 import lombok.*;
 
+// builder 패턴
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
+//@Setter
 @Getter
 @ToString
+@Builder
 public class NoteDTO {
     private String noteUUID;
     private String fromEmail;

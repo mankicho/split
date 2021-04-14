@@ -2,12 +2,14 @@ package component.home.view;
 
 import component.home.vo.HomeDataMyInfo;
 import component.home.vo.HomeExplorerVO;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@ToString
+@Builder
 public class HomeData {
     private String memberEmail;
     private HomeDataMyInfo homeDataMyInfo;

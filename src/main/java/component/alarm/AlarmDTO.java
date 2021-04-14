@@ -1,12 +1,15 @@
 package component.alarm;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
 import lombok.Data;
-import org.json.JSONObject;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Map;
 
-@Data
+@Builder
+@Getter
+@ToString
 public class AlarmDTO {
     private String toEmail;
     private Map<String,Object> msg;

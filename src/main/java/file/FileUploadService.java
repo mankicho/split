@@ -23,20 +23,15 @@ public class FileUploadService {
         try {
             InputStream fileStream = multipartFile.getInputStream(); // file 업로드
             FileUtils.copyInputStreamToFile(fileStream, targetFile);
-            log.info("upload success");
         } catch (IOException e) {
             FileUtils.deleteQuietly(targetFile);
             e.printStackTrace();
         }
-        log.info("file upload finish");
-        log.info("----------------");
         if (targetFile.exists()) {
-            log.info(targetFile);
-            log.info(targetFile.getPath());
             log.info(targetFile.getAbsolutePath());
-            return 1; // 파일 업로드 성공
+            return 202; // 파일 업로드 성공
         }
-        return 0; // 파일업로드 실패
+        return 500; // 파일업로드 실패
     }
 
     private String getUUID() { // 고유 식별자 만들기

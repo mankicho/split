@@ -16,14 +16,14 @@ import java.util.Random;
 public class SMSService {
     public SMSView sendSMSForReg(String phoneNumber) {
         int code = new Random().nextInt(8999) + 1000;
-        String msg = "[split] 회원가입 메세지 입니다. [" + code + "]를 입력해주세요";
+        String msg = "[SPECK] 회원가입 메세지 입니다. [" + code + "]를 입력해주세요";
 
         return sendSMS(phoneNumber, msg, code);
     }
 
     public SMSView sendSMSForFindEmail(String phoneNumber) {
         int code = new Random().nextInt(8999) + 1000;
-        String msg = "[split] 비밀번호를 찾기위한 메세지 입니다. [" + code + "]를 입력해주세요";
+        String msg = "[SPECK] 비밀번호를 찾기위한 메세지 입니다. [" + code + "]를 입력해주세요";
         return sendSMS(phoneNumber, msg, code);
     }
 

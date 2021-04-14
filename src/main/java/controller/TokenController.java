@@ -1,5 +1,6 @@
 package controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,10 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/token")
+@RequiredArgsConstructor
 public class TokenController {
 
-    @Setter(onMethod_ = {@Autowired})
-    private TokenGeneratorService tokenGeneratorService; // Bean 으로 관리를 해야하는가??
+    private final TokenGeneratorService tokenGeneratorService; // Bean 으로 관리를 해야하는가??
 
     @GetMapping(value = "/get.do")
     public TokenResultView genToken(@RequestParam(value = "subject") String subject) {

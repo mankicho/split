@@ -4,26 +4,26 @@
 <mapper namespace="component.home.HomeDataMapper">
 
     <resultMap id="homeDataMyInfo" type="component.home.vo.HomeDataMyInfo">
-        <result property="myAttCheck" column="my_att_check"/>
-        <result property="myDust" column="dust"/>
-        <result property="dustLevel" column="dust_level"/>
-        <result property="allUniverseNum" column="all_universe_num"/>
-        <result property="memberPoint" column="member_point"/>
+        <result property="memberEmail" column="member_email"/>
+        <result property="myAttNum" column="my_att_num"/>
+        <result property="myPoint" column="my_point"/>
+        <result property="allAttNum" column="all_att_num"/>
         <result property="attImage" column="att_image"/>
+        <result property="dust" column="dust"/>
     </resultMap>
 
     <resultMap id="homeExplorerVO" type="component.home.vo.HomeExplorerVO">
+        <result property="memberEmail" column="member_email"/>
         <result property="schoolId" column="school_id"/>
+        <result property="classId" column="class_id"/>
+        <result property="cnt" column="cnt"/>
+        <result property="setPaymentAmount" column="set_payment_amount"/>
+        <result property="attNum" column="att_num"/>
         <result property="schoolType" column="school_type"/>
         <result property="schoolName" column="school_name"/>
-        <result property="setLocation" column="set_location"/>
-        <result property="imagePath" column="image_path"/>
-        <result property="myNeedTotalCheckNum" column="my_need_total_check_num"/>
-        <result property="classId" column="class_id"/>
-        <result property="setPaymentAmount" column="set_payment_amount"/>
-        <result property="myTotalCheckNum" column="my_total_check_num"/>
-        <result property="todayReservedPerson" column="today_reserved_person"/>
-        <result property="dummyDate" column="dummy_date"/>
+        <result property="authTime" column="auth_time"/>
+        <result property="mySumPoint" column="my_sum_point"/>
+
     </resultMap>
 
     <resultMap id="homeData" type="component.home.view.HomeData">
@@ -83,36 +83,106 @@
         where date_format(now(),'%Y-%m-%d') <![CDATA[<=]]> end_date and c.member_email = #{memberEmail}) as card
         on card.member_email = p.member_email where p.member_email = #{memberEmail};
     </select>
+
+    <select id="getMyHomeInfo" parameterType="HomeDataDTO" resultMap="homeDataMyInfo">
+        select att.member_email,ifnull(my_att_num,0) as my_att_num,
+        ifnull(my_point,0) as my_point,ifnull(all_att_num,0) as all_att_num,i.att_image,d.dust From
+        (select #{memberEmail} as member_email, ifnull(count(*),0) as my_att_num -- 내 출석횟수
+        from class_auth_log where member_email = #{memberEmail}) as att
+        left outer join
+        (select member_email, sum(member_point) as my_point from members_point where member_email = #{memberEmail}) as po -- 내 상금
+        on att.member_email = po.member_email
+        left outer join
+        (select #{memberEmail} as member_email, count(*) as all_att_num from class_auth_log -- 지금 3164명이 우주탐험중
+        where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) as al
+        on att.member_email = al.member_email
+        left outer join
+        members_image as i -- 내 이미지
+        on i.member_email = att.member_email
+        left outer join
+        members_dust as d -- 내 레벨 단계
+        on att.member_email = d.member_email;
+    </select>
+
+    <select id="getMyHomeExplorers" parameterType="HomeDataDTO" resultMap="homeExplorerVO">
+        select my.*,ifnull(log.att_num,0) as att_num ,s.school_type,concat(if(s.school_type=1,'[공식]',''),' ',s.school_name) as school_name,
+        c.auth_time,my.set_payment_amount,dust.dust,ifnull(my_sum_point,0) as my_sum_point
+        From
+        (SELECT *
+        FROM(SELECT member_email,school_id,class_id,start_date,cnt,set_payment_amount FROM
+        (SELECT * FROM class_members WHERE (member_email = #{memberEmail}) AND (DATE_FORMAT(now(), '%Y-%m-%d') <![CDATA[<=]]> end_date)
+        ORDER BY start_date) AS class_members
+        GROUP BY school_id , class_id) AS my) as my -- 내 탐험단 리스트
+        left outer join school as s
+        on my.school_id = s.school_id -- 학교정보
+        left outer join class as c
+        on my.class_id = c.class_id -- 출석시간
+        left outer join members_dust as dust
+        on my.member_email = dust.member_email -- 더스트
+        left outer join (select member_email,school_id,class_id,sum(member_point) as my_sum_point
+        from members_point where member_email = #{memberEmail} group by school_id,class_id) as p
+        on my.member_email = p.member_email and my.school_id = p.school_id and my.class_id = p.class_id -- 내 상금
+        left outer join
+        (select school_id,class_id,att_num from
+        (select l.school_id,l.class_id,count(*) as att_num
+        From class_auth_log as l left outer join
+        (SELECT *
+        FROM(SELECT school_id,class_id,start_date FROM
+        (SELECT * FROM class_members
+        WHERE (member_email = #{memberEmail}) AND (DATE_FORMAT(now(), '%Y-%m-%d') <![CDATA[<=]]> end_date) ORDER BY start_date)
+        AS class_members
+        GROUP BY school_id , class_id) AS my) as my
+        on l.school_id=my.school_id and l.class_id =my.class_id
+        where member_email = #{memberEmail} and date_format(auth_date,'%Y-%m-%d') <![CDATA[>=]]> start_date group by school_id,class_id) as log) as log
+        on my.school_id = log.school_id and my.class_id = log.class_id;
+    </select>
 </mapper>
 
 
-<!--        select p.member_email,p.member_point,d.dust,-->
-<!--        (select count(*) from class_auth_log where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) as all_universe_num,-->
-<!--        my.my_att_check,if((select planet_name from planet where planet_code = card.set_location) is not null,'지정장소','자유장소') as set_location,-->
-<!--        card.image_path,card.my_need_total_check_num,card.school_name,card.school_type,card.school_id,card.class_id,card.set_payment_amount,card.my_total_check_num,card.today_reserved_person,card.dummy_date-->
-<!--        from members_point as p left outer join members_dust as d on p.member_email = d.member_email-->
-<!--        left outer join-->
-<!--        (select member_email,count(*) as my_att_check from class_auth_log where member_email = #{memberEmail}) as my-->
-<!--        on my.member_email = p.member_email-->
-<!--        left outer join-->
-<!--        (select s.school_id,s.school_type,s.school_name,s.set_location,s.image_path,c.member_email,c.class_id,c.cnt as my_need_total_check_num,-->
-<!--        c.set_payment_amount,l.my_total_check_num,tmp.today_reserved_person,dummy_date-->
-<!--        from school as s left outer join-->
-<!--        class_members as c &#45;&#45; 학교 데이터-->
-<!--        on s.school_id = c.school_id-->
-<!--        left outer join-->
-<!--        (select school_id,class_id,member_email,count(*) as my_total_check_num from class_auth_log group by school_id,class_Id,member_email) as l-->
-<!--        on c.member_email = l.member_email and c.school_id = l.school_id and c.class_id = l.class_id-->
-<!--        left outer join-->
-<!--        (select school_id,class_id,count(*) as today_reserved_person from class_members-->
-<!--        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)-->
-<!--        group by school_id,class_id) as tmp &#45;&#45; 오늘 예약자-->
-<!--        on c.school_id = tmp.school_id and c.class_id = tmp.class_id-->
-<!--        left outer join-->
-<!--        (-->
-<!--        select school_id,class_id,dummy_date from class_members as c left outer join dummy_date as d on dummy_date-->
-<!--        between date_format(date_add(now(),interval 1 day),'%Y-%m-%d') and end_date-->
-<!--        where weekday <![CDATA[&]]> set_day != 0 group by school_id, class_id) as ttmp2 &#45;&#45; dummy_date-->
-<!--        on c.school_id = ttmp2.school_id and c.class_id = ttmp2.class_id-->
-<!--        where date_format(now(),'%Y-%m-%d') between start_date and end_date and c.member_email = #{memberEmail}) as card-->
-<!--        on card.member_email = p.member_email where p.member_email = #{memberEmail};-->
+        <!--        select p.member_email,p.member_point,d.dust,-->
+        <!--        (select count(*) from class_auth_log where date_format(auth_date,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')) as all_universe_num,-->
+        <!--        my.my_att_check,if((select planet_name from planet where planet_code = card.set_location) is not null,'지정장소','자유장소') as set_location,-->
+        <!--        card.image_path,card.my_need_total_check_num,card.school_name,card.school_type,card.school_id,card.class_id,card.set_payment_amount,card.my_total_check_num,card.today_reserved_person,card.dummy_date-->
+        <!--        from members_point as p left outer join members_dust as d on p.member_email = d.member_email-->
+        <!--        left outer join-->
+        <!--        (select member_email,count(*) as my_att_check from class_auth_log where member_email = #{memberEmail}) as my-->
+        <!--        on my.member_email = p.member_email-->
+        <!--        left outer join-->
+        <!--        (select s.school_id,s.school_type,s.school_name,s.set_location,s.image_path,c.member_email,c.class_id,c.cnt as my_need_total_check_num,-->
+        <!--        c.set_payment_amount,l.my_total_check_num,tmp.today_reserved_person,dummy_date-->
+        <!--        from school as s left outer join-->
+        <!--        class_members as c &#45;&#45; 학교 데이터-->
+        <!--        on s.school_id = c.school_id-->
+        <!--        left outer join-->
+        <!--        (select school_id,class_id,member_email,count(*) as my_total_check_num from class_auth_log group by school_id,class_Id,member_email) as l-->
+        <!--        on c.member_email = l.member_email and c.school_id = l.school_id and c.class_id = l.class_id-->
+        <!--        left outer join-->
+        <!--        (select school_id,class_id,count(*) as today_reserved_person from class_members-->
+        <!--        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} != 0)-->
+        <!--        group by school_id,class_id) as tmp &#45;&#45; 오늘 예약자-->
+        <!--        on c.school_id = tmp.school_id and c.class_id = tmp.class_id-->
+        <!--        left outer join-->
+        <!--        (-->
+        <!--        select school_id,class_id,dummy_date from class_members as c left outer join dummy_date as d on dummy_date-->
+        <!--        between date_format(date_add(now(),interval 1 day),'%Y-%m-%d') and end_date-->
+        <!--        where weekday <![CDATA[&]]> set_day != 0 group by school_id, class_id) as ttmp2 &#45;&#45; dummy_date-->
+        <!--        on c.school_id = ttmp2.school_id and c.class_id = ttmp2.class_id-->
+        <!--        where date_format(now(),'%Y-%m-%d') between start_date and end_date and c.member_email = #{memberEmail}) as card-->
+        <!--        on card.member_email = p.member_email where p.member_email = #{memberEmail};-->
+
+
+        <!-- 메인 페이지의 탐험단 데이터 가져오기 -->
+        <!--        select m.member_email,m.school_id,m.class_id,s.school_type,s.school_name,c.auth_time,m.set_payment_amount,ifnull(my_total_check,0) as my_total_check,m.cnt,round(ifnull(my_total_check/cnt * 100,0),0) as att_rate-->
+        <!--        , ifnull(my_total_check * set_payment_amount,0) as my_payment_amount, (cnt*set_payment_amount) as all_payment_amount, ifnull(member_point,0) as member_point-->
+        <!--        from class_members as m left outer join school as s on m.school_id = s.school_id-->
+        <!--        left outer join class as c on m.class_id = c.class_id-->
+        <!--        left outer join-->
+        <!--        (select school_id, class_id,sum(member_point) as member_point from members_point where member_email = '100sozzang@gmail.com' group by school_id,class_id) as member_point-->
+        <!--        on m.school_id = member_point.school_id and m.class_id = member_point.class_id-->
+        <!--        left outer join-->
+        <!--        (select member_email,school_id,class_id,count(*) as my_total_check from class_auth_log-->
+        <!--        where member_email = '100sozzang@gmail.com' group by school_id,class_id,member_email) as total_check &#45;&#45; 탐험단 별로 몇번 출석했는가-->
+        <!--        on m.member_email = total_check.member_email and m.school_id = total_check.school_id and m.class_id = total_check.class_id-->
+        <!--        where (date_format(now(),'%Y-%m-%d') <= end_date) and m.member_email = '100sozzang@gmail.com'; &#45;&#45; 현재 진행중인 탐험단 [공식] 인하대학교 갤럭시(08:00), 설정 보증금-->
+
+        <!-- 해야할것 : 메인페이지의 나의정보 가져오기 -->

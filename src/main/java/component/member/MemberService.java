@@ -47,24 +47,15 @@ public class MemberService {
 
     // todo 1. 바뀔 서비스
     public int registerMember(String data) {
-
-        JSONObject jsonMemberDTO = new JSONObject(data);
-
-        log.info("jsonMemberDTO.toString() = " + jsonMemberDTO.toString());
-        String email = jsonMemberDTO.getString("email");
-        String pw = jsonMemberDTO.getInt("pw") + "";
-        String sex = jsonMemberDTO.getString("sex");
-        String bornTime = jsonMemberDTO.getInt("bornTime") + "";
-        String phoneNumber = jsonMemberDTO.getString("phoneNumber");
-        String nickname = jsonMemberDTO.getString("nickname");
-
-        MemberDTO memberDTO = new MemberDTO(email, pw, phoneNumber, sex, bornTime, nickname);
-        log.info("memberDTO = " + memberDTO);
+        JSONObject object = new JSONObject(data);
 //        // todo 1. pw check(right format?)
-        String encodedPassword = passwordEncoder.encode(pw); // pw 인코딩
-        memberDTO.setPw(encodedPassword);
+        int insertedRow = memberMapper.registerMember(jsonToMemberDTO(object));
 
-        return memberMapper.registerMember(memberDTO);
+        if (insertedRow == 1) {
+            return 202; // 정상적으로 DB 에 저장되면 202
+        } else {
+            return 500; // 나머지 오류 SQL 제약조건, 서버 에러 등등
+        }
     }
 
 
@@ -220,6 +211,10 @@ public class MemberService {
         return memberMapper.getRegDate(email);
     }
 
+    public List<MemberDeviceVO> getMemberDeviceVOList() {
+        return memberMapper.getMemberDeviceVOList();
+    }
+
     private String generateSalt() {
         Random random = new Random();
 
@@ -237,6 +232,24 @@ public class MemberService {
     private boolean containSpecial(String str) {
         String pattern = "^[ㄱ-ㅎ가-힣a-zA-Z0-9@.]*$";
         return !Pattern.matches(pattern, str);
+    }
+
+    private MemberDTO jsonToMemberDTO(JSONObject jsonMemberDTO) {
+
+        log.info("jsonMemberDTO.toString() = " + jsonMemberDTO.toString());
+        String email = jsonMemberDTO.getString("email");
+        String pw = jsonMemberDTO.getString("pw");
+        String sex = jsonMemberDTO.getString("sex");
+        String bornTime = jsonMemberDTO.getString("bornTime");
+        String phoneNumber = jsonMemberDTO.getString("phoneNumber");
+        String nickname = jsonMemberDTO.getString("nickname");
+
+        return MemberDTO.builder()
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .sex(sex).
+                        nickname(nickname).pw(passwordEncoder.encode(pw)).
+                        bornTime(bornTime).build();
     }
 }
 

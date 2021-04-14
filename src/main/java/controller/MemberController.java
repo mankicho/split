@@ -4,7 +4,10 @@ import component.member.*;
 import component.member.dto.MemberDTO;
 import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
-import component.member.view.UpdatePasswordView;
+import component.member.response.MemberServiceStatusResponse;
+import component.member.response.RegisterMemberResponse;
+import component.member.response.UpdatePasswordResponse;
+import component.member.response.enumm.RegisterMemberStatus;
 import component.member.vo.*;
 import file.FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -70,15 +73,15 @@ public class MemberController {
 
 
     // todo 1. 변경될 로직(회원가입)
+    // todo 2. file 이랑 data 를 갖고있는 객체를 만들어서 매핑하라는거잖아.
     // 트랜잭션 구현 필요
     @PostMapping(value = "/registerWithFile.do")
-    public int insertMember(HttpServletRequest request, @RequestParam("file") MultipartFile multipartFile)   {
-        String data = request.getParameter("memberDTO");
-        log.info("data = " + data);
-
+    public RegisterMemberResponse insertMemberWithFile(@RequestParam("memberDTO") String data, @RequestParam("file") MultipartFile multipartFile) {
         int savedFile = fileUploadService.fileUpload(home, multipartFile);
-        log.info(savedFile);
-        return memberService.registerMember(data);
+        int registerStatus = memberService.registerMember(data);
+
+        RegisterMemberStatus status = RegisterMemberStatus.getRegisterMemberStatus(registerStatus, savedFile);
+        return new RegisterMemberResponse(status);
     }
 
 
@@ -98,8 +101,8 @@ public class MemberController {
     }
 
     @PostMapping(value = "/update.do")
-    public UpdatePasswordView updatePassword(@RequestParam("email") String email, @RequestParam("pw") String pw) {
-        UpdatePasswordView view = new UpdatePasswordView();
+    public UpdatePasswordResponse updatePassword(@RequestParam("email") String email, @RequestParam("pw") String pw) {
+        UpdatePasswordResponse view = new UpdatePasswordResponse();
         if (email == null || pw == null) {
             view.setCode("400");
             return view;
@@ -119,17 +122,20 @@ public class MemberController {
     // todo 2.
     // email 이 null 인지
     @PostMapping(value = "/delete.do")
-    public HashMap<String, String> deleteMember(HttpServletRequest request) {
-        HashMap<String, String> hashMap = new HashMap<>();
+    public MemberServiceStatusResponse deleteMember(HttpServletRequest request) {
+        MemberServiceStatusResponse memberServiceStatusResponse = new MemberServiceStatusResponse();
+
         String email = request.getParameter("email");
         // 1이면 삭제, 0이면 삭제 x
         int delete = memberService.deleteMember(email);
         if (delete == 1) {
-            hashMap.put("test", "1");
+            memberServiceStatusResponse.setStatus(202);
+            memberServiceStatusResponse.setMsg("delete success : delete row[" + delete + "]");
         } else {
-            hashMap.put("test", "2");
+            memberServiceStatusResponse.setStatus(500);
+            memberServiceStatusResponse.setMsg("delete fail : delete row[" + delete + "]");
         }
-        return hashMap;
+        return memberServiceStatusResponse;
     }
 
     @PostMapping(value = "/check/nick")
@@ -240,6 +246,7 @@ public class MemberController {
         return memberService.getFriendAddRequest(to);
     }
 
+    // todo . 바꿀예정
     @GetMapping(value = "/phone/auth.do") // 핸드폰 인증번호 유효시간 3분 체크
     public boolean phoneAuthenticate(HttpServletRequest request) {
         String now = request.getParameter("now");
@@ -283,6 +290,7 @@ public class MemberController {
         return memberService.getFollowers(email);
     }
 
+    // todo 추후 구현예정
     @PostMapping(value = "/follow/insert.do")
     public MemberControllerStatus memberFollow(@RequestBody MemberFollowingDTO memberFollowingVO) {
         log.info(memberFollowingVO);
@@ -297,4 +305,5 @@ public class MemberController {
             return new MemberControllerStatus(500);
         }
     }
+
 }

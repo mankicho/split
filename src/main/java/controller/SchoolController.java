@@ -2,6 +2,7 @@ package controller;
 
 import component.school.SchoolService;
 import component.school.dto.*;
+import component.school.explorer.dto.MyExplorerDTO;
 import component.school.explorer.dto.SchoolExplorerDTO;
 import component.school.explorer.dto.SchoolExplorerRewardDTO;
 import component.school.explorer.vo.*;
@@ -19,7 +20,6 @@ import security.token.TokenGeneratorService;
 import view.DefaultResultView;
 import view.ResultView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,9 +34,8 @@ public class SchoolController {
 
     private final SchoolService schoolService;
     private final ZoneService zoneService;
-
     private final TokenGeneratorService tokenGeneratorService;
-    private final SearchKeywordBroker broker = new SearchKeywordBroker();
+    private final SearchKeywordBroker broker;
 
     // 학교 개설
     @PostMapping(value = "/create.do")
@@ -79,6 +78,7 @@ public class SchoolController {
         log.info(classDTOForSelect);
 
         return schoolService.getClasses(classDTOForSelect);
+
     }
 
     // 학교 검색
@@ -133,13 +133,23 @@ public class SchoolController {
     @PostMapping(value = "/explorer/reward/get.do")
     public SchoolRewardVO getExplorerReward(@RequestBody SchoolExplorerRewardDTO schoolExplorerRewardDTO) {
         SchoolRewardVO schoolRewardVO = schoolService.getExplorerReward(schoolExplorerRewardDTO);
+        log.info(schoolRewardVO);
         int predictReward = schoolService.getPredictReward(schoolExplorerRewardDTO);
+        log.info(predictReward);
         schoolRewardVO.setPredictReward(predictReward);
         return schoolRewardVO;
     }
 
     // 탐험단 정보 가져오기
+
+    /**
+     * 바뀐부분 테스트 끝나고 서버에 적용
+     *
+     * @param schoolExplorerDTO
+     * @return
+     */
     @PostMapping(value = "/explorer/att/list/get.do")
+    // /explorer/get.do
     public SchoolExplorerVO getExplorerVO(@RequestBody SchoolExplorerDTO schoolExplorerDTO) {
         int schoolId = schoolExplorerDTO.getSchoolId();
         int classId = schoolExplorerDTO.getClassId();
@@ -150,28 +160,23 @@ public class SchoolController {
     }
 
     @PostMapping(value = "/explorer/my/info/get.do")
-    public SchoolExplorerMyInfo getMyInfo(@RequestParam("schoolId") int schoolId, @RequestParam("classId") int classId,
-                                          @RequestParam("memberEmail") String memberEmail) {
-        return schoolService.getMyInfo(schoolId, classId, memberEmail);
+    public SchoolExplorerMyInfo getMyInfo(@RequestParam("tid") int tid) {
+        return schoolService.getMyInfo(tid);
     }
 
     @PostMapping(value = "/my/explorer/list/get.do")
-    public List<SchoolMyExplorersVO> getMyExplorersVO(@RequestParam("memberEmail") String memberEmail) {
-            return schoolService.getMyExplorersVO(memberEmail);
+    public List<SchoolMyExplorersVO> getMyExplorersVO(@RequestBody MyExplorerDTO myExplorerDTO) {
+        return schoolService.getMyExplorersVO(myExplorerDTO);
     }
 
-    @PostMapping(value = "/test/galaxy")
-    public Map<String, Object> testGalaxy(@RequestBody ClassDTO classDTO) {
+    @PostMapping(value = "/explorer/galaxy")
+    public SchoolGalaxyOfExplorerVO getGalaxyOfExplorer(@RequestBody ClassDTO classDTO) {
         List<ClassVO> classVOList = schoolService.getClasses(classDTO);
-        log.info(classDTO);
-        log.info(classVOList);
-        SchoolTestVO testVO = schoolService.getTest(classDTO.getSchoolId());
+        GalaxyStatisticVO galaxyOfExplorer = schoolService.getGalaxyOfExplorer(classDTO.getSchoolId());
 
-
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("classVOList", classVOList);
-        map.put("testVO", testVO);
-        return map;
+        return SchoolGalaxyOfExplorerVO.builder()
+                .classVOS(classVOList)
+                .galaxyStatisticVO(galaxyOfExplorer)
+                .build();
     }
 }

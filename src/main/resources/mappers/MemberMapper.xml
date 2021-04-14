@@ -22,6 +22,13 @@
         <result property="regDate" column="regtime"/>
     </resultMap>
 
+    <!-- member device -->
+    <resultMap id="memberDeviceVO" type="component.member.vo.MemberDeviceVO">
+        <result property="memberEmail" column="member_email"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="deviceToken" column="device_token"/>
+    </resultMap>
+
     <select id="selects" resultMap="memberMap" parameterType="string">
         SELECT m.email,m.pw,m.phone_num,m.sex,m.born_time,m.nickname,a.member_email,a.auth
         from members as m left outer join members_auth as a on m.email = a.member_email
@@ -140,6 +147,10 @@
     <insert id="memberFollow" parameterType="MemberFollowingVO">
         insert into members_follow values(#{memberEmail},#{follower})
     </insert>
+
+    <select id="getMemberDeviceVOList" resultMap="memberDeviceVO">
+        select * from member_device;
+    </select>
 </mapper>
 
 

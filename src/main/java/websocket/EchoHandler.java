@@ -1,5 +1,7 @@
 package websocket;
 
+import component.alarm.AlarmDTO;
+import component.alarm.AlarmMapper;
 import component.member.vo.MemberDeviceVO;
 import component.member.MemberMapper;
 import component.note.NoteMapper;
@@ -23,7 +25,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 현재 집중시간 모드 기능을 이용하고 있는 총 회원 파악용도
@@ -38,6 +42,7 @@ public class EchoHandler extends TextWebSocketHandler {
     private final SchoolMapper schoolMapper;
     private final FcmNotifier fcmNotifier;
     private final NoteMapper noteMapper;
+    private final AlarmMapper alarmMapper;
 
     //로그인 한 전체
     private List<WebSocketSession> sessions = new ArrayList<>();  // 실시간 어플을 이용하고 있는 유저
@@ -184,25 +189,37 @@ public class EchoHandler extends TextWebSocketHandler {
         log.info("deviceList = " + deviceList);
         if (deviceList != null && !deviceList.isEmpty()) { // 디바이스 토큰 값ㅇ ㅣ존재하면
             deviceList.forEach(vo -> { // for 문 돌면서 push alarm 전송
+                String msg = makeNotificationMsgForAttendanceCheck(vo);
                 fcmNotifier.sendFCM(vo.getDeviceToken(), "시스템 알림",
-                        memberDeviceTokenToString(vo));
+                        msg);
                 try {
                     WebSocketSession user = userEmailSocketSessionMap.get(vo.getMemberEmail()); // 웹소켓으로 실시간 알림도 전송
                     // todo 1. 알림 보낸 내역에 저장.
-                    if (user != null) {
-                        user.sendMessage(new TextMessage("출석체크 30분 전입니다."));
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("type", 2);
+                    map.put("msg", msg);
+                    map.put("subject", "system");
+                    AlarmDTO alarmDTO = AlarmDTO.builder().toEmail(vo.getMemberEmail()).msg(map).build();
+                    log.info("save alarmDTO = " + alarmDTO);
+                    int savedRow = alarmMapper.saveAlarms(alarmDTO);
+                    if (savedRow != 0 && user != null) { // 저장이 안됐으면 메세지도 보내지않는다.
+                        // 저장이 왜 안되지. 이유분석 필요
+                        user.sendMessage(new TextMessage(msg));
                     }
-                } catch (IOException ignored) {
-                    log.info("text send error => user disconnected");
+                } catch (IOException e) {
+                    log.info("text send error => user disconnected : " + e.getMessage());
                 }
             });
         }
     }
 
-//    @Scheduled(cron ="") // 플랜 시스템 알림
-//    public void sendSystemMessageForPlan(){
-//
-//    }
+    // 매일 6시가 되면 집중시간을 저장한다
+    @Scheduled(cron = "0 0 6 * * *")
+    public void saveConcentrationTimeScheduler() {
+        log.info("save concentration time scheduler execute.. " + LocalDateTime.now());
+        List<MemberDeviceVO> memberDeviceVOList = memberMapper.getMemberDeviceVOList();
+        fcmNotifier.sendFCMForUpdateConcentrationTime(memberDeviceVOList);
+    }
 //
 //    @Scheduled(cron ="") // 팔로잉 시스템 알림
 //    public void sendSystemMessageForFollowing(){
@@ -234,7 +251,7 @@ public class EchoHandler extends TextWebSocketHandler {
         }
     }
 
-    private String memberDeviceTokenToString(MemberDeviceVO memberDeviceVO) {
+    private String makeNotificationMsgForAttendanceCheck(MemberDeviceVO memberDeviceVO) {
         return "회원님의 '" + memberDeviceVO.getSchoolName() + "' 출석 인증까지 30분 남았습니다!";
     }
 }
