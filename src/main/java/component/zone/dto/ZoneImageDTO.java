@@ -7,6 +7,5 @@ import java.util.List;
 @Data
 public class ZoneImageDTO {
     private String code;
-    private String innerImage;
-    private String outerImage;
+    private String imagePath;
 }

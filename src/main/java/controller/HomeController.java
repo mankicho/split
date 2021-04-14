@@ -1,8 +1,8 @@
 package controller;
 
-import component.home.HomeDataDTO;
+import component.home.dto.HomeDataDTO;
 import component.home.HomeDataService;
-import component.home.view.HomeData;
+import component.home.response.HomeData;
 import component.home.vo.HomeDataMyInfo;
 import component.home.vo.HomeExplorerVO;
 import component.member.MemberService;
@@ -11,11 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

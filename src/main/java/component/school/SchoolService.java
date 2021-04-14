@@ -1,5 +1,8 @@
 package component.school;
 
+import component.home.HomeDataMapper;
+import component.home.dto.HomeTicketDTO;
+import component.home.vo.HomeTicketVO;
 import component.school.dto.*;
 import component.school.explorer.dto.MyExplorerDTO;
 import component.school.explorer.dto.SchoolExplorerDTO;
@@ -28,6 +31,7 @@ import java.util.*;
 public class SchoolService {
 
     private final SchoolMapper schoolMapper; // DB 쿼리문을 수행하는 mapper
+    private final HomeDataMapper homeDataMapper;
     private final TokenGeneratorService tokenGeneratorService;
 
     private final ZoneMapper zoneMapper;
@@ -135,17 +139,32 @@ public class SchoolService {
 
         log.info(myAuthVO);
 
-        ClassAuthLogDTO dto = new ClassAuthLogDTO(myAuthVO.getSchoolId(), myAuthVO.getTid(), myAuthVO.getClassId(), classAuthDTO.getMemberEmail(), location);
+        ClassAuthLogDTO dto = ClassAuthLogDTO.builder(). // 내가 인증해야 할 플랜 정보로 로그 기록 데이터를 만든다
+                classId(myAuthVO.getClassId())
+                .tid(myAuthVO.getTid())
+                .schoolId(myAuthVO.getSchoolId())
+                .memberEmail(classAuthDTO.getMemberEmail())
+                .planetCode(location)
+                .build();
 
-        int insertedRow = schoolMapper.classAuth(dto);
+        int insertedRow = schoolMapper.classAuth(dto); // 저장한다
         if (insertedRow == 0) {
             view.setStatus(5000);
             view.setAuthenticatedRow(0);
-            view.setMsg("server error");
+            view.setMsg("server error"); // 저장 실패 시
         } else {
             view.setStatus(202);
             view.setAuthenticatedRow(1);
-            view.setMsg("success authenticate");
+            view.setMsg("class auth success");
+
+            HomeTicketDTO homeTicketDTO = HomeTicketDTO.builder()
+                    .tid(dto.getTid())
+                    .weekday(classAuthDTO.getWeekday())
+                    .classId(dto.getClassId())
+                    .memberEmail(dto.getMemberEmail())
+                    .build();
+            HomeTicketVO homeTicketVO = homeDataMapper.getTicket(homeTicketDTO);
+            view.setHomeTicketVO(homeTicketVO);
         }
 
         return view;
