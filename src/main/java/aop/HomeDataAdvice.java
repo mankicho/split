@@ -1,6 +1,6 @@
 package aop;
 
-import component.home.HomeDataDTO;
+import component.home.dto.HomeDataDTO;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,8 +9,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
-
-import java.util.Arrays;
 
 @Aspect
 @Log4j2
