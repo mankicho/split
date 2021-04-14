@@ -1,12 +1,13 @@
 package component.home;
 
-import component.home.view.HomeData;
+import component.home.dto.HomeDataDTO;
+import component.home.dto.HomeTicketDTO;
+import component.home.response.HomeData;
 import component.home.vo.HomeDataMyInfo;
 import component.home.vo.HomeExplorerVO;
+import component.home.vo.HomeTicketVO;
 import org.apache.ibatis.annotations.Param;
 
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public interface HomeDataMapper {
@@ -18,5 +19,6 @@ public interface HomeDataMapper {
 
     List<HomeExplorerVO> getMyHomeExplorers(HomeDataDTO homeData); // 나의 탐험단 카드
 
+    HomeTicketVO getTicket(HomeTicketDTO homeTicketDTO);
 
 }

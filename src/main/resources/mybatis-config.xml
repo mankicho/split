@@ -25,13 +25,13 @@
         <typeAlias type="component.school.dto.ClassDTO" alias="ClassDTO"/>
         <typeAlias type="component.school.dto.ClassJoinDTO" alias="ClassJoinDTO"/>
         <typeAlias type="component.school.dto.ClassAuthDTO" alias="ClassAuthDTO"/>
-        <typeAlias type="component.home.HomeDataDTO" alias="HomeDataDTO"/>
+        <typeAlias type="component.home.dto.HomeDataDTO" alias="HomeDataDTO"/>
         <typeAlias type="component.school.explorer.dto.SchoolExplorerDTO" alias="SchoolExplorerDTO"/>
         <typeAlias type="component.school.explorer.dto.SchoolExplorerRewardDTO" alias="SchoolExplorerRewardDTO"/>
         <typeAlias type="component.school.dto.ClassAuthLogDTO" alias="ClassAuthLogDTO"/>
         <typeAlias type="component.mypage.MyPageMainDTO" alias="MyPageMainDTO"/>
         <typeAlias type="component.school.explorer.dto.MyExplorerDTO" alias="MyExplorerDTO"/>
-
+        <typeAlias type="component.home.dto.HomeTicketDTO" alias="HomeTicketDTO"/>
 
     </typeAliases>
     <mappers>

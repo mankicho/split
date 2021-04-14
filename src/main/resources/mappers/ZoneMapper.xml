@@ -21,8 +21,7 @@
 
     <resultMap id="imageMap" type="component.zone.dto.ZoneImageDTO">
         <result property="code" column="planet_code"/>
-        <result property="innerImage" column="inner_image_path"/>
-        <result property="outerImage" column="outer_image_path"/>
+        <result property="imagePath" column="image_path"/>
     </resultMap>
 
     <resultMap id="zone" type="component.zone.vo.ZoneVO">

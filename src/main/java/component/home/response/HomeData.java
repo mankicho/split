@@ -1,10 +1,9 @@
-package component.home.view;
+package component.home.response;
 
 import component.home.vo.HomeDataMyInfo;
 import component.home.vo.HomeExplorerVO;
 import lombok.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter

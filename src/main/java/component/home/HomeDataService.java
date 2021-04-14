@@ -1,15 +1,15 @@
 package component.home;
 
-import component.home.view.HomeData;
+import component.home.dto.HomeDataDTO;
+import component.home.dto.HomeTicketDTO;
+import component.home.response.HomeData;
 import component.home.vo.HomeDataMyInfo;
 import component.home.vo.HomeExplorerVO;
+import component.home.vo.HomeTicketVO;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -33,4 +33,7 @@ public class HomeDataService {
 
     ; // 나의 탐험단 카드
 
+    public HomeTicketVO getTicket(HomeTicketDTO homeTicketDTO) {
+        return homeDataMapper.getTicket(homeTicketDTO);
+    }
 }

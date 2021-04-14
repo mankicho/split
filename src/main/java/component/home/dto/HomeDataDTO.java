@@ -1,4 +1,4 @@
-package component.home;
+package component.home.dto;
 
 import lombok.Data;
 
