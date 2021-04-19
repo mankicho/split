@@ -120,12 +120,14 @@
     </select>
 
     <select id="getMyHomeExplorers" parameterType="HomeDataDTO" resultMap="homeExplorerVO">
-        select my.*,ifnull(log.att_num,0) as att_num ,s.school_type,concat(if(s.school_type=1,'[공식]',''),' ',s.school_name) as school_name,
+        select my.*,ifnull(log.att_num,0) as att_num ,s.school_type,concat(if(s.school_type=1,'[공식]',''),'
+        ',s.school_name) as school_name,
         c.auth_time,my.set_payment_amount,dust.dust,ifnull(my_sum_point,0) as my_sum_point
         From
         (SELECT *
-        FROM(SELECT member_email,school_id,class_id,start_date,cnt,set_payment_amount FROM
-        (SELECT * FROM class_members WHERE (member_email = #{memberEmail}) AND (DATE_FORMAT(now(), '%Y-%m-%d') <![CDATA[<=]]> end_date)
+        FROM(SELECT member_email,tid,school_id,class_id,start_date,cnt,set_payment_amount FROM
+        (SELECT * FROM class_members WHERE (member_email = #{memberEmail}) AND (DATE_FORMAT(now(), '%Y-%m-%d') <![CDATA[<=]]>
+        end_date)
         ORDER BY start_date) AS class_members
         GROUP BY school_id , class_id) AS my) as my -- 내 탐험단 리스트
         left outer join school as s
@@ -134,9 +136,9 @@
         on my.class_id = c.class_id -- 출석시간
         left outer join members_dust as dust
         on my.member_email = dust.member_email -- 더스트
-        left outer join (select member_email,school_id,class_id,sum(member_point) as my_sum_point
-        from members_point where member_email = #{memberEmail} group by school_id,class_id) as p
-        on my.member_email = p.member_email and my.school_id = p.school_id and my.class_id = p.class_id -- 내 상금
+        left outer join (select member_email,tid,sum(member_point) as my_sum_point
+        from members_point where member_email = #{memberEmail} group by tid) as p
+        on my.member_email = p.member_email and my.tid = p.tid -- 내 상금
         left outer join
         (select school_id,class_id,att_num from
         (select l.school_id,l.class_id,count(*) as att_num
@@ -144,12 +146,14 @@
         (SELECT *
         FROM(SELECT school_id,class_id,start_date FROM
         (SELECT * FROM class_members
-        WHERE (member_email = #{memberEmail}) AND (DATE_FORMAT(now(), '%Y-%m-%d') <![CDATA[<=]]> end_date) ORDER BY start_date)
+        WHERE (member_email = #{memberEmail}) AND (DATE_FORMAT(now(), '%Y-%m-%d') <![CDATA[<=]]> end_date) ORDER
+        BY start_date)
         AS class_members
         GROUP BY school_id , class_id) AS my) as my
         on l.school_id=my.school_id and l.class_id =my.class_id
-        where member_email = #{memberEmail} and date_format(auth_date,'%Y-%m-%d') <![CDATA[>=]]> start_date group by school_id,class_id) as log) as log
-        on my.school_id = log.school_id and my.class_id = log.class_id;
+        where member_email = #{memberEmail} and date_format(auth_date,'%Y-%m-%d') <![CDATA[>=]]> start_date group by
+        school_id,class_id) as log)
+        as log on my.school_id = log.school_id and my.class_id = log.class_id;
     </select>
 
     <select id="getTicket" resultMap="homeTicketVO" parameterType="HomeTicketDTO">
@@ -164,7 +168,7 @@
         where class_id= #{classId} and set_day <![CDATA[&]]> #{weekday} != 0 and date_format(now(),'%Y-%m-%d')
         between start_date and end_date) as sum_amount
         on m.class_id = sum_amount.class_id
-        left outer join (select tid,count(*) as all_num from class_auth_log ) as l
+        left outer join (select tid,count(*) as all_num from class_auth_log where tid = #{tid}) as l
         on m.tid = l.tid
         left outer join school as s
         on m.school_id = s.school_id
