@@ -104,7 +104,7 @@
         <result property="schoolId" column="school_id"/>
         <result property="categoryId" column="category_id"/>
         <result property="schoolType" column="school_type"/>
-        <result property="memberEmail" column="member_email"/>
+        <result property="nickname" column="nickname"/>
         <result property="schoolName" column="school_name"/>
         <result property="oneLineMessage" column="one_line_message"/>
         <result property="imagePath" column="image_path"/>
@@ -125,7 +125,7 @@
 
     <!-- 학교정보 가져오기 -->
     <select id="getSchools" parameterType="int" resultMap="schoolVO">
-        select s.school_id,s.category_id,s.school_type,s.member_email,s.school_name,
+        select s.school_id,s.category_id,s.school_type,me.nickname,s.school_name,
         s.one_line_message,s.image_path,m_image.profile_image,ifnull(s.set_location,'자유 장소') as set_location,s.period,
         ifnull(reservation_num.today_person,0) as today_person, hashtag.hashtags_id, hashtag.hashtags,
         ifnull(acc_attendance.sum_person,0) as sum_person,
@@ -133,18 +133,20 @@
         date_format(found_date,'%Y-%m-%d')),0),0) as att_person,
         ifnull(tmp.total_payment,0) as total_payment
         , ifnull(tmp.daily_payment,0) as daily_payment,
-        rank() over (order by tmp.total_payment desc) as total_payment_rank,
-        rank() over(order by acc_attendance.sum_person desc) as sum_person_rank,
-        rank() over (order by round(acc_attendance.sum_person/datediff(date_format(now(),'%Y-%m-%d'),
+        dense_rank() over (order by tmp.total_payment desc) as total_payment_rank,
+        dense_rank() over(order by acc_attendance.sum_person desc) as sum_person_rank,
+        dense_rank() over (order by round(acc_attendance.sum_person/datediff(date_format(now(),'%Y-%m-%d'),
         date_format(found_date,'%Y-%m-%d')),0) desc)
-        as att_person_rank from school as s left outer join
+        as att_person_rank from school as s
+        left outer join members as me
+        on s.member_email =me.email
+        left outer join
         (select member_email, profile_image from members_profile) as m_image on s.member_email = m_image.member_email
         left outer join
         (select * from
         (select school_id,count(*) as today_person -- 오늘 예약자
         from class_members
-        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} !=
-        0)
+        where (date_format(now(),'%Y-%m-%d') between start_date and end_date) and (set_day <![CDATA[&]]> #{weekday} !=0)
         group by school_id) as
         tmp) as reservation_num on s.school_id = reservation_num.school_id
         left outer join
@@ -285,7 +287,7 @@
     special_galaxy.special_today_daily_amount, special_galaxy.special_all_acc_amount from
     (select 1 as dump,ifnull(sum(auth_members),0) as acc_auth_members, ifnull(round(sum(att_rate)/count(*),1),0) as avg_att_rate,
     ifnull(round(sum(auth_members)/datediff(date_format(now(),'%Y-%m-%d'),date_format(s.found_date,'%Y-%m-%d'))),0) as avg_att_members,
-    ifnull(ttmp.today_all_amount,0) as today_all_amount, ifnull(ttmp.today_daily_amount,0) as today_daily_amount,all_acc_amount From(
+    ifnull(ttmp.today_all_amount,0) as today_all_getSchoolsamount, ifnull(ttmp.today_daily_amount,0) as today_daily_amount,all_acc_amount From(
     select school_id,class_id,sum(auth_members) as auth_members,
     round((sum(auth_members)/sum(all_members))*100,1) as att_rate,days
     from school_daily_attendance_rate where class_id = #{classId} group by school_id,class_id,days) as tmp
