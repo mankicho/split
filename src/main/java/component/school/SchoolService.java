@@ -73,7 +73,7 @@ public class SchoolService {
 
     public int joinClass(ClassJoinDTO classJoinDTO, int type) throws ParseException { // 클래스 등록하기(플랜 예약하기)
         Date today = new Date();
-        if (simpleDateFormat.parse(classJoinDTO.getStartDate()).compareTo(today) < 0
+        if (simpleDateFormat.parse(classJoinDTO.getStartDate()).compareTo(new Date(today.getTime() - 1000 * 60 * 60 * 24L)) < 0
                 || simpleDateFormat.parse(classJoinDTO.getEndDate()).compareTo(today) < 0) {
             // 예약 날짜가 오늘 이전이면
             return -1;
