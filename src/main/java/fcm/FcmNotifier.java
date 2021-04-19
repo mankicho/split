@@ -23,12 +23,12 @@ public class FcmNotifier {
     private final int UPDATE_CONCENTRATION_TIME = 1;
 //    @Value("#{path['fcm_local']}")
 //    private String fcmPath;
-//
-//    @Value("#{path['fcm_server']}")
-//    private String fcmPath;
 
-    @Value("#{path['fcm_linux_server']}")
+    @Value("#{path['fcm_server']}")
     private String fcmPath;
+
+//    @Value("#{path['fcm_linux_server']}")
+//    private String fcmPath;
 
     public void sendFCM(String tokenId, String title, String content) {
         try (FileInputStream refreshToken = new FileInputStream(fcmPath)) {

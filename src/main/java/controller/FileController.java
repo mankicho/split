@@ -22,12 +22,12 @@ public class FileController {
 
 //    @Value("#{path['local_home']}")
 //    private String home;
-//
-//    @Value("#{path['server_home']}")
-//    private String home;
-//
-    @Value("#{path['server_linux_home']}")
+
+    @Value("#{path['server_home']}")
     private String home;
+//
+//    @Value("#{path['server_linux_home']}")
+//    private String home;
 
     @PostMapping(value = "/main/upload")
     public void fileUploadMain(MultipartFile multipartFile) {
