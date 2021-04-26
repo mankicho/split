@@ -10,6 +10,8 @@ import component.member.response.UpdatePasswordResponse;
 import component.member.response.enumm.RegisterMemberStatus;
 import component.member.vo.*;
 import file.FileUploadService;
+import firebase.FirebaseCloudStorageService;
+import firebase.response.FileUploadResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +52,8 @@ public class MemberController {
     // for generating token (to use application service)
     private final TokenGeneratorService tokenGeneratorService; // return authentication token
 
+    private final FirebaseCloudStorageService firebaseCloudStorageService;
+
     // 로그인함수 (이메일, 비밀번호)
     @RequestMapping(value = "/login.do")
     public String memberLogin(@RequestParam("email") String email, @RequestParam("pw") String pw) {
@@ -77,10 +81,10 @@ public class MemberController {
     // 트랜잭션 구현 필요
     @PostMapping(value = "/registerWithFile.do")
     public RegisterMemberResponse insertMemberWithFile(@RequestParam("memberDTO") String data, @RequestParam("file") MultipartFile multipartFile) {
-        int savedFile = fileUploadService.fileUpload(home, multipartFile);
+        FileUploadResponse fileUploadResponse = firebaseCloudStorageService.uploadFile("profile/manki/", multipartFile);
         int registerStatus = memberService.registerMember(data);
 
-        RegisterMemberStatus status = RegisterMemberStatus.getRegisterMemberStatus(registerStatus, savedFile);
+        RegisterMemberStatus status = RegisterMemberStatus.getRegisterMemberStatus(registerStatus, fileUploadResponse.getStatus());
         return new RegisterMemberResponse(status);
     }
 

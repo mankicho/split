@@ -33,8 +33,6 @@ import java.util.Map;
 public class SchoolController {
 
     private final SchoolService schoolService;
-    private final ZoneService zoneService;
-    private final TokenGeneratorService tokenGeneratorService;
     private final SearchKeywordBroker broker;
 
     // 학교 개설

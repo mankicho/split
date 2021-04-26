@@ -69,4 +69,6 @@ public interface MemberMapper {
     Timestamp getRegDate(@Param("email") String email);
 
     List<MemberDeviceVO> getMemberDeviceVOList();
+
+    String getNickname(@Param("memberEmail") String email);
 }

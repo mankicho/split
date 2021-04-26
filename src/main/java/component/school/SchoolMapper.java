@@ -8,6 +8,7 @@ import component.school.explorer.dto.SchoolExplorerRewardDTO;
 import component.school.explorer.vo.*;
 import component.school.vo.ClassAuthVO;
 import component.school.vo.ClassVO;
+import component.school.vo.SchoolMembers;
 import component.school.vo.SchoolVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -60,4 +61,6 @@ public interface SchoolMapper {
     List<SchoolMyExplorersVO> getMyExplorersVO(MyExplorerDTO myExplorerDTO);
 
     GalaxyStatisticVO getGalaxyOfExplorer(@Param("schoolId") int schoolId);
+
+    List<SchoolMembers> getMembers(@Param("schoolId") int schoolId, @Param("classId") int classId);
 }

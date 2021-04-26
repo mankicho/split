@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 public class FirebaseCloudMessagingService {
 
     private final int UPDATE_CONCENTRATION_TIME = 1;
-    @Value("#{path['fcm_local']}")
-    private String fcmPath;
+//    @Value("#{path['fcm_local']}")
+//    private String fcmPath;
 
     private final FirebaseUtil firebaseUtil;
     private final SchoolMapper schoolMapper;
@@ -39,8 +39,8 @@ public class FirebaseCloudMessagingService {
     //    @Value("#{path['fcm_server']}")
 //    private String fcmPath;
 //
-//    @Value("#{path['fcm_linux_server']}")
-//    private String fcmPath;
+    @Value("#{path['fcm_linux_server']}")
+    private String fcmPath;
 
 
     public void sendFCM(String tokenId, String title, String content) {

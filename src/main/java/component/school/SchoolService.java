@@ -11,12 +11,14 @@ import component.school.explorer.vo.*;
 import component.school.view.ClassAuthView;
 import component.school.vo.ClassAuthVO;
 import component.school.vo.ClassVO;
+import component.school.vo.SchoolMembers;
 import component.school.vo.SchoolVO;
 import component.zone.ZoneMapper;
 import component.zone.vo.ZoneLatLngVO;
 import exception.error.SchoolErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import security.token.TokenGeneratorService;
@@ -251,5 +253,8 @@ public class SchoolService {
         return schoolMapper.getGalaxyOfExplorer(schoolId);
     }
 
+    public List<SchoolMembers> getMembers(@Param("schoolId") int schoolId, @Param("classId") int classId) {
+        return schoolMapper.getMembers(schoolId, classId);
+    }
 
 }

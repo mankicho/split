@@ -10,7 +10,7 @@ public class SchoolVO {
     private int categoryId; // 카테고리 Id
     private int schoolId; // 학교 Id
     private int schoolType; // 학교유형(공식? 비공식?)
-    private String memberEmail; // 학교 설립자
+    private String nickname; // 학교 설립자
     private String schoolName; // 학교 이름
     private String oneLineMessage; // 한줄메세지
     private String imagePath; // 학교 대표 사진

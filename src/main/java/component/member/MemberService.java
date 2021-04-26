@@ -247,9 +247,15 @@ public class MemberService {
         return MemberDTO.builder()
                 .email(email)
                 .phoneNumber(phoneNumber)
-                .sex(sex).
-                        nickname(nickname).pw(passwordEncoder.encode(pw)).
-                        bornTime(bornTime).build();
+                .sex(sex)
+                .nickname(nickname)
+                .pw(passwordEncoder.encode(pw))
+                .bornTime(bornTime)
+                .build();
+    }
+
+    public String getNickname(@Param("memberEmail") String email) {
+        return memberMapper.getNickname(email);
     }
 }
 
