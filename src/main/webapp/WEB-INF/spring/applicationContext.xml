@@ -17,7 +17,6 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
     <util:properties id="admin_config" location="classpath:/config/admin.properties"/>
-<!--            <util:properties id="db" location="file:/home/hosting_users/icnogari/tomcat/db.properties"/>-->
         <util:properties id="db" location="file:/home/tomcat/apache-tomcat-8.5.64/db.properties"/>
 <!--    <util:properties id="db"-->
 <!--                     location="file:C:\Users\82102\Desktop\apache-tomcat-8.5.57-windows-x64\apache-tomcat-8.5.57/db.properties"/>-->
@@ -33,7 +32,7 @@
     <context:component-scan base-package="component"/>
     <context:component-scan base-package="exception"/>
     <context:component-scan base-package="application"/>
-    <context:component-scan base-package="fcm"/>
+    <context:component-scan base-package="firebase"/>
     <context:component-scan base-package="system"/>
     <context:component-scan base-package="file"/>
     <context:component-scan base-package="rank"/>

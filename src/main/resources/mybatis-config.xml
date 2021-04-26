@@ -42,6 +42,7 @@
         <mapper class="component.alarm.AlarmMapper"/>
         <mapper class="component.note.NoteMapper"/>
         <mapper class="component.mypage.MyPageMapper"/>
+        <mapper class="component.chat.ChattingMapper"/>
     </mappers>
 
 </configuration>

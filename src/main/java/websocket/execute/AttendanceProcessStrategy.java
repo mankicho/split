@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Log4j2
-public class AttendanceProcessStrategy extends DataProcessStrategy {
+public class AttendanceProcessStrategy {
     private Map<String, WebSocketSession> cafeMap;
     private Map<String, WebSocketSession> userMap;
 
@@ -24,7 +24,6 @@ public class AttendanceProcessStrategy extends DataProcessStrategy {
         this.userMap = userMap;
     }
 
-    @Override
     public void execute(TextMessage tm) {
         JSONObject object = new JSONObject(tm.getPayload());
         String cafe = object.getString("cafe"); // 메세지에 카페정보(Q01B)

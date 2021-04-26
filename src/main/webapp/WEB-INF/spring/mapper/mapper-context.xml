@@ -31,5 +31,8 @@
         <property name="mapperInterface" value="component.mypage.MyPageMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
-
+    <bean id="chattingMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="component.chat.ChattingMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
 </beans>

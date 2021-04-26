@@ -7,7 +7,8 @@ import component.member.MemberMapper;
 import component.note.NoteMapper;
 import component.school.SchoolMapper;
 import component.zone.ZoneMapper;
-import fcm.FcmNotifier;
+import firebase.FirebaseCloudMessagingService;
+import firebase.FirebaseRealtimeDatabaseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
@@ -19,7 +20,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import websocket.execute.*;
-import websocket.execute.note.NoteProcessStrategy;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -27,7 +27,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 현재 집중시간 모드 기능을 이용하고 있는 총 회원 파악용도
@@ -40,7 +39,8 @@ public class EchoHandler extends TextWebSocketHandler {
     private final MemberMapper memberMapper;
     private final ZoneMapper zoneMapper;
     private final SchoolMapper schoolMapper;
-    private final FcmNotifier fcmNotifier;
+    private final FirebaseCloudMessagingService firebaseCloudMessagingService;
+    private final FirebaseRealtimeDatabaseService firebaseRealtimeDatabaseService;
     private final NoteMapper noteMapper;
     private final AlarmMapper alarmMapper;
 
@@ -105,8 +105,12 @@ public class EchoHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws Exception {
 
+        log.info(message.getPayload());
         // todo 1. 클라이언트가 날린 메세지 해석
         DataProcessStrategy dps = parseTextMessage(webSocketSession, message);
+        if (dps == null) {
+            return;
+        }
         // todo 2. 메세지에 맞는 함수 호출(DB에 데이터 저장 or 적절한 유저에게 메세지 전송 등)
         dataProcess(dps, message);
     }
@@ -114,18 +118,16 @@ public class EchoHandler extends TextWebSocketHandler {
 
     // 유저가 보낸 메세지 처리
     private DataProcessStrategy parseTextMessage(WebSocketSession webSocketSession, TextMessage message) {
+        if (!(message.getPayload().startsWith("{") || message.getPayload().endsWith("}"))) {
+            return null;
+        }
         JSONObject object = new JSONObject(message.getPayload());
         switch (object.getInt("type")) {
-            case 1: // 친구요청
-                FriendProcessStrategy dps = new FriendProcessStrategy();
-                dps.setUserMap(userEmailSocketSessionMap);
-                return dps;
-            case 2: // 출석체크
-                AttendanceProcessStrategy aps = new AttendanceProcessStrategy();
-                aps.setCafeMap(cafeCodeSocketSessionMap);
-                aps.setUserMap(userEmailSocketSessionMap);
-                return aps;
-            case 5: // 집중시간
+            case MessageType.CHATTING:
+//                firebaseRealtimeDatabaseService.write();
+//                firebaseCloudMessagingService.sendChattingMessage(message);
+                return null;
+            case MessageType.CONCENTRATE: // 집중시간
                 String user = object.getString("user");
                 int mode = object.getInt("mode");
                 if (mode == 1 && !timers.contains(user)) { // 집중 모드면
@@ -138,14 +140,6 @@ public class EchoHandler extends TextWebSocketHandler {
                 tps.setTimerSessions(timers);
                 tps.setLoginUsers(sessions);
                 return tps;
-            case 6:
-                // 팔로우 요청
-                FollowProcessStrategy fps = new FollowProcessStrategy();
-                fps.setUserMap(userEmailSocketSessionMap);
-                return fps;
-            case 7:
-                // 쪽지 보내기
-                return new NoteProcessStrategy(userEmailSocketSessionMap, noteMapper);
             default:
                 return null;
         }
@@ -190,7 +184,7 @@ public class EchoHandler extends TextWebSocketHandler {
         if (deviceList != null && !deviceList.isEmpty()) { // 디바이스 토큰 값ㅇ ㅣ존재하면
             deviceList.forEach(vo -> { // for 문 돌면서 push alarm 전송
                 String msg = makeNotificationMsgForAttendanceCheck(vo);
-                fcmNotifier.sendFCM(vo.getDeviceToken(), "시스템 알림",
+                firebaseCloudMessagingService.sendFCM(vo.getDeviceToken(), "시스템 알림",
                         msg);
                 try {
                     WebSocketSession user = userEmailSocketSessionMap.get(vo.getMemberEmail()); // 웹소켓으로 실시간 알림도 전송
@@ -218,7 +212,7 @@ public class EchoHandler extends TextWebSocketHandler {
     public void saveConcentrationTimeScheduler() {
         log.info("save concentration time scheduler execute.. " + LocalDateTime.now());
         List<MemberDeviceVO> memberDeviceVOList = memberMapper.getMemberDeviceVOList();
-        fcmNotifier.sendFCMForUpdateConcentrationTime(memberDeviceVOList);
+        firebaseCloudMessagingService.sendFCMForUpdateConcentrationTime(memberDeviceVOList);
     }
 //
 //    @Scheduled(cron ="") // 팔로잉 시스템 알림

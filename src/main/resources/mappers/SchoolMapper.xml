@@ -85,6 +85,12 @@
         <result property="schoolName" column="school_name"/>
     </resultMap>
 
+    <resultMap id="schoolMembers" type="component.school.vo.SchoolMembers">
+        <result property="memberEmail" column="member_email"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="deviceToken" column="device_token"/>
+    </resultMap>
+
     <!-- class vo -->
     <resultMap id="classVO" type="component.school.vo.ClassVO">
         <result property="classId" column="class_id"/>
@@ -350,7 +356,7 @@
 
     <select id="getAttendanceRate" parameterType="int" resultMap="schoolClassAvgAttendanceRateVO">
             select (sum(auth_members/all_members)/count(*)) * 100 as rate ,round(sum(auth_members)/count(*),0) as att_num
-            from school_daily_attendance_rate where school_id = #{schoolId} and class_id= #{classId}    ;
+            from school_daily_attendance_rate where school_id = #{schoolId} and class_id= #{classId};
     </select>
 
     <select id="getPredictReward" parameterType="SchoolExplorerRewardDTO" resultType="int">
@@ -452,5 +458,11 @@
 
     </select>
 
+    <select id="getMembers" parameterType="int" resultMap="schoolMembers">
+        select c.member_email,device_type,device_token from class_members as c
+        left outer join member_device as d
+        on c.member_email = d.member_email
+        where school_id = #{schoolId} and class_id = #{classId};
+    </select>
 </mapper>
 

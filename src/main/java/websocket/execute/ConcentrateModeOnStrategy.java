@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Log4j2
-public class ConcentrateModeOnStrategy extends DataProcessStrategy {
+public class ConcentrateModeOnStrategy extends DataProcessStrategy{
     private List<WebSocketSession> loginUsers;
     private List<String> timers;
 

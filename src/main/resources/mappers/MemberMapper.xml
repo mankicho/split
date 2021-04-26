@@ -151,6 +151,10 @@
     <select id="getMemberDeviceVOList" resultMap="memberDeviceVO">
         select * from member_device;
     </select>
+
+    <select id="getNickname" parameterType="string">
+        SELECT nickname from members where email = #{memberEmail}
+    </select>
 </mapper>
 
 
