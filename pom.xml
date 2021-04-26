@@ -4,20 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>rank system</id>-->
-<!--            <name>external jars</name>-->
-<!--            <url>file://${project.basedir}/lib</url>-->
-<!--        </repository>-->
-<!--        <repository>-->
-<!--            <id>in-project-jenkins</id>-->
-<!--            <name>kkma-jar-jenkins</name>-->
-<!--            <url>file://C:/Users/82102/.jenkins/jobs/SPLIT-BACKEND(admin)/workspace/lib</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-
-
     <groupId>org.example</groupId>
     <artifactId>please</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -218,13 +204,6 @@
             <artifactId>nv-websocket-client</artifactId>
             <version>2.9</version>
         </dependency>
-<!--        &lt;!&ndash; local repository &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>rank.sys</groupId>-->
-<!--            <artifactId>kkma</artifactId>-->
-<!--            <version>2.1</version>-->
-<!--        </dependency>-->
-
     </dependencies>
 
     <build>
