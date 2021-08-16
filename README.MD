@@ -24,12 +24,8 @@
  <br><br><br>
 
 ## 스택
- 서버 : Java, Spring, Apache-Tomcat<br>
- DBMS : MySQL<br>
- 호스팅 : AWS EC2, AWS RDS <br>
- App  : Flutter<br>
- <br><br><br>
- 
+ ![image](https://user-images.githubusercontent.com/48756287/129514929-1e3eee63-ec63-465c-9732-a527e962df11.png)
+
  ## 팀 구성원
  - 기획자 1명
  - 개발자 3명(백엔드 1명 + 프론트엔드 2명)
