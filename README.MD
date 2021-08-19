@@ -37,7 +37,7 @@
 [날짜 선택, 보증금 선택, 결제 기능]<br>
 ![image](https://user-images.githubusercontent.com/48756287/130078553-216ba4f1-ce9a-47a9-b445-95ddf41a22c9.png)              ![image](https://user-images.githubusercontent.com/48756287/130078642-951dec97-3feb-4a32-828f-bdba768f7a31.png)              ![image](https://user-images.githubusercontent.com/48756287/130078758-a25530ed-bd21-406b-b208-49e219a62ddc.png)
 1. 시작날짜 ~ 끝날짜를 선택하고 인증을 원하는 요일을 선택합니다.<br>
-2. 보증금을 입력합니다. 총 요일수 * 보증금이 계산됩니다.<br>
+2. 보증금을 입력합니다. 총 날짜 수 * 보증금이 계산됩니다.<br>
 3. 결제하기 버튼을 누르면 결제 프로세스가 시작되고, 결제 완료시 일정이 예약됩니다.
 
 [QR코드 스캐너, QR코드 태블릿]<br>
