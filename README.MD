@@ -35,14 +35,14 @@
  <br><br>
  ## 앱 화면<br>
 [날짜 선택, 보증금 선택, 결제 기능]<br>
-![image](https://user-images.githubusercontent.com/48756287/130076990-a6ea7300-c577-4121-a8a1-83dbc89ab6ee.png)<br>
+![image](https://user-images.githubusercontent.com/48756287/130078553-216ba4f1-ce9a-47a9-b445-95ddf41a22c9.png)              ![image](https://user-images.githubusercontent.com/48756287/130078642-951dec97-3feb-4a32-828f-bdba768f7a31.png)              ![image](https://user-images.githubusercontent.com/48756287/130078758-a25530ed-bd21-406b-b208-49e219a62ddc.png)
 1. 시작날짜 ~ 끝날짜를 선택하고 인증을 원하는 요일을 선택합니다.<br>
 2. 보증금을 입력합니다. 총 요일수 * 보증금이 계산됩니다.<br>
 3. 결제하기 버튼을 누르면 결제 프로세스가 시작되고, 결제 완료시 일정이 예약됩니다.
 
-<br>
 [QR코드 스캐너, QR코드 태블릿]<br>
-![image](https://user-images.githubusercontent.com/48756287/130077417-64ae906a-2257-46bc-91cb-5c8f1ab4af5d.png)<br>
+![image](https://user-images.githubusercontent.com/48756287/130078115-cf7b1c32-06a9-4c62-8bae-fae2c2be2445.png)
+
 1. QR코드를 스캔하면 QR코드가 비치된 공간 코드 + JWT 토큰값이 서버에 전송됩니다.<br>
 2. 서버에서는 JWT 토큰값을 이용해 사용자 식별 키를 구하고, DB에 저장된 일정을 확인합니다.<br>
 3. 인증 성공과 실패 여부를 리턴합니다.
