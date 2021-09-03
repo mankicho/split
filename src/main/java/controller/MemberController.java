@@ -5,6 +5,7 @@ import component.member.dto.MemberDTO;
 import component.member.dto.MemberFollowingDTO;
 import component.member.dto.MemberTmpInfoDTO;
 import component.member.response.MemberServiceStatusResponse;
+import component.member.response.MemberToken;
 import component.member.response.RegisterMemberResponse;
 import component.member.response.UpdatePasswordResponse;
 import component.member.response.enumm.RegisterMemberStatus;
@@ -37,15 +38,6 @@ import java.util.*;
 public class MemberController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
-    @Value("#{path['local_home']}")
-    private String home;
-
-    //    @Value("#{path['server_home']}")
-//    private String home;
-
-    private final FileUploadService fileUploadService;
-    // member service(register, login, find password and so on)
     private final MemberService memberService;
     // password encoder
     private final BCryptPasswordEncoder passwordEncoder; // password encoding function
@@ -56,23 +48,13 @@ public class MemberController {
 
     // 로그인함수 (이메일, 비밀번호)
     @RequestMapping(value = "/login.do")
-    public String memberLogin(@RequestParam("email") String email, @RequestParam("pw") String pw) {
+    public MemberToken memberLogin(@RequestParam("email") String email, @RequestParam("pw") String pw) {
         MemberVO memberVO = memberService.selects(email); // db 에서 회원정보 조회
         if (memberVO != null && pw != null && passwordEncoder.matches(pw, memberVO.getPw())) { // db 에 저장된 정보와 사용자 입력 비밀번호를 인코딩한 정보가 일치하면
-            int affectedRow = memberService.autoLogin(email); // 자동로그인
-            if (affectedRow >= 1) {
-                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 30L);
-                // 어플내의 기능을 이용하기위한 토큰 발급
-            }
+            String token = tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 30L);
+            return MemberToken.builder().token(token).build();
         }
-        MemberTmpInfoDTO tmpInfoDTO = memberService.selectsByTmpInfo(email);
-        if (tmpInfoDTO != null && passwordEncoder.matches(pw, tmpInfoDTO.getPw())) {
-            int affectedRow = memberService.autoLogin(email);
-            if (affectedRow >= 1) {
-                return tokenGeneratorService.createToken(email, 1000 * 60 * 60 * 24 * 30L); // 유효기간 1달
-            }
-        }
-        return "fail";
+        return MemberToken.builder().token("fail").build();
     }
 
 
@@ -92,16 +74,7 @@ public class MemberController {
     // 트랜잭션 구현 필요
     @PostMapping(value = "/register.do")
     public int insertMember(@RequestBody MemberDTO memberDTO) {
-        String pw = memberDTO.getPw();
-//        // todo 1. pw check(right format?)
-        String encodedPassword = passwordEncoder.encode(pw); // pw 인코딩
-        memberDTO.setPw(encodedPassword);
-
-        int affectedRowOfRegisterMember = memberService.registerMember(memberDTO); // 회원정보 등록
-        if (affectedRowOfRegisterMember == 1) {
-            return 100;
-        }
-        return 101;
+        return memberService.registerMember(memberDTO); // 회원정보 등록
     }
 
     @PostMapping(value = "/update.do")
